@@ -1,0 +1,21 @@
+번호,사용 구분,한글 용어명,영문 용어명,영문 약어,관련 시스템,물리 타입,자릿수,소수점,비고
+1,표준항목,고객번호,Customer Number,CUST_NO,"CRM,ORDER,BILLING",VARCHAR,20,0,Approved 기준 샘플
+2,표준항목,고객명,Customer Name,CUST_NM,"CRM,ORDER",VARCHAR,100,0,Approved 기준 샘플
+3,표준항목,고객상태코드,Customer Status Code,CUST_STS_CD,CRM,VARCHAR,10,0,Approved 기준 샘플
+4,표준항목,주문번호,Order Number,ORD_NO,ORDER,VARCHAR,20,0,Approved 기준 샘플
+5,표준항목,주문일자,Order Date,ORD_DT,ORDER,DATE,8,0,Approved 기준 샘플
+6,표준항목,주문일시,Order Date Time,ORD_DTTM,ORDER,TIMESTAMP,14,0,Approved 기준 샘플
+7,표준항목,주문금액,Order Amount,ORD_AMT,ORDER,NUMERIC,15,2,Approved 기준 샘플
+8,표준항목,주문상태코드,Order Status Code,ORD_STS_CD,ORDER,VARCHAR,10,0,Approved 기준 샘플
+9,표준항목,결제금액,Payment Amount,PAY_AMT,PAYMENT,NUMERIC,15,2,Approved 기준 샘플
+10,표준항목,결제일시,Payment Date Time,PAY_DTTM,PAYMENT,TIMESTAMP,14,0,Approved 기준 샘플
+11,표준항목,상품번호,Product Number,PRD_NO,PRODUCT,VARCHAR,20,0,Approved 기준 샘플
+12,표준항목,상품명,Product Name,PRD_NM,PRODUCT,VARCHAR,200,0,Approved 기준 샘플
+13,표준항목,상품대표이미지URL,Product Representative Image URL,PRD_REP_IMG_URL,PRODUCT,VARCHAR,500,0,Approved 기준 샘플
+14,표준항목,청구번호,Billing Number,BILL_NO,BILLING,VARCHAR,20,0,Approved 기준 샘플
+15,표준항목,청구금액,Billing Amount,BILL_AMT,BILLING,NUMERIC,15,2,Approved 기준 샘플
+16,표준항목,상담번호,Consultation Number,CNSL_NO,CONSULTATION,VARCHAR,20,0,Approved 기준 샘플
+17,표준항목,상담일시,Consultation Date Time,CNSL_DTTM,CONSULTATION,TIMESTAMP,14,0,Approved 기준 샘플
+18,표준항목,고객ID,Customer ID,CUST_ID,CRM,VARCHAR,20,0,Deprecated 후보: 고객번호로 대체
+19,표준항목,회원번호,Member Number,MBR_NO,CRM,VARCHAR,20,0,NeedsContext 후보: 고객과 회원 도메인 구분 필요
+20,표준항목,사용자식별자,User Identifier,USER_ID,COMMON,VARCHAR,50,0,NeedsContext 후보: 기술 사용자 ID와 업무 고객번호 구분 필요

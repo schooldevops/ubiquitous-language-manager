@@ -1,0 +1,458 @@
+Term:
+  type: object
+  description: 표준 용어 상세 정보
+  required:
+    - termId
+    - termNumber
+    - domainName
+    - usageType
+    - koreanName
+    - englishName
+    - englishAbbreviation
+    - businessDefinition
+    - physicalType
+    - digits
+    - decimalPoint
+    - status
+    - owner
+    - version
+    - expressions
+    - aliases
+  properties:
+    termId:
+      type: string
+      description: 용어를 식별하는 내부 ID
+      example: T-000001
+    termNumber:
+      type: string
+      description: 업무적으로 노출 가능한 용어 번호
+      example: TERM-000001
+    domainName:
+      type: string
+      description: 용어가 속한 업무 도메인명
+      example: 고객
+    usageType:
+      type: string
+      description: 용어 사용 구분
+      example: 표준항목
+    koreanName:
+      type: string
+      description: 한글 표준 용어명
+      example: 고객번호
+    englishName:
+      type: string
+      description: 영문 표준 용어명
+      example: Customer Number
+    englishAbbreviation:
+      type: string
+      description: 영문 약어 또는 DB 컬럼명 후보
+      example: CUST_NO
+    businessDefinition:
+      type: string
+      description: 업무 정의
+      example: 회사에서 고객을 업무적으로 식별하기 위해 사용하는 번호
+    usageContext:
+      type: string
+      description: 사용 맥락
+      example: 주문, 계약, 청구, 상담 등에서 고객 식별 기준으로 사용
+    physicalType:
+      type: string
+      description: DB 물리 타입
+      example: VARCHAR
+    digits:
+      type: integer
+      format: int32
+      minimum: 0
+      description: 데이터 길이
+      example: 20
+    decimalPoint:
+      type: integer
+      format: int32
+      minimum: 0
+      description: 소수점 자리수
+      example: 0
+    status:
+      $ref: './enums.yaml#/TermStatus'
+    owner:
+      type: string
+      description: 용어 소유자
+      example: 고객도메인 데이터스튜어드
+    version:
+      type: string
+      description: 용어 버전
+      example: '1.0'
+    expressions:
+      type: array
+      description: 산출물별 표현 매핑
+      items:
+        $ref: '#/TermExpression'
+    aliases:
+      type: array
+      description: 유사어, 금지어, 폐기어 목록
+      items:
+        $ref: '#/TermAlias'
+    createdAt:
+      type: string
+      format: date-time
+      description: 생성 일시
+    updatedAt:
+      type: string
+      format: date-time
+      description: 수정 일시
+
+TermSummary:
+  type: object
+  description: 표준 용어 목록 조회용 요약 정보
+  required:
+    - termId
+    - termNumber
+    - domainName
+    - koreanName
+    - englishName
+    - englishAbbreviation
+    - status
+  properties:
+    termId:
+      type: string
+      example: T-000001
+    termNumber:
+      type: string
+      example: TERM-000001
+    domainName:
+      type: string
+      example: 고객
+    koreanName:
+      type: string
+      example: 고객번호
+    englishName:
+      type: string
+      example: Customer Number
+    englishAbbreviation:
+      type: string
+      example: CUST_NO
+    apiFieldName:
+      type: string
+      description: 표준 API 필드명
+      example: customerNumber
+    status:
+      $ref: './enums.yaml#/TermStatus'
+    relatedSystems:
+      type: array
+      description: 관련 시스템 목록
+      items:
+        type: string
+      example:
+        - CRM
+        - ORDER
+
+TermListResponse:
+  type: object
+  description: 표준 용어 목록 응답
+  required:
+    - items
+    - page
+  properties:
+    items:
+      type: array
+      items:
+        $ref: '#/TermSummary'
+    page:
+      $ref: './common.yaml#/PageMetadata'
+
+TermCreateRequest:
+  type: object
+  description: 표준 용어 등록 요청
+  required:
+    - domainName
+    - usageType
+    - koreanName
+    - englishName
+    - englishAbbreviation
+    - businessDefinition
+    - physicalType
+    - digits
+    - decimalPoint
+    - owner
+  properties:
+    domainName:
+      type: string
+      minLength: 1
+      maxLength: 100
+      example: 고객
+    usageType:
+      type: string
+      minLength: 1
+      maxLength: 50
+      example: 표준항목
+    koreanName:
+      type: string
+      minLength: 1
+      maxLength: 200
+      example: 고객번호
+    englishName:
+      type: string
+      minLength: 1
+      maxLength: 300
+      example: Customer Number
+    englishAbbreviation:
+      type: string
+      minLength: 1
+      maxLength: 100
+      pattern: '^[A-Z][A-Z0-9_]*$'
+      example: CUST_NO
+    businessDefinition:
+      type: string
+      minLength: 1
+      example: 회사에서 고객을 업무적으로 식별하기 위해 사용하는 번호
+    usageContext:
+      type: string
+      example: 주문, 계약, 청구, 상담 등에서 고객 식별 기준으로 사용
+    physicalType:
+      type: string
+      minLength: 1
+      maxLength: 50
+      example: VARCHAR
+    digits:
+      type: integer
+      format: int32
+      minimum: 0
+      example: 20
+    decimalPoint:
+      type: integer
+      format: int32
+      minimum: 0
+      example: 0
+    owner:
+      type: string
+      minLength: 1
+      maxLength: 200
+      example: 고객도메인 데이터스튜어드
+    status:
+      $ref: './enums.yaml#/TermStatus'
+
+TermUpdateRequest:
+  allOf:
+    - $ref: '#/TermCreateRequest'
+    - type: object
+      description: 표준 용어 수정 요청
+      required:
+        - version
+        - changeReason
+      properties:
+        version:
+          type: string
+          minLength: 1
+          example: '1.1'
+        changeReason:
+          type: string
+          minLength: 1
+          example: 업무 정의 보완
+
+TermExpression:
+  type: object
+  description: 용어 표현 매핑
+  required:
+    - expressionId
+    - termId
+    - expressionType
+    - expressionValue
+    - isStandard
+  properties:
+    expressionId:
+      type: integer
+      format: int64
+      example: 1
+    termId:
+      type: string
+      example: T-000001
+    expressionType:
+      $ref: './enums.yaml#/ExpressionType'
+    expressionValue:
+      type: string
+      minLength: 1
+      maxLength: 500
+      example: customerNumber
+    language:
+      type: string
+      example: en
+    style:
+      type: string
+      example: camelCase
+    isStandard:
+      type: boolean
+      example: true
+
+TermExpressionCreateRequest:
+  type: object
+  description: 용어 표현 매핑 등록 요청
+  required:
+    - expressionType
+    - expressionValue
+    - isStandard
+  properties:
+    expressionType:
+      $ref: './enums.yaml#/ExpressionType'
+    expressionValue:
+      type: string
+      minLength: 1
+      maxLength: 500
+      example: customerNumber
+    language:
+      type: string
+      maxLength: 20
+      example: en
+    style:
+      type: string
+      maxLength: 50
+      example: camelCase
+    isStandard:
+      type: boolean
+      example: true
+
+TermAlias:
+  type: object
+  description: 유사어, 금지어, 폐기어, 문맥 확인 표현
+  required:
+    - aliasId
+    - termId
+    - aliasName
+    - aliasType
+    - recommendationAction
+    - reason
+  properties:
+    aliasId:
+      type: string
+      example: A-000001
+    termId:
+      type: string
+      example: T-000001
+    aliasName:
+      type: string
+      example: 고객ID
+    aliasType:
+      $ref: './enums.yaml#/AliasType'
+    recommendationAction:
+      type: string
+      example: 고객번호로 변환 권장
+    reason:
+      type: string
+      example: 업무 고객 식별 번호 의미로 사용되는 경우 표준 용어는 고객번호
+
+TermAliasCreateRequest:
+  type: object
+  description: 용어 별칭 등록 요청
+  required:
+    - aliasName
+    - aliasType
+    - recommendationAction
+    - reason
+  properties:
+    aliasName:
+      type: string
+      minLength: 1
+      maxLength: 500
+      example: 고객ID
+    aliasType:
+      $ref: './enums.yaml#/AliasType'
+    recommendationAction:
+      type: string
+      minLength: 1
+      maxLength: 500
+      example: 고객번호로 변환 권장
+    reason:
+      type: string
+      minLength: 1
+      example: 업무 고객 식별 번호 의미로 사용되는 경우 표준 용어는 고객번호
+
+TermApprovalRequest:
+  type: object
+  description: 용어 승인 요청
+  required:
+    - approver
+    - reason
+  properties:
+    approver:
+      type: string
+      minLength: 1
+      example: data.steward
+    reason:
+      type: string
+      minLength: 1
+      example: 업무 정의와 산출물 표현 검토 완료
+
+TermDeprecationRequest:
+  type: object
+  description: 용어 폐기 요청
+  required:
+    - approver
+    - replacementTermId
+    - reason
+  properties:
+    approver:
+      type: string
+      minLength: 1
+      example: data.steward
+    replacementTermId:
+      type: string
+      minLength: 1
+      example: T-000001
+    reason:
+      type: string
+      minLength: 1
+      example: CUST_ID는 기술 ID와 혼동 가능하여 고객번호로 대체
+    impactAnalysisId:
+      type: string
+      example: IA-000001
+
+TermChangeHistory:
+  type: object
+  description: 용어 변경 이력
+  required:
+    - changeHistoryId
+    - changeType
+    - reason
+    - createdAt
+  properties:
+    changeHistoryId:
+      type: integer
+      format: int64
+      example: 1
+    termId:
+      type: string
+      example: T-000001
+    changeType:
+      type: string
+      example: APPROVE
+    previousStatus:
+      $ref: './enums.yaml#/TermStatus'
+    newStatus:
+      $ref: './enums.yaml#/TermStatus'
+    reason:
+      type: string
+      example: 업무 정의와 산출물 표현 검토 완료
+    requestedBy:
+      type: string
+      example: planner
+    approvedBy:
+      type: string
+      example: data.steward
+    impactAnalysisId:
+      type: string
+      example: IA-000001
+    createdAt:
+      type: string
+      format: date-time
+
+TermChangeHistoryListResponse:
+  type: object
+  description: 용어 변경 이력 목록 응답
+  required:
+    - items
+    - page
+  properties:
+    items:
+      type: array
+      items:
+        $ref: '#/TermChangeHistory'
+    page:
+      $ref: './common.yaml#/PageMetadata'

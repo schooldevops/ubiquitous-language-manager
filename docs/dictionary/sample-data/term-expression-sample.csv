@@ -1,0 +1,36 @@
+TERM_ID,EXPRESSION_TYPE,EXPRESSION_VALUE,LANGUAGE,STYLE,IS_STANDARD
+T-000001,Korean,고객번호,ko,standard,true
+T-000001,English,Customer Number,en,title,true
+T-000001,DB_COLUMN,CUST_NO,en,UPPER_SNAKE,true
+T-000001,API_FIELD,customerNumber,en,camelCase,true
+T-000001,CODE_VARIABLE,customerNumber,en,camelCase,true
+T-000001,UI_LABEL,고객번호,ko,label,true
+T-000001,TEST_WORD,고객번호,ko,gherkin,true
+T-000004,Korean,주문번호,ko,standard,true
+T-000004,English,Order Number,en,title,true
+T-000004,DB_COLUMN,ORD_NO,en,UPPER_SNAKE,true
+T-000004,API_FIELD,orderNumber,en,camelCase,true
+T-000004,CODE_VARIABLE,orderNumber,en,camelCase,true
+T-000004,UI_LABEL,주문번호,ko,label,true
+T-000004,TEST_WORD,주문번호,ko,gherkin,true
+T-000005,Korean,주문일자,ko,standard,true
+T-000005,English,Order Date,en,title,true
+T-000005,DB_COLUMN,ORD_DT,en,UPPER_SNAKE,true
+T-000005,API_FIELD,orderDate,en,camelCase,true
+T-000005,CODE_VARIABLE,orderDate,en,camelCase,true
+T-000005,UI_LABEL,주문일자,ko,label,true
+T-000005,TEST_WORD,주문일자,ko,gherkin,true
+T-000007,Korean,주문금액,ko,standard,true
+T-000007,English,Order Amount,en,title,true
+T-000007,DB_COLUMN,ORD_AMT,en,UPPER_SNAKE,true
+T-000007,API_FIELD,orderAmount,en,camelCase,true
+T-000007,CODE_VARIABLE,orderAmount,en,camelCase,true
+T-000007,UI_LABEL,주문금액,ko,label,true
+T-000007,TEST_WORD,주문금액,ko,gherkin,true
+T-000008,Korean,주문상태코드,ko,standard,true
+T-000008,English,Order Status Code,en,title,true
+T-000008,DB_COLUMN,ORD_STS_CD,en,UPPER_SNAKE,true
+T-000008,API_FIELD,orderStatusCode,en,camelCase,true
+T-000008,CODE_VARIABLE,orderStatusCode,en,camelCase,true
+T-000008,UI_LABEL,주문상태코드,ko,label,true
+T-000008,TEST_WORD,주문상태코드,ko,gherkin,true

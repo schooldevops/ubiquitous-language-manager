@@ -1,0 +1,251 @@
+openapi: 3.0.3
+info:
+  title: AULMS API
+  description: 데이터 사전 기반 유비쿼터스 랭기지 관리 시스템 API
+  version: 0.1.0
+  contact:
+    name: AULMS Team
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+tags:
+  - name: Term
+    description: 표준 용어 등록, 조회, 수정, 승인, 폐기 API
+  - name: Expression
+    description: DB 컬럼명, API 필드명, 코드 변수명 등 표현 매핑 API
+  - name: Alias
+    description: 유사어, 별칭, 금지어 관리 API
+  - name: Search
+    description: 정확 검색, 유사어 검색, 의미 기반 검색 API
+  - name: Review
+    description: 기획서, OpenAPI, DDL, 코드, PR 검증 API
+  - name: Candidate
+    description: 신규 용어 후보 등록, 검토, 승격 API
+  - name: PromptTemplate
+    description: AI 개발 도구와 기획서 작성 도구가 사용하는 표준 프롬프트 템플릿 API
+  - name: AI
+    description: 데이터 사전 기반 AI 산출물 생성 지원 API
+  - name: Governance
+    description: 승인, 폐기, 정책, 권한 관련 API
+  - name: Relationship
+    description: 용어 관계와 Graphify 관계 검색 API
+  - name: Impact
+    description: 용어 변경 영향도 분석 API
+paths:
+  /terms:
+    $ref: './paths/terms.yaml#/terms'
+  /terms/{termId}:
+    $ref: './paths/terms.yaml#/termsByTermId'
+  /terms/{termId}/approve:
+    $ref: './paths/terms.yaml#/approveTerm'
+  /terms/{termId}/deprecate:
+    $ref: './paths/terms.yaml#/deprecateTerm'
+  /terms/{termId}/history:
+    $ref: './paths/terms.yaml#/termHistory'
+  /terms/{termId}/expressions:
+    $ref: './paths/terms.yaml#/termExpressions'
+  /terms/{termId}/aliases:
+    $ref: './paths/terms.yaml#/termAliases'
+  /search/exact:
+    $ref: './paths/search.yaml#/exactSearch'
+  /search/alias:
+    $ref: './paths/search.yaml#/aliasSearch'
+  /search/domain/{domainName}:
+    $ref: './paths/search.yaml#/domainSearch'
+  /search/deprecated:
+    $ref: './paths/search.yaml#/deprecatedSearch'
+  /search/semantic:
+    $ref: './paths/search.yaml#/semanticSearch'
+  /reviews/document:
+    $ref: './paths/reviews.yaml#/documentReview'
+  /candidates:
+    $ref: './paths/candidates.yaml#/candidates'
+  /candidates/{candidateId}:
+    $ref: './paths/candidates.yaml#/candidatesByCandidateId'
+  /candidates/{candidateId}/review:
+    $ref: './paths/candidates.yaml#/reviewCandidate'
+  /candidates/{candidateId}/promote:
+    $ref: './paths/candidates.yaml#/promoteCandidate'
+  /prompt-templates:
+    $ref: './paths/prompt-templates.yaml#/promptTemplates'
+  /prompt-templates/{templateId}:
+    $ref: './paths/prompt-templates.yaml#/promptTemplatesByTemplateId'
+  /prompt-templates/{templateId}/versions:
+    $ref: './paths/prompt-templates.yaml#/promptTemplateVersions'
+  /prompt-templates/{templateId}/preview:
+    $ref: './paths/prompt-templates.yaml#/previewPromptTemplate'
+  /ai/development-assist:
+    $ref: './paths/ai.yaml#/developmentAssist'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: MVP에서는 placeholder로 정의하며, 실제 인증 구현 시 Spring Security와 연결한다.
+  schemas:
+    ErrorResponse:
+      $ref: './schemas/common.yaml#/ErrorResponse'
+    PageMetadata:
+      $ref: './schemas/common.yaml#/PageMetadata'
+    ValidationIssue:
+      $ref: './schemas/common.yaml#/ValidationIssue'
+    ValidationSeverity:
+      $ref: './schemas/common.yaml#/ValidationSeverity'
+    TermStatus:
+      $ref: './schemas/enums.yaml#/TermStatus'
+    ExpressionType:
+      $ref: './schemas/enums.yaml#/ExpressionType'
+    AliasType:
+      $ref: './schemas/enums.yaml#/AliasType'
+    RelationshipType:
+      $ref: './schemas/enums.yaml#/RelationshipType'
+    UserRole:
+      $ref: './schemas/enums.yaml#/UserRole'
+    Term:
+      $ref: './schemas/term.yaml#/Term'
+    TermSummary:
+      $ref: './schemas/term.yaml#/TermSummary'
+    TermCreateRequest:
+      $ref: './schemas/term.yaml#/TermCreateRequest'
+    TermUpdateRequest:
+      $ref: './schemas/term.yaml#/TermUpdateRequest'
+    TermListResponse:
+      $ref: './schemas/term.yaml#/TermListResponse'
+    TermExpression:
+      $ref: './schemas/term.yaml#/TermExpression'
+    TermExpressionCreateRequest:
+      $ref: './schemas/term.yaml#/TermExpressionCreateRequest'
+    TermAlias:
+      $ref: './schemas/term.yaml#/TermAlias'
+    TermAliasCreateRequest:
+      $ref: './schemas/term.yaml#/TermAliasCreateRequest'
+    TermApprovalRequest:
+      $ref: './schemas/term.yaml#/TermApprovalRequest'
+    TermDeprecationRequest:
+      $ref: './schemas/term.yaml#/TermDeprecationRequest'
+    TermChangeHistory:
+      $ref: './schemas/term.yaml#/TermChangeHistory'
+    TermChangeHistoryListResponse:
+      $ref: './schemas/term.yaml#/TermChangeHistoryListResponse'
+    SearchResponse:
+      $ref: './schemas/search.yaml#/SearchResponse'
+    DeprecatedSearchResponse:
+      $ref: './schemas/search.yaml#/DeprecatedSearchResponse'
+    SearchResult:
+      $ref: './schemas/search.yaml#/SearchResult'
+    SemanticSearchRequest:
+      $ref: './schemas/search.yaml#/SemanticSearchRequest'
+    SemanticSearchResponse:
+      $ref: './schemas/search.yaml#/SemanticSearchResponse'
+    SemanticSearchResult:
+      $ref: './schemas/search.yaml#/SemanticSearchResult'
+    DeprecatedSearchResult:
+      $ref: './schemas/search.yaml#/DeprecatedSearchResult'
+    MatchedExpression:
+      $ref: './schemas/search.yaml#/MatchedExpression'
+    Recommendation:
+      $ref: './schemas/search.yaml#/Recommendation'
+    DocumentReviewRequest:
+      $ref: './schemas/review.yaml#/DocumentReviewRequest'
+    DocumentReviewOptions:
+      $ref: './schemas/review.yaml#/DocumentReviewOptions'
+    DocumentReviewResult:
+      $ref: './schemas/review.yaml#/DocumentReviewResult'
+    DetectedTerm:
+      $ref: './schemas/review.yaml#/DetectedTerm'
+    StandardMapping:
+      $ref: './schemas/review.yaml#/StandardMapping'
+    CandidateTerm:
+      $ref: './schemas/review.yaml#/CandidateTerm'
+    CandidateStatus:
+      $ref: './schemas/candidate.yaml#/CandidateStatus'
+    TermCandidate:
+      $ref: './schemas/candidate.yaml#/TermCandidate'
+    TermCandidateSummary:
+      $ref: './schemas/candidate.yaml#/TermCandidateSummary'
+    TermCandidateListResponse:
+      $ref: './schemas/candidate.yaml#/TermCandidateListResponse'
+    TermCandidateCreateRequest:
+      $ref: './schemas/candidate.yaml#/TermCandidateCreateRequest'
+    TermCandidateReviewRequest:
+      $ref: './schemas/candidate.yaml#/TermCandidateReviewRequest'
+    TermCandidatePromoteRequest:
+      $ref: './schemas/candidate.yaml#/TermCandidatePromoteRequest'
+    CandidatePromotionResult:
+      $ref: './schemas/candidate.yaml#/CandidatePromotionResult'
+    SimilarTerm:
+      $ref: './schemas/candidate.yaml#/SimilarTerm'
+    CandidateHistory:
+      $ref: './schemas/candidate.yaml#/CandidateHistory'
+    PromptTemplateType:
+      $ref: './schemas/prompt-template.yaml#/PromptTemplateType'
+    PromptTemplateStatus:
+      $ref: './schemas/prompt-template.yaml#/PromptTemplateStatus'
+    PromptTemplate:
+      $ref: './schemas/prompt-template.yaml#/PromptTemplate'
+    PromptTemplateSummary:
+      $ref: './schemas/prompt-template.yaml#/PromptTemplateSummary'
+    PromptTemplateListResponse:
+      $ref: './schemas/prompt-template.yaml#/PromptTemplateListResponse'
+    PromptTemplateVariable:
+      $ref: './schemas/prompt-template.yaml#/PromptTemplateVariable'
+    PromptTemplateVersion:
+      $ref: './schemas/prompt-template.yaml#/PromptTemplateVersion'
+    PromptTemplateVersionListResponse:
+      $ref: './schemas/prompt-template.yaml#/PromptTemplateVersionListResponse'
+    PromptTemplateHistory:
+      $ref: './schemas/prompt-template.yaml#/PromptTemplateHistory'
+    PromptTemplatePreviewRequest:
+      $ref: './schemas/prompt-template.yaml#/PromptTemplatePreviewRequest'
+    PromptTemplatePreviewResponse:
+      $ref: './schemas/prompt-template.yaml#/PromptTemplatePreviewResponse'
+    DevelopmentAssistRequest:
+      $ref: './schemas/ai.yaml#/DevelopmentAssistRequest'
+    DevelopmentAssistResponse:
+      $ref: './schemas/ai.yaml#/DevelopmentAssistResponse'
+    AssistTargetArtifact:
+      $ref: './schemas/ai.yaml#/AssistTargetArtifact'
+    ExtractedBusinessConcept:
+      $ref: './schemas/ai.yaml#/ExtractedBusinessConcept'
+    AssistTermMapping:
+      $ref: './schemas/ai.yaml#/AssistTermMapping'
+    GeneratedArtifact:
+      $ref: './schemas/ai.yaml#/GeneratedArtifact'
+    AssistCandidateTerm:
+      $ref: './schemas/ai.yaml#/AssistCandidateTerm'
+    StandardViolationWarning:
+      $ref: './schemas/ai.yaml#/StandardViolationWarning'
+  responses:
+    BadRequest:
+      description: 요청 형식 또는 validation 오류
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/common.yaml#/ErrorResponse'
+    Unauthorized:
+      description: 인증 필요
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/common.yaml#/ErrorResponse'
+    Forbidden:
+      description: 권한 없음
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/common.yaml#/ErrorResponse'
+    NotFound:
+      description: 리소스 없음
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/common.yaml#/ErrorResponse'
+    Conflict:
+      description: 중복 또는 상태 충돌
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/common.yaml#/ErrorResponse'
+security:
+  - bearerAuth: []

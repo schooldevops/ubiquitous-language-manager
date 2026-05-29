@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.aulms.prompt.PromptTemplateApiContractTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-05-28T23:28:26.058Z" hostname="NHY9M72K9J" time="0.067">
+  <properties/>
+  <testcase name="list get versions and preview vibe coding prompt template()" classname="com.aulms.prompt.PromptTemplateApiContractTest" time="0.058"/>
+  <testcase name="return not found for unknown prompt template()" classname="com.aulms.prompt.PromptTemplateApiContractTest" time="0.009"/>
+  <system-out><![CDATA[2026-05-29T08:28:26.045+09:00  INFO 38923 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.aulms.prompt.PromptTemplateApiContractTest]: PromptTemplateApiContractTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-29T08:28:26.056+09:00  INFO 38923 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.aulms.AulmsBackendApplication for test class com.aulms.prompt.PromptTemplateApiContractTest
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

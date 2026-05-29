@@ -1,0 +1,62 @@
+TermStatus:
+  type: string
+  description: 용어 상태
+  enum:
+    - Draft
+    - Reviewing
+    - Approved
+    - Deprecated
+    - Rejected
+  example: Approved
+
+ExpressionType:
+  type: string
+  description: 용어 표현 유형
+  enum:
+    - Korean
+    - English
+    - DB_COLUMN
+    - API_FIELD
+    - CODE_VARIABLE
+    - UI_LABEL
+    - TEST_WORD
+  example: API_FIELD
+
+AliasType:
+  type: string
+  description: 별칭 유형
+  enum:
+    - Synonym
+    - Forbidden
+    - Deprecated
+    - NeedsContext
+  example: Synonym
+
+RelationshipType:
+  type: string
+  description: 용어 관계 유형
+  enum:
+    - sameAs
+    - synonymOf
+    - relatedTo
+    - partOf
+    - broaderThan
+    - narrowerThan
+    - usedWith
+    - conflictsWith
+    - deprecatedBy
+  example: relatedTo
+
+UserRole:
+  type: string
+  description: 사용자 역할
+  enum:
+    - ADMIN
+    - DATA_STEWARD
+    - DEVELOPMENT_LEAD
+    - ARCHITECT
+    - PLANNER
+    - DEVELOPER
+    - OPERATOR
+    - VIEWER
+  example: DATA_STEWARD

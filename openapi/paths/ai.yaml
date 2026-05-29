@@ -1,0 +1,82 @@
+developmentAssist:
+  post:
+    tags:
+      - AI
+    summary: AI 산출물 생성 지원
+    description: 요구사항 텍스트에서 업무 개념을 추출하고 데이터 사전 기반 표준 용어 매핑, 신규 후보, 표준 위반 경고, 산출물 예시를 생성한다.
+    operationId: developmentAssist
+    x-required-roles:
+      - ADMIN
+      - DATA_STEWARD
+      - DEVELOPMENT_LEAD
+      - ARCHITECT
+      - PLANNER
+      - DEVELOPER
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ai.yaml#/DevelopmentAssistRequest'
+          examples:
+            customerOrders:
+              value:
+                requirementText: 고객별 주문 내역을 조회하는 API 만들어줘.
+                targetArtifacts:
+                  - DTO
+                  - OPENAPI_SCHEMA
+                  - SQL_EXAMPLE
+                domainNames:
+                  - 고객
+                  - 주문
+    responses:
+      '200':
+        description: AI 산출물 생성 지원 성공
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/ai.yaml#/DevelopmentAssistResponse'
+            examples:
+              customerOrders:
+                value:
+                  requirementText: 고객별 주문 내역을 조회하는 API 만들어줘.
+                  extractedConcepts:
+                    - concept: 고객번호
+                      reason: 고객별 조회 조건에서 고객 식별 기준이 필요함
+                      confidence: 0.95
+                    - concept: 주문번호
+                      reason: 주문 내역 응답의 주문 식별자가 필요함
+                      confidence: 0.93
+                  termMappings:
+                    - concept: 고객번호
+                      termId: T-000001
+                      standardTerm: 고객번호
+                      englishName: Customer Number
+                      dbColumn: CUST_NO
+                      apiField: customerNumber
+                      codeVariable: customerNumber
+                      status: Approved
+                      mappingSource: Exact
+                      recommendationReason: 승인된 표준 용어 매핑
+                    - concept: 주문번호
+                      termId: T-000004
+                      standardTerm: 주문번호
+                      englishName: Order Number
+                      dbColumn: ORD_NO
+                      apiField: orderNumber
+                      codeVariable: orderNumber
+                      status: Approved
+                      mappingSource: Exact
+                      recommendationReason: 승인된 표준 용어 매핑
+                  generatedArtifacts:
+                    - artifactType: DTO
+                      name: CustomerOrderResponse
+                      content: data class CustomerOrderResponse(...)
+                  candidateTerms: []
+                  warnings: []
+      '400':
+        $ref: '../openapi.yaml#/components/responses/BadRequest'
+      '401':
+        $ref: '../openapi.yaml#/components/responses/Unauthorized'
+      '403':
+        $ref: '../openapi.yaml#/components/responses/Forbidden'

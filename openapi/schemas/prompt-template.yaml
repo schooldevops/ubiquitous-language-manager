@@ -1,0 +1,337 @@
+PromptTemplateType:
+  type: string
+  description: 프롬프트 템플릿 유형
+  enum:
+    - VibeCoding
+    - Planning
+  example: VibeCoding
+
+PromptTemplateStatus:
+  type: string
+  description: 프롬프트 템플릿 상태
+  enum:
+    - Draft
+    - Active
+    - Deprecated
+  example: Active
+
+PromptTemplate:
+  type: object
+  description: 프롬프트 템플릿 상세 정보
+  required:
+    - templateId
+    - type
+    - name
+    - version
+    - status
+    - description
+    - body
+    - variables
+    - versionPolicy
+    - histories
+    - createdAt
+    - updatedAt
+  properties:
+    templateId:
+      type: string
+      example: PT-VIBE-001
+    type:
+      $ref: '#/PromptTemplateType'
+    name:
+      type: string
+      example: 사내 데이터 사전 기반 개발 규칙
+    version:
+      type: string
+      description: SemVer 형식의 템플릿 버전
+      example: 1.0.0
+    status:
+      $ref: '#/PromptTemplateStatus'
+    description:
+      type: string
+      example: DB, API, DTO, Entity, 테스트 생성 시 표준 용어를 강제하는 프롬프트
+    body:
+      type: string
+      description: Mustache 스타일 변수 플레이스홀더를 포함한 템플릿 본문
+      example: |
+        # 사내 데이터 사전 기반 개발 규칙
+        요구사항: {{requirementText}}
+    variables:
+      type: array
+      description: 템플릿에 주입 가능한 변수 목록
+      items:
+        $ref: '#/PromptTemplateVariable'
+    versionPolicy:
+      type: string
+      description: 템플릿 버전 변경 정책
+      example: MAJOR는 출력 구조 변경, MINOR는 규칙 추가, PATCH는 문구 보완에 사용한다.
+    histories:
+      type: array
+      description: 템플릿 변경 이력
+      items:
+        $ref: '#/PromptTemplateHistory'
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
+
+PromptTemplateSummary:
+  type: object
+  description: 프롬프트 템플릿 목록 요약
+  required:
+    - templateId
+    - type
+    - name
+    - version
+    - status
+    - description
+    - updatedAt
+  properties:
+    templateId:
+      type: string
+      example: PT-VIBE-001
+    type:
+      $ref: '#/PromptTemplateType'
+    name:
+      type: string
+      example: 사내 데이터 사전 기반 개발 규칙
+    version:
+      type: string
+      example: 1.0.0
+    status:
+      $ref: '#/PromptTemplateStatus'
+    description:
+      type: string
+      example: DB, API, DTO, Entity, 테스트 생성 시 표준 용어를 강제하는 프롬프트
+    updatedAt:
+      type: string
+      format: date-time
+
+PromptTemplateListResponse:
+  type: object
+  description: 프롬프트 템플릿 목록 응답
+  required:
+    - items
+  properties:
+    items:
+      type: array
+      items:
+        $ref: '#/PromptTemplateSummary'
+
+PromptTemplateVariable:
+  type: object
+  description: 프롬프트 템플릿 변수
+  required:
+    - name
+    - description
+    - required
+    - source
+  properties:
+    name:
+      type: string
+      example: termMappings
+    description:
+      type: string
+      example: 데이터 사전 검색 결과로 확정된 표준 용어 매핑 목록
+    required:
+      type: boolean
+      example: true
+    source:
+      type: string
+      description: 변수 값 출처
+      enum:
+        - UserInput
+        - DictionarySearch
+        - CandidateWorkflow
+        - System
+      example: DictionarySearch
+
+PromptTemplateVersion:
+  type: object
+  description: 프롬프트 템플릿 버전 정보
+  required:
+    - templateId
+    - version
+    - status
+    - changeReason
+    - createdBy
+    - createdAt
+  properties:
+    templateId:
+      type: string
+      example: PT-VIBE-001
+    version:
+      type: string
+      example: 1.0.0
+    status:
+      $ref: '#/PromptTemplateStatus'
+    changeReason:
+      type: string
+      example: MVP3 기본 바이브코딩 프롬프트 등록
+    createdBy:
+      type: string
+      example: system
+    createdAt:
+      type: string
+      format: date-time
+
+PromptTemplateVersionListResponse:
+  type: object
+  description: 프롬프트 템플릿 버전 목록 응답
+  required:
+    - items
+  properties:
+    items:
+      type: array
+      items:
+        $ref: '#/PromptTemplateVersion'
+
+PromptTemplateHistory:
+  type: object
+  description: 프롬프트 템플릿 변경 이력
+  required:
+    - historyId
+    - templateId
+    - version
+    - changeType
+    - reason
+    - actor
+    - createdAt
+  properties:
+    historyId:
+      type: string
+      example: PT-HIST-000001
+    templateId:
+      type: string
+      example: PT-VIBE-001
+    version:
+      type: string
+      example: 1.0.0
+    changeType:
+      type: string
+      enum:
+        - Created
+        - Updated
+        - Deprecated
+      example: Created
+    reason:
+      type: string
+      example: MVP3 기본 템플릿 등록
+    actor:
+      type: string
+      example: system
+    createdAt:
+      type: string
+      format: date-time
+
+PromptTemplatePreviewRequest:
+  type: object
+  description: 프롬프트 템플릿 미리보기 요청
+  required:
+    - requirementText
+  properties:
+    requirementText:
+      type: string
+      minLength: 1
+      description: 사용자가 입력한 요구사항 또는 기획서 초안
+      example: 고객별 주문 내역을 조회하는 API 만들어줘.
+    termMappings:
+      type: array
+      description: 데이터 사전 검색으로 확정한 표준 용어 매핑 목록
+      items:
+        $ref: '#/PromptTermMapping'
+    candidateTerms:
+      type: array
+      description: 데이터 사전에 없어 후보로 분리한 신규 용어 목록
+      items:
+        $ref: '#/PromptCandidateTerm'
+    additionalContext:
+      type: string
+      description: AI 도구에 함께 전달할 추가 맥락
+      example: Kotlin Spring Boot와 OpenAPI 기반으로 생성한다.
+
+PromptTermMapping:
+  type: object
+  description: 프롬프트에 주입할 표준 용어 매핑
+  required:
+    - concept
+    - standardTerm
+    - englishName
+    - dbColumn
+    - apiField
+    - codeVariable
+    - status
+  properties:
+    concept:
+      type: string
+      example: 고객번호
+    standardTerm:
+      type: string
+      example: 고객번호
+    englishName:
+      type: string
+      example: Customer Number
+    dbColumn:
+      type: string
+      example: CUST_NO
+    apiField:
+      type: string
+      example: customerNumber
+    codeVariable:
+      type: string
+      example: customerNumber
+    status:
+      $ref: './enums.yaml#/TermStatus'
+
+PromptCandidateTerm:
+  type: object
+  description: 프롬프트에 주입할 신규 용어 후보
+  required:
+    - candidateTerm
+    - reason
+    - approvalRequired
+  properties:
+    candidateTerm:
+      type: string
+      example: 고객선호배송시간대
+    recommendedEnglishName:
+      type: string
+      example: Customer Preferred Delivery Time Slot
+    recommendedAbbreviation:
+      type: string
+      example: CUST_PREF_DLV_TM_SLOT
+    reason:
+      type: string
+      example: 데이터 사전에 일치하는 승인 용어가 없음
+    approvalRequired:
+      type: boolean
+      example: true
+
+PromptTemplatePreviewResponse:
+  type: object
+  description: 프롬프트 템플릿 미리보기 응답
+  required:
+    - templateId
+    - version
+    - renderedPrompt
+    - injectedVariables
+  properties:
+    templateId:
+      type: string
+      example: PT-VIBE-001
+    version:
+      type: string
+      example: 1.0.0
+    renderedPrompt:
+      type: string
+      description: 변수 주입이 완료된 최종 프롬프트
+    injectedVariables:
+      type: array
+      description: 실제 주입된 변수명 목록
+      items:
+        type: string
+      example:
+        - requirementText
+        - termMappings
+        - candidateTerms

@@ -1,0 +1,91 @@
+documentReview:
+  post:
+    tags:
+      - Review
+    summary: 기획서 용어 검토
+    description: 기획서 본문에서 비표준 용어를 탐지하고 표준 용어, 산출물 표현, 신규 용어 후보를 반환한다.
+    operationId: reviewDocument
+    x-required-roles:
+      - ADMIN
+      - DATA_STEWARD
+      - DEVELOPMENT_LEAD
+      - ARCHITECT
+      - PLANNER
+      - DEVELOPER
+      - OPERATOR
+      - VIEWER
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/review.yaml#/DocumentReviewRequest'
+          examples:
+            customerOrderSearch:
+              value:
+                documentText: 고객 ID를 입력하면 주문 리스트를 조회한다.
+                domainNames:
+                  - 고객
+                  - 주문
+                options:
+                  includeCandidateTerms: true
+                  includeValidationIssues: true
+                  normalizeSentences: true
+    responses:
+      '200':
+        description: 기획서 용어 검토 성공
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/review.yaml#/DocumentReviewResult'
+            examples:
+              customerOrderSearch:
+                value:
+                  originalText: 고객 ID를 입력하면 주문 리스트를 조회한다.
+                  recommendedText: 고객번호를 입력하면 주문 목록을 조회한다.
+                  detectedTerms:
+                    - expression: 고객 ID
+                      sentenceIndex: 0
+                      startOffset: 0
+                      endOffset: 5
+                      matchType: Alias
+                      mappedTermId: T-000001
+                      standardTerm: 고객번호
+                    - expression: 주문 리스트
+                      sentenceIndex: 0
+                      startOffset: 11
+                      endOffset: 17
+                      matchType: Alias
+                      mappedTermId: T-000009
+                      standardTerm: 주문목록
+                  standardMappings:
+                    - inputExpression: 고객 ID
+                      termId: T-000001
+                      standardTerm: 고객번호
+                      englishName: Customer Number
+                      dbColumn: CUST_NO
+                      apiField: customerNumber
+                      codeVariable: customerNumber
+                      reason: 고객 ID는 고객번호의 유사어입니다.
+                    - inputExpression: 주문 리스트
+                      termId: T-000009
+                      standardTerm: 주문목록
+                      englishName: Order List
+                      dbColumn: ORD_LIST
+                      apiField: orderList
+                      codeVariable: orderList
+                      reason: 주문 리스트는 주문목록의 유사어입니다.
+                  candidateTerms: []
+                  validationIssues:
+                    - severity: WARNING
+                      source: DOCUMENT
+                      inputExpression: 고객 ID
+                      standardTerm: 고객번호
+                      recommendedExpression: 고객번호
+                      reason: 고객 ID는 고객번호로 표준화해야 합니다.
+      '400':
+        $ref: '../openapi.yaml#/components/responses/BadRequest'
+      '401':
+        $ref: '../openapi.yaml#/components/responses/Unauthorized'
+      '403':
+        $ref: '../openapi.yaml#/components/responses/Forbidden'

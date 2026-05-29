@@ -1,0 +1,329 @@
+CandidateStatus:
+  type: string
+  description: 신규 용어 후보 상태
+  enum:
+    - Draft
+    - Reviewing
+    - Approved
+    - Rejected
+    - Promoted
+  example: Draft
+
+TermCandidate:
+  type: object
+  description: 신규 용어 후보 상세 정보
+  required:
+    - candidateId
+    - koreanName
+    - englishName
+    - englishAbbreviation
+    - domainName
+    - businessDefinition
+    - physicalType
+    - digits
+    - decimalPoint
+    - status
+    - requestedBy
+    - similarTerms
+    - histories
+  properties:
+    candidateId:
+      type: string
+      description: 후보 식별자
+      example: CAND-000001
+    koreanName:
+      type: string
+      description: 후보 한글 용어명
+      example: 고객선호배송시간대
+    englishName:
+      type: string
+      description: 후보 영문 용어명
+      example: Customer Preferred Delivery Time Slot
+    englishAbbreviation:
+      type: string
+      description: 후보 영문 약어
+      example: CUST_PREF_DLV_TM_SLOT
+    domainName:
+      type: string
+      description: 업무 도메인명
+      example: 고객
+    businessDefinition:
+      type: string
+      description: 업무 정의
+      example: 고객이 선호하는 배송 시간대
+    usageContext:
+      type: string
+      description: 사용 맥락
+      example: 배송 옵션 추천과 배송 요청 화면에서 사용
+    physicalType:
+      type: string
+      description: DB 물리 타입
+      example: VARCHAR
+    digits:
+      type: integer
+      format: int32
+      minimum: 0
+      description: 자릿수
+      example: 20
+    decimalPoint:
+      type: integer
+      format: int32
+      minimum: 0
+      description: 소수점
+      example: 0
+    status:
+      $ref: '#/CandidateStatus'
+    requestedBy:
+      type: string
+      description: 요청자
+      example: planner01
+    reviewedBy:
+      type: string
+      description: 검토자
+      example: data.steward
+    promotedTermId:
+      type: string
+      description: 승격된 표준 용어 ID
+      example: T-000018
+    similarTerms:
+      type: array
+      description: 등록 시 검색된 기존 유사 용어
+      items:
+        $ref: '#/SimilarTerm'
+    histories:
+      type: array
+      description: 후보 상태 변경 이력
+      items:
+        $ref: '#/CandidateHistory'
+    createdAt:
+      type: string
+      format: date-time
+      description: 생성 일시
+    updatedAt:
+      type: string
+      format: date-time
+      description: 수정 일시
+
+TermCandidateSummary:
+  type: object
+  description: 신규 용어 후보 목록 요약
+  required:
+    - candidateId
+    - koreanName
+    - englishName
+    - englishAbbreviation
+    - domainName
+    - status
+    - requestedBy
+  properties:
+    candidateId:
+      type: string
+      example: CAND-000001
+    koreanName:
+      type: string
+      example: 고객선호배송시간대
+    englishName:
+      type: string
+      example: Customer Preferred Delivery Time Slot
+    englishAbbreviation:
+      type: string
+      example: CUST_PREF_DLV_TM_SLOT
+    domainName:
+      type: string
+      example: 고객
+    status:
+      $ref: '#/CandidateStatus'
+    requestedBy:
+      type: string
+      example: planner01
+    promotedTermId:
+      type: string
+      example: T-000018
+
+TermCandidateListResponse:
+  type: object
+  description: 신규 용어 후보 목록 응답
+  required:
+    - items
+    - page
+  properties:
+    items:
+      type: array
+      items:
+        $ref: '#/TermCandidateSummary'
+    page:
+      $ref: './common.yaml#/PageMetadata'
+
+TermCandidateCreateRequest:
+  type: object
+  description: 신규 용어 후보 등록 요청
+  required:
+    - koreanName
+    - englishName
+    - englishAbbreviation
+    - domainName
+    - businessDefinition
+    - physicalType
+    - digits
+    - decimalPoint
+    - requestedBy
+  properties:
+    koreanName:
+      type: string
+      minLength: 1
+      example: 고객선호배송시간대
+    englishName:
+      type: string
+      minLength: 1
+      example: Customer Preferred Delivery Time Slot
+    englishAbbreviation:
+      type: string
+      minLength: 1
+      pattern: '^[A-Z][A-Z0-9_]*$'
+      example: CUST_PREF_DLV_TM_SLOT
+    domainName:
+      type: string
+      minLength: 1
+      example: 고객
+    businessDefinition:
+      type: string
+      minLength: 1
+      example: 고객이 선호하는 배송 시간대
+    usageContext:
+      type: string
+      example: 배송 옵션 추천과 배송 요청 화면에서 사용
+    physicalType:
+      type: string
+      minLength: 1
+      example: VARCHAR
+    digits:
+      type: integer
+      format: int32
+      minimum: 0
+      example: 20
+    decimalPoint:
+      type: integer
+      format: int32
+      minimum: 0
+      example: 0
+    requestedBy:
+      type: string
+      minLength: 1
+      example: planner01
+
+TermCandidateReviewRequest:
+  type: object
+  description: 후보 검토 요청
+  required:
+    - reviewer
+    - decision
+    - reason
+  properties:
+    reviewer:
+      type: string
+      minLength: 1
+      example: data.steward
+    decision:
+      type: string
+      description: 검토 결과
+      enum:
+        - Approve
+        - Reject
+        - RequestChanges
+      example: Approve
+    reason:
+      type: string
+      minLength: 1
+      example: 중복 없음, 약어와 타입 적합
+
+TermCandidatePromoteRequest:
+  type: object
+  description: 후보 표준 용어 승격 요청
+  required:
+    - approver
+    - owner
+    - reason
+  properties:
+    approver:
+      type: string
+      minLength: 1
+      example: data.steward
+    owner:
+      type: string
+      minLength: 1
+      example: 고객도메인 데이터스튜어드
+    reason:
+      type: string
+      minLength: 1
+      example: 표준 용어로 승인 및 개발 반영 가능
+
+CandidatePromotionResult:
+  type: object
+  description: 후보 승격 결과
+  required:
+    - candidate
+    - term
+  properties:
+    candidate:
+      $ref: '#/TermCandidate'
+    term:
+      $ref: './term.yaml#/Term'
+
+SimilarTerm:
+  type: object
+  description: 신규 후보와 유사한 기존 용어
+  required:
+    - termId
+    - koreanName
+    - englishName
+    - dbColumn
+    - apiField
+    - reason
+  properties:
+    termId:
+      type: string
+      example: T-000001
+    koreanName:
+      type: string
+      example: 고객번호
+    englishName:
+      type: string
+      example: Customer Number
+    dbColumn:
+      type: string
+      example: CUST_NO
+    apiField:
+      type: string
+      example: customerNumber
+    reason:
+      type: string
+      example: 같은 고객 도메인의 기존 표준 용어
+
+CandidateHistory:
+  type: object
+  description: 후보 상태 변경 이력
+  required:
+    - historyId
+    - candidateId
+    - status
+    - reason
+    - actor
+    - createdAt
+  properties:
+    historyId:
+      type: string
+      example: CAND-HIST-000001
+    candidateId:
+      type: string
+      example: CAND-000001
+    status:
+      $ref: '#/CandidateStatus'
+    reason:
+      type: string
+      example: 신규 후보 등록
+    actor:
+      type: string
+      example: planner01
+    createdAt:
+      type: string
+      format: date-time

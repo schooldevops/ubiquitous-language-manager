@@ -1,0 +1,308 @@
+SearchResponse:
+  type: object
+  description: 검색 결과 목록 응답
+  required:
+    - query
+    - items
+  properties:
+    query:
+      type: string
+      description: 사용자가 입력한 검색어
+      example: 고객ID
+    items:
+      type: array
+      description: 검색 결과 목록
+      items:
+        $ref: '#/SearchResult'
+    page:
+      $ref: './common.yaml#/PageMetadata'
+
+SemanticSearchRequest:
+  type: object
+  description: 자연어 의미 기반 용어 검색 요청
+  required:
+    - query
+  properties:
+    query:
+      type: string
+      minLength: 1
+      description: 자연어 질의문
+      example: 주문이 발생한 날짜
+    domainNames:
+      type: array
+      description: 검색 대상 도메인 필터
+      items:
+        type: string
+      example:
+        - 주문
+    statuses:
+      type: array
+      description: 검색 대상 용어 상태 필터
+      items:
+        $ref: './enums.yaml#/TermStatus'
+      example:
+        - Approved
+    limit:
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 50
+      default: 5
+      description: 반환할 후보 개수
+      example: 5
+
+SemanticSearchResponse:
+  type: object
+  description: 자연어 의미 기반 용어 검색 응답
+  required:
+    - query
+    - items
+  properties:
+    query:
+      type: string
+      description: 입력 질의문
+      example: 주문이 발생한 날짜
+    items:
+      type: array
+      description: 의미 기반 표준 용어 후보
+      items:
+        $ref: '#/SemanticSearchResult'
+
+SemanticSearchResult:
+  type: object
+  description: 의미 기반 검색 결과
+  required:
+    - termId
+    - standardTerm
+    - englishName
+    - dbColumn
+    - apiField
+    - status
+    - similarityScore
+    - recommendationReason
+    - differenceDescription
+  properties:
+    termId:
+      type: string
+      description: 표준 용어 ID
+      example: T-000005
+    standardTerm:
+      type: string
+      description: 한글 표준 용어명
+      example: 주문일자
+    englishName:
+      type: string
+      description: 영문 표준 용어명
+      example: Order Date
+    dbColumn:
+      type: string
+      description: 표준 DB 컬럼명
+      example: ORD_DT
+    apiField:
+      type: string
+      description: 표준 API 필드명
+      example: orderDate
+    status:
+      $ref: './enums.yaml#/TermStatus'
+    similarityScore:
+      type: number
+      format: double
+      minimum: 0
+      maximum: 1
+      description: 의미 유사도 점수
+      example: 0.92
+    recommendationReason:
+      type: string
+      description: 후보 추천 사유
+      example: 질의의 주문, 발생, 날짜 의미가 주문일자의 업무 정의와 가장 유사함
+    differenceDescription:
+      type: string
+      description: 유사 후보 간 차이 설명
+      example: 주문일자는 날짜만 표현하고 주문일시는 시분초까지 포함함
+    guidance:
+      type: string
+      description: 상태별 사용 안내
+      example: Approved 용어이므로 기획서와 개발 산출물에 사용할 수 있음
+    validationIssues:
+      type: array
+      description: Rule Engine 후처리 결과
+      items:
+        $ref: './common.yaml#/ValidationIssue'
+
+DeprecatedSearchResponse:
+  type: object
+  description: 폐기어 검색 결과 목록 응답
+  required:
+    - query
+    - items
+  properties:
+    query:
+      type: string
+      description: 사용자가 입력한 폐기어 또는 비표준 표현
+      example: CUST_ID
+    items:
+      type: array
+      description: 폐기어와 대체 표준 용어 목록
+      items:
+        $ref: '#/DeprecatedSearchResult'
+
+SearchResult:
+  type: object
+  description: 표준 용어 검색 결과
+  required:
+    - termId
+    - standardTerm
+    - englishName
+    - dbColumn
+    - apiField
+    - status
+    - matchedExpressions
+    - recommendations
+  properties:
+    termId:
+      type: string
+      description: 표준 용어 식별자
+      example: T-000001
+    standardTerm:
+      type: string
+      description: 한글 표준 용어명
+      example: 고객번호
+    englishName:
+      type: string
+      description: 영문 표준 용어명
+      example: Customer Number
+    dbColumn:
+      type: string
+      description: 표준 DB 컬럼명
+      example: CUST_NO
+    apiField:
+      type: string
+      description: 표준 API 필드명
+      example: customerNumber
+    codeVariable:
+      type: string
+      description: 표준 코드 변수명
+      example: customerNumber
+    status:
+      $ref: './enums.yaml#/TermStatus'
+    domainName:
+      type: string
+      description: 업무 도메인명
+      example: 고객
+    businessDefinition:
+      type: string
+      description: 업무 정의
+      example: 회사에서 고객을 업무적으로 식별하기 위해 사용하는 번호
+    usageContext:
+      type: string
+      description: 사용 맥락
+      example: 주문, 계약, 청구, 상담 등에서 고객 식별 기준으로 사용
+    score:
+      type: number
+      format: double
+      minimum: 0
+      maximum: 1
+      description: 검색 적합도 점수
+      example: 0.98
+    matchedExpressions:
+      type: array
+      description: 입력 검색어와 매칭된 표현
+      items:
+        $ref: '#/MatchedExpression'
+    recommendations:
+      type: array
+      description: 표준 표현 사용 권고
+      items:
+        $ref: '#/Recommendation'
+
+DeprecatedSearchResult:
+  type: object
+  description: 폐기어 검색 결과와 대체 표준 용어
+  required:
+    - deprecatedExpression
+    - reason
+    - replacementTerm
+    - recommendation
+  properties:
+    deprecatedExpression:
+      type: string
+      description: 폐기되었거나 사용 금지된 표현
+      example: CUST_ID
+    reason:
+      type: string
+      description: 폐기 또는 사용 금지 사유
+      example: 기술 식별자와 업무 고객번호가 혼동될 수 있음
+    replacementTerm:
+      $ref: '#/SearchResult'
+    recommendation:
+      $ref: '#/Recommendation'
+
+MatchedExpression:
+  type: object
+  description: 검색어가 매칭된 용어 표현 정보
+  required:
+    - expressionType
+    - expressionValue
+    - matchType
+  properties:
+    expressionType:
+      $ref: './enums.yaml#/ExpressionType'
+    expressionValue:
+      type: string
+      description: 데이터 사전에 등록된 표현값
+      example: 고객ID
+    matchType:
+      type: string
+      description: 검색어와 표현값의 매칭 방식
+      enum:
+        - Exact
+        - Alias
+        - Domain
+        - Deprecated
+      example: Alias
+    inputExpression:
+      type: string
+      description: 사용자가 입력한 표현
+      example: 고객ID
+
+Recommendation:
+  type: object
+  description: 표준 용어 사용 권고
+  required:
+    - action
+    - recommendedExpression
+    - reason
+  properties:
+    action:
+      type: string
+      description: 권고 조치
+      enum:
+        - UseStandardTerm
+        - ReplaceDeprecatedTerm
+        - ConfirmContext
+        - RegisterCandidate
+      example: UseStandardTerm
+    recommendedTermId:
+      type: string
+      description: 권고 표준 용어 식별자
+      example: T-000001
+    recommendedTerm:
+      type: string
+      description: 권고 표준 용어명
+      example: 고객번호
+    recommendedExpression:
+      type: string
+      description: 권고 표준 표현
+      example: customerNumber
+    reason:
+      type: string
+      description: 권고 사유
+      example: 고객ID는 고객번호의 유사어이며 표준 API 필드명은 customerNumber임
+    severity:
+      type: string
+      description: 권고 중요도
+      enum:
+        - Info
+        - Warning
+        - Error
+      example: Warning

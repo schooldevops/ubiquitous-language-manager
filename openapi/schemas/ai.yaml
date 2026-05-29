@@ -1,0 +1,214 @@
+AssistTargetArtifact:
+  type: string
+  description: AI 지원 API가 생성할 산출물 유형
+  enum:
+    - DTO
+    - OPENAPI_SCHEMA
+    - SQL_EXAMPLE
+  example: DTO
+
+DevelopmentAssistRequest:
+  type: object
+  description: AI 산출물 생성 지원 요청
+  required:
+    - requirementText
+    - targetArtifacts
+  properties:
+    requirementText:
+      type: string
+      minLength: 1
+      description: 사용자가 입력한 요구사항
+      example: 고객별 주문 내역을 조회하는 API 만들어줘.
+    targetArtifacts:
+      type: array
+      minItems: 1
+      description: 생성할 산출물 유형 목록
+      items:
+        $ref: '#/AssistTargetArtifact'
+      example:
+        - DTO
+        - OPENAPI_SCHEMA
+        - SQL_EXAMPLE
+    domainNames:
+      type: array
+      description: 우선 검색할 업무 도메인 목록
+      items:
+        type: string
+      example:
+        - 고객
+        - 주문
+
+DevelopmentAssistResponse:
+  type: object
+  description: AI 산출물 생성 지원 응답
+  required:
+    - requirementText
+    - extractedConcepts
+    - termMappings
+    - generatedArtifacts
+    - candidateTerms
+    - warnings
+  properties:
+    requirementText:
+      type: string
+      example: 고객별 주문 내역을 조회하는 API 만들어줘.
+    extractedConcepts:
+      type: array
+      description: 요구사항에서 추출한 업무 개념 후보
+      items:
+        $ref: '#/ExtractedBusinessConcept'
+    termMappings:
+      type: array
+      description: 데이터 사전 기준 표준 용어 매핑
+      items:
+        $ref: '#/AssistTermMapping'
+    generatedArtifacts:
+      type: array
+      description: 표준 용어 매핑으로 생성한 산출물 예시
+      items:
+        $ref: '#/GeneratedArtifact'
+    candidateTerms:
+      type: array
+      description: 데이터 사전에 없어 승인 전 후보로 분리한 신규 용어
+      items:
+        $ref: '#/AssistCandidateTerm'
+    warnings:
+      type: array
+      description: Rule Engine과 표준 정책 기반 위반 경고
+      items:
+        $ref: '#/StandardViolationWarning'
+
+ExtractedBusinessConcept:
+  type: object
+  description: 요구사항에서 추출한 업무 개념
+  required:
+    - concept
+    - reason
+    - confidence
+  properties:
+    concept:
+      type: string
+      example: 고객번호
+    reason:
+      type: string
+      example: 고객별 조회 조건에서 고객 식별 기준이 필요함
+    confidence:
+      type: number
+      format: double
+      minimum: 0
+      maximum: 1
+      example: 0.95
+
+AssistTermMapping:
+  type: object
+  description: 표준 용어 매핑 결과
+  required:
+    - concept
+    - termId
+    - standardTerm
+    - englishName
+    - dbColumn
+    - apiField
+    - codeVariable
+    - status
+    - mappingSource
+    - recommendationReason
+  properties:
+    concept:
+      type: string
+      example: 고객번호
+    termId:
+      type: string
+      example: T-000001
+    standardTerm:
+      type: string
+      example: 고객번호
+    englishName:
+      type: string
+      example: Customer Number
+    dbColumn:
+      type: string
+      example: CUST_NO
+    apiField:
+      type: string
+      example: customerNumber
+    codeVariable:
+      type: string
+      example: customerNumber
+    status:
+      $ref: './enums.yaml#/TermStatus'
+    mappingSource:
+      type: string
+      description: 매핑 출처
+      enum:
+        - Exact
+        - Alias
+        - Semantic
+      example: Exact
+    recommendationReason:
+      type: string
+      example: 승인된 표준 용어 매핑
+
+GeneratedArtifact:
+  type: object
+  description: 생성 산출물 placeholder
+  required:
+    - artifactType
+    - name
+    - content
+  properties:
+    artifactType:
+      $ref: '#/AssistTargetArtifact'
+    name:
+      type: string
+      example: CustomerOrderResponse
+    content:
+      type: string
+      description: 표준 용어 기반으로 생성한 예시 내용
+
+AssistCandidateTerm:
+  type: object
+  description: 신규 용어 후보
+  required:
+    - candidateTerm
+    - reason
+    - approvalRequired
+  properties:
+    candidateTerm:
+      type: string
+      example: 고객선호배송시간대
+    recommendedEnglishName:
+      type: string
+      example: Customer Preferred Delivery Time Slot
+    recommendedAbbreviation:
+      type: string
+      example: CUST_PREF_DLV_TM_SLOT
+    reason:
+      type: string
+      example: 데이터 사전에 일치하는 승인 용어가 없음
+    approvalRequired:
+      type: boolean
+      example: true
+
+StandardViolationWarning:
+  type: object
+  description: 표준 위반 경고
+  required:
+    - inputExpression
+    - severity
+    - reason
+  properties:
+    inputExpression:
+      type: string
+      example: 고객ID
+    severity:
+      $ref: './common.yaml#/ValidationSeverity'
+    standardTerm:
+      type: string
+      example: 고객번호
+    recommendedExpression:
+      type: string
+      example: customerNumber
+    reason:
+      type: string
+      example: 고객ID는 비표준 표현이며 고객번호 사용 권장

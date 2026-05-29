@@ -1,0 +1,13 @@
+ALIAS_ID,TERM_ID,ALIAS_NAME,ALIAS_TYPE,RECOMMENDATION_ACTION,REASON
+A-000001,T-000001,고객ID,Synonym,고객번호로 변환 권장,업무 고객 식별 번호 의미로 사용되는 경우 표준 용어는 고객번호
+A-000002,T-000001,고객 ID,Synonym,고객번호로 변환 권장,기획서에서 띄어쓴 표현으로 자주 사용됨
+A-000003,T-000001,고객식별자,Synonym,고객번호로 변환 권장,업무 고객 식별 값 의미
+A-000004,T-000001,customerId,Synonym,customerNumber로 변환 권장,API 표준 필드명은 customerNumber
+A-000005,T-000001,customer id,Synonym,customerNumber로 변환 권장,자연어 입력에서 자주 사용되는 비표준 표현
+A-000006,T-000001,CUST_ID,Forbidden,CUST_NO 사용,기술 ID와 업무 고객번호가 혼동될 수 있음
+A-000007,T-000001,회원번호,NeedsContext,문맥 확인 필요,고객과 회원 도메인 구분 필요
+A-000008,T-000001,사용자 식별자,NeedsContext,문맥 확인 필요,기술 사용자 ID와 업무 고객번호 구분 필요
+A-000009,T-000005,주문 날짜,Synonym,주문일자로 변환 권장,기획서 표현을 표준 용어로 정리
+A-000010,T-000005,order date,Synonym,orderDate로 변환 권장,API 표준 필드명은 orderDate
+A-000011,T-000007,주문 액수,Synonym,주문금액으로 변환 권장,기획서 표현을 표준 용어로 정리
+A-000012,T-000008,주문상태,Synonym,주문상태코드로 변환 권장,상태는 코드값으로 관리

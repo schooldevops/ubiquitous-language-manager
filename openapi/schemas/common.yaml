@@ -1,0 +1,100 @@
+ErrorResponse:
+  type: object
+  required:
+    - code
+    - message
+    - traceId
+  properties:
+    code:
+      type: string
+      description: 시스템에서 정의한 에러 코드
+      example: TERM_NOT_FOUND
+    message:
+      type: string
+      description: 사용자 또는 개발자가 이해할 수 있는 에러 메시지
+      example: 표준 용어를 찾을 수 없습니다.
+    detail:
+      type: string
+      description: 상세 에러 설명
+      example: termId=T-000123
+    traceId:
+      type: string
+      description: 요청 추적 ID
+      example: 01HX8R7P9Q6RZC6Q9VQ0X7Z3WB
+
+PageMetadata:
+  type: object
+  required:
+    - page
+    - size
+    - totalElements
+    - totalPages
+  properties:
+    page:
+      type: integer
+      format: int32
+      minimum: 0
+      description: 현재 페이지 번호
+      example: 0
+    size:
+      type: integer
+      format: int32
+      minimum: 1
+      description: 페이지 크기
+      example: 20
+    totalElements:
+      type: integer
+      format: int64
+      minimum: 0
+      description: 전체 항목 수
+      example: 120
+    totalPages:
+      type: integer
+      format: int32
+      minimum: 0
+      description: 전체 페이지 수
+      example: 6
+
+ValidationSeverity:
+  type: string
+  description: 검증 결과 심각도
+  enum:
+    - ERROR
+    - WARNING
+    - INFO
+  example: ERROR
+
+ValidationIssue:
+  type: object
+  required:
+    - severity
+    - source
+    - inputExpression
+    - reason
+  properties:
+    severity:
+      $ref: '#/ValidationSeverity'
+    source:
+      type: string
+      description: 문서, DDL, OpenAPI, 코드, PR 등 검증 출처
+      example: CODE
+    location:
+      type: string
+      description: 파일명, 라인, 필드명 등 위치 정보
+      example: CustomerOrderResponse.kt:12
+    inputExpression:
+      type: string
+      description: 입력 표현
+      example: customerId
+    standardTerm:
+      type: string
+      description: 표준 용어
+      example: 고객번호
+    recommendedExpression:
+      type: string
+      description: 권장 표현
+      example: customerNumber
+    reason:
+      type: string
+      description: 위반 또는 권고 사유
+      example: 고객번호의 표준 API/코드 표현은 customerNumber입니다.
