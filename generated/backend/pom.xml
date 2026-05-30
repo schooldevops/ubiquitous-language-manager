@@ -6,6 +6,7 @@
     <name>openapi-spring</name>
     <version>1.0.0</version>
     <properties>
+        <springdoc-openapi.version>2.2.0</springdoc-openapi.version>
         <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
         <jakarta-annotation.version>2.1.0</jakarta-annotation.version>
         <kotlin-test-junit5.version>1.7.10</kotlin-test-junit5.version>
@@ -99,7 +100,12 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-
+        <!--SpringDoc dependencies -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${springdoc-openapi.version}</version>
+        </dependency>
 
         <!-- @Nullable annotation -->
         <dependency>

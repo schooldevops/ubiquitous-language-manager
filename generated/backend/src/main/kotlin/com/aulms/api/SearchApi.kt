@@ -11,6 +11,11 @@ import com.aulms.model.SearchResponse
 import com.aulms.model.SemanticSearchRequest
 import com.aulms.model.SemanticSearchResponse
 import com.aulms.model.TermStatus
+import io.swagger.v3.oas.annotations.*
+import io.swagger.v3.oas.annotations.enums.*
+import io.swagger.v3.oas.annotations.media.*
+import io.swagger.v3.oas.annotations.responses.*
+import io.swagger.v3.oas.annotations.security.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -37,54 +42,162 @@ import kotlin.collections.Map
 @Validated
 interface SearchApi {
 
-
+    @Operation(
+        tags = ["Search",],
+        summary = "유사어 검색",
+        operationId = "aliasSearch",
+        description = """유사어, 별칭, 문맥 확인 필요 표현을 표준 용어로 변환하기 위해 검색한다.""",
+        responses = [
+            ApiResponse(responseCode = "200", description = "유사어 검색 성공", content = [Content(schema = Schema(implementation = SearchResponse::class), examples = [
+                ExampleObject(name = "customerIdToCustomerNumber", summary = "\uACE0\uAC1DID\uB97C \uACE0\uAC1D\uBC88\uD638\uB85C \uAD8C\uACE0", value = "{\n  \"query\": \"\uACE0\uAC1DID\",\n  \"items\": [\n    {\n      \"termId\": \"T-000001\",\n      \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"englishName\": \"Customer Number\",\n      \"dbColumn\": \"CUST_NO\",\n      \"apiField\": \"customerNumber\",\n      \"codeVariable\": \"customerNumber\",\n      \"status\": \"Approved\",\n      \"domainName\": \"\uACE0\uAC1D\",\n      \"businessDefinition\": \"\uD68C\uC0AC\uC5D0\uC11C \uACE0\uAC1D\uC744 \uC5C5\uBB34\uC801\uC73C\uB85C \uC2DD\uBCC4\uD558\uAE30 \uC704\uD574 \uC0AC\uC6A9\uD558\uB294 \uBC88\uD638\",\n      \"usageContext\": \"\uC8FC\uBB38, \uACC4\uC57D, \uCCAD\uAD6C, \uC0C1\uB2F4 \uB4F1\uC5D0\uC11C \uACE0\uAC1D \uC2DD\uBCC4 \uAE30\uC900\uC73C\uB85C \uC0AC\uC6A9\",\n      \"score\": 0.96,\n      \"matchedExpressions\": [\n        {\n          \"expressionType\": \"Korean\",\n          \"expressionValue\": \"\uACE0\uAC1DID\",\n          \"matchType\": \"Alias\",\n          \"inputExpression\": \"\uACE0\uAC1DID\"\n        }\n      ],\n      \"recommendations\": [\n        {\n          \"action\": \"UseStandardTerm\",\n          \"recommendedTermId\": \"T-000001\",\n          \"recommendedTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n          \"recommendedExpression\": \"customerNumber\",\n          \"reason\": \"\uACE0\uAC1DID\uB294 \uACE0\uAC1D\uBC88\uD638\uC758 \uC720\uC0AC\uC5B4\uC774\uBA70 \uD45C\uC900 API \uD544\uB4DC\uBA85\uC740 customerNumber\uC784\",\n          \"severity\": \"Warning\"\n        }\n      ]\n    }\n  ]\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.GET],
             value = ["/search/alias"],
             produces = ["application/json"]
     )
-    fun aliasSearch(@NotNull @Size(min=1)  @Valid @RequestParam(value = "q", required = true) q: kotlin.String): ResponseEntity<SearchResponse> {
+    fun aliasSearch(@NotNull @Size(min=1) @Parameter(description = "유사어 또는 비표준 표현", required = true) @Valid @RequestParam(value = "q", required = true) q: kotlin.String): ResponseEntity<SearchResponse> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Search",],
+        summary = "폐기어 검색",
+        operationId = "deprecatedSearch",
+        description = """Deprecated 또는 사용 금지 표현을 검색하고 대체 표준 용어를 반환한다.""",
+        responses = [
+            ApiResponse(responseCode = "200", description = "폐기어 검색 성공", content = [Content(schema = Schema(implementation = DeprecatedSearchResponse::class), examples = [
+                ExampleObject(name = "custIdToCustNo", value = "{\n  \"query\": \"CUST_ID\",\n  \"items\": [\n    {\n      \"deprecatedExpression\": \"CUST_ID\",\n      \"reason\": \"\uAE30\uC220 \uC2DD\uBCC4\uC790\uC640 \uC5C5\uBB34 \uACE0\uAC1D\uBC88\uD638\uAC00 \uD63C\uB3D9\uB420 \uC218 \uC788\uC74C\",\n      \"replacementTerm\": {\n        \"termId\": \"T-000001\",\n        \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n        \"englishName\": \"Customer Number\",\n        \"dbColumn\": \"CUST_NO\",\n        \"apiField\": \"customerNumber\",\n        \"codeVariable\": \"customerNumber\",\n        \"status\": \"Approved\",\n        \"domainName\": \"\uACE0\uAC1D\",\n        \"businessDefinition\": \"\uD68C\uC0AC\uC5D0\uC11C \uACE0\uAC1D\uC744 \uC5C5\uBB34\uC801\uC73C\uB85C \uC2DD\uBCC4\uD558\uAE30 \uC704\uD574 \uC0AC\uC6A9\uD558\uB294 \uBC88\uD638\",\n        \"usageContext\": \"\uC8FC\uBB38, \uACC4\uC57D, \uCCAD\uAD6C, \uC0C1\uB2F4 \uB4F1\uC5D0\uC11C \uACE0\uAC1D \uC2DD\uBCC4 \uAE30\uC900\uC73C\uB85C \uC0AC\uC6A9\",\n        \"score\": 0.99,\n        \"matchedExpressions\": [\n          {\n            \"expressionType\": \"DB_COLUMN\",\n            \"expressionValue\": \"CUST_ID\",\n            \"matchType\": \"Deprecated\",\n            \"inputExpression\": \"CUST_ID\"\n          }\n        ],\n        \"recommendations\": [\n          {\n            \"action\": \"ReplaceDeprecatedTerm\",\n            \"recommendedTermId\": \"T-000001\",\n            \"recommendedTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n            \"recommendedExpression\": \"CUST_NO\",\n            \"reason\": \"CUST_ID \uB300\uC2E0 \uACE0\uAC1D\uBC88\uD638\uC758 \uD45C\uC900 DB \uCEEC\uB7FC\uBA85 CUST_NO\uB97C \uC0AC\uC6A9\uD574\uC57C \uD568\",\n            \"severity\": \"Error\"\n          }\n        ]\n      },\n      \"recommendation\": {\n        \"action\": \"ReplaceDeprecatedTerm\",\n        \"recommendedTermId\": \"T-000001\",\n        \"recommendedTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n        \"recommendedExpression\": \"CUST_NO\",\n        \"reason\": \"CUST_ID \uB300\uC2E0 \uACE0\uAC1D\uBC88\uD638\uC758 \uD45C\uC900 DB \uCEEC\uB7FC\uBA85 CUST_NO\uB97C \uC0AC\uC6A9\uD574\uC57C \uD568\",\n        \"severity\": \"Error\"\n      }\n    }\n  ]\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.GET],
             value = ["/search/deprecated"],
             produces = ["application/json"]
     )
-    fun deprecatedSearch(@NotNull @Size(min=1)  @Valid @RequestParam(value = "q", required = true) q: kotlin.String): ResponseEntity<DeprecatedSearchResponse> {
+    fun deprecatedSearch(@NotNull @Size(min=1) @Parameter(description = "폐기어 또는 사용 금지 표현", required = true) @Valid @RequestParam(value = "q", required = true) q: kotlin.String): ResponseEntity<DeprecatedSearchResponse> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Search",],
+        summary = "도메인별 검색",
+        operationId = "domainSearch",
+        description = """특정 업무 도메인에 속한 표준 용어를 조회한다.""",
+        responses = [
+            ApiResponse(responseCode = "200", description = "도메인별 검색 성공", content = [Content(schema = Schema(implementation = SearchResponse::class), examples = [
+                ExampleObject(name = "orderDomain", value = "{\n  \"query\": \"\uC8FC\uBB38\",\n  \"items\": [\n    {\n      \"termId\": \"T-000002\",\n      \"standardTerm\": \"\uC8FC\uBB38\uBC88\uD638\",\n      \"englishName\": \"Order Number\",\n      \"dbColumn\": \"ORD_NO\",\n      \"apiField\": \"orderNumber\",\n      \"codeVariable\": \"orderNumber\",\n      \"status\": \"Approved\",\n      \"domainName\": \"\uC8FC\uBB38\",\n      \"businessDefinition\": \"\uC8FC\uBB38\uC744 \uC5C5\uBB34\uC801\uC73C\uB85C \uC2DD\uBCC4\uD558\uAE30 \uC704\uD574 \uC0AC\uC6A9\uD558\uB294 \uBC88\uD638\",\n      \"usageContext\": \"\uC8FC\uBB38 \uC870\uD68C, \uC8FC\uBB38 \uC0C1\uC138, \uACB0\uC81C \uC5F0\uACB0\uC5D0\uC11C \uC8FC\uBB38 \uC2DD\uBCC4 \uAE30\uC900\uC73C\uB85C \uC0AC\uC6A9\",\n      \"score\": 1,\n      \"matchedExpressions\": [\n        {\n          \"expressionType\": \"Korean\",\n          \"expressionValue\": \"\uC8FC\uBB38\",\n          \"matchType\": \"Domain\",\n          \"inputExpression\": \"\uC8FC\uBB38\"\n        }\n      ],\n      \"recommendations\": [\n        {\n          \"action\": \"UseStandardTerm\",\n          \"recommendedTermId\": \"T-000002\",\n          \"recommendedTerm\": \"\uC8FC\uBB38\uBC88\uD638\",\n          \"recommendedExpression\": \"orderNumber\",\n          \"reason\": \"\uC8FC\uBB38 \uB3C4\uBA54\uC778\uC758 \uC2B9\uC778\uB41C \uD45C\uC900 \uC6A9\uC5B4\uC784\",\n          \"severity\": \"Info\"\n        }\n      ]\n    }\n  ],\n  \"page\": {\n    \"page\": 0,\n    \"size\": 20,\n    \"totalElements\": 1,\n    \"totalPages\": 1\n  }\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.GET],
             value = ["/search/domain/{domainName}"],
             produces = ["application/json"]
     )
-    fun domainSearch(@Size(min=1)  @PathVariable("domainName") domainName: kotlin.String, @Valid @RequestParam(value = "status", required = false) status: TermStatus?,@Min(0) @Valid @RequestParam(value = "page", required = false, defaultValue = "0") page: kotlin.Int,@Min(1) @Max(200)  @Valid @RequestParam(value = "size", required = false, defaultValue = "20") size: kotlin.Int): ResponseEntity<SearchResponse> {
+    fun domainSearch(@Size(min=1) @Parameter(description = "업무 도메인명", required = true) @PathVariable("domainName") domainName: kotlin.String,@Parameter(description = "용어 상태 필터", schema = Schema(allowableValues = ["Draft", "Reviewing", "Approved", "Deprecated", "Rejected"])) @Valid @RequestParam(value = "status", required = false) status: TermStatus?,@Min(0)@Parameter(description = "페이지 번호", schema = Schema(defaultValue = "0")) @Valid @RequestParam(value = "page", required = false, defaultValue = "0") page: kotlin.Int,@Min(1) @Max(200) @Parameter(description = "페이지 크기", schema = Schema(defaultValue = "20")) @Valid @RequestParam(value = "size", required = false, defaultValue = "20") size: kotlin.Int): ResponseEntity<SearchResponse> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Search",],
+        summary = "정확 검색",
+        operationId = "exactSearch",
+        description = """한글 표준명, 영문명, DB 컬럼명, API 필드명, 코드 변수명이 정확히 일치하는 표준 용어를 검색한다.""",
+        responses = [
+            ApiResponse(responseCode = "200", description = "정확 검색 성공", content = [Content(schema = Schema(implementation = SearchResponse::class), examples = [
+                ExampleObject(name = "customerNumber", value = "{\n  \"query\": \"customerNumber\",\n  \"items\": [\n    {\n      \"termId\": \"T-000001\",\n      \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"englishName\": \"Customer Number\",\n      \"dbColumn\": \"CUST_NO\",\n      \"apiField\": \"customerNumber\",\n      \"codeVariable\": \"customerNumber\",\n      \"status\": \"Approved\",\n      \"domainName\": \"\uACE0\uAC1D\",\n      \"businessDefinition\": \"\uD68C\uC0AC\uC5D0\uC11C \uACE0\uAC1D\uC744 \uC5C5\uBB34\uC801\uC73C\uB85C \uC2DD\uBCC4\uD558\uAE30 \uC704\uD574 \uC0AC\uC6A9\uD558\uB294 \uBC88\uD638\",\n      \"usageContext\": \"\uC8FC\uBB38, \uACC4\uC57D, \uCCAD\uAD6C, \uC0C1\uB2F4 \uB4F1\uC5D0\uC11C \uACE0\uAC1D \uC2DD\uBCC4 \uAE30\uC900\uC73C\uB85C \uC0AC\uC6A9\",\n      \"score\": 1,\n      \"matchedExpressions\": [\n        {\n          \"expressionType\": \"API_FIELD\",\n          \"expressionValue\": \"customerNumber\",\n          \"matchType\": \"Exact\",\n          \"inputExpression\": \"customerNumber\"\n        }\n      ],\n      \"recommendations\": [\n        {\n          \"action\": \"UseStandardTerm\",\n          \"recommendedTermId\": \"T-000001\",\n          \"recommendedTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n          \"recommendedExpression\": \"customerNumber\",\n          \"reason\": \"\uC785\uB825 \uD45C\uD604\uC774 \uC2B9\uC778\uB41C \uD45C\uC900 API \uD544\uB4DC\uBA85\uACFC \uC77C\uCE58\uD568\",\n          \"severity\": \"Info\"\n        }\n      ]\n    }\n  ]\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.GET],
             value = ["/search/exact"],
             produces = ["application/json"]
     )
-    fun exactSearch(@NotNull @Size(min=1)  @Valid @RequestParam(value = "q", required = true) q: kotlin.String, @Valid @RequestParam(value = "status", required = false) status: TermStatus?): ResponseEntity<SearchResponse> {
+    fun exactSearch(@NotNull @Size(min=1) @Parameter(description = "정확히 일치시킬 검색어", required = true) @Valid @RequestParam(value = "q", required = true) q: kotlin.String,@Parameter(description = "용어 상태 필터", schema = Schema(allowableValues = ["Draft", "Reviewing", "Approved", "Deprecated", "Rejected"])) @Valid @RequestParam(value = "status", required = false) status: TermStatus?): ResponseEntity<SearchResponse> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Search",],
+        summary = "의미 기반 검색",
+        operationId = "semanticSearch",
+        description = """자연어 질의문을 용어 문서 임베딩과 비교해 표준 용어 후보를 반환한다.""",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [Content(
+                mediaType = "application/json",
+                examples = [
+                    ExampleObject(name = "orderDate", value = "{\n  \"query\": \"\uC8FC\uBB38\uC774 \uBC1C\uC0DD\uD55C \uB0A0\uC9DC\",\n  \"domainNames\": [\n    \"\uC8FC\uBB38\"\n  ],\n  \"statuses\": [\n    \"Approved\"\n  ],\n  \"limit\": 5\n}")
+                ]
+            )]
+        ),
+        responses = [
+            ApiResponse(responseCode = "200", description = "의미 기반 검색 성공", content = [Content(schema = Schema(implementation = SemanticSearchResponse::class), examples = [
+                ExampleObject(name = "orderDate", value = "{\n  \"query\": \"\uC8FC\uBB38\uC774 \uBC1C\uC0DD\uD55C \uB0A0\uC9DC\",\n  \"items\": [\n    {\n      \"termId\": \"T-000005\",\n      \"standardTerm\": \"\uC8FC\uBB38\uC77C\uC790\",\n      \"englishName\": \"Order Date\",\n      \"dbColumn\": \"ORD_DT\",\n      \"apiField\": \"orderDate\",\n      \"status\": \"Approved\",\n      \"similarityScore\": 0.92,\n      \"recommendationReason\": \"\uC9C8\uC758\uC758 \uC8FC\uBB38, \uBC1C\uC0DD, \uB0A0\uC9DC \uC758\uBBF8\uAC00 \uC8FC\uBB38\uC77C\uC790\uC758 \uC5C5\uBB34 \uC815\uC758\uC640 \uAC00\uC7A5 \uC720\uC0AC\uD568\",\n      \"differenceDescription\": \"\uC8FC\uBB38\uC77C\uC790\uB294 \uB0A0\uC9DC\uB9CC \uD45C\uD604\uD558\uACE0 \uC8FC\uBB38\uC77C\uC2DC\uB294 \uC2DC\uBD84\uCD08\uAE4C\uC9C0 \uD3EC\uD568\uD568\",\n      \"guidance\": \"Approved \uC6A9\uC5B4\uC774\uBBC0\uB85C \uAE30\uD68D\uC11C\uC640 \uAC1C\uBC1C \uC0B0\uCD9C\uBB3C\uC5D0 \uC0AC\uC6A9\uD560 \uC218 \uC788\uC74C\",\n      \"validationIssues\": [\n\n      ]\n    },\n    {\n      \"termId\": \"T-000010\",\n      \"standardTerm\": \"\uC8FC\uBB38\uC77C\uC2DC\",\n      \"englishName\": \"Order Date Time\",\n      \"dbColumn\": \"ORD_DTTM\",\n      \"apiField\": \"orderDateTime\",\n      \"status\": \"Approved\",\n      \"similarityScore\": 0.81,\n      \"recommendationReason\": \"\uC8FC\uBB38 \uBC1C\uC0DD \uC2DC\uC810\uC744 \uC2DC\uBD84\uCD08\uAE4C\uC9C0 \uD45C\uD604\uD574\uC57C \uD560 \uB54C \uC801\uD569\uD568\",\n      \"differenceDescription\": \"\uC8FC\uBB38\uC77C\uC2DC\uB294 \uB0A0\uC9DC\uC640 \uC2DC\uAC04\uC744 \uBAA8\uB450 \uD3EC\uD568\uD558\uACE0 \uC8FC\uBB38\uC77C\uC790\uB294 \uB0A0\uC9DC\uB9CC \uD3EC\uD568\uD568\",\n      \"guidance\": \"Approved \uC6A9\uC5B4\uC774\uBBC0\uB85C \uAE30\uD68D\uC11C\uC640 \uAC1C\uBC1C \uC0B0\uCD9C\uBB3C\uC5D0 \uC0AC\uC6A9\uD560 \uC218 \uC788\uC74C\",\n      \"validationIssues\": [\n\n      ]\n    }\n  ]\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.POST],
             value = ["/search/semantic"],
             produces = ["application/json"],
             consumes = ["application/json"]
     )
-    fun semanticSearch( @Valid @RequestBody semanticSearchRequest: SemanticSearchRequest): ResponseEntity<SemanticSearchResponse> {
+    fun semanticSearch(@Parameter(description = "", required = true) @Valid @RequestBody semanticSearchRequest: SemanticSearchRequest): ResponseEntity<SemanticSearchResponse> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }

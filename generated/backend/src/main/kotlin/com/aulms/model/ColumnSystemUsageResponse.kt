@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 컬럼 사용 시스템 조회 응답
@@ -20,9 +21,11 @@ import jakarta.validation.Valid
  */
 data class ColumnSystemUsageResponse(
 
+    @Schema(example = "CUST_NO", required = true, description = "")
     @get:JsonProperty("columnName", required = true) val columnName: kotlin.String,
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("items", required = true) val items: kotlin.collections.List<ColumnSystemUsage>
     ) {
 

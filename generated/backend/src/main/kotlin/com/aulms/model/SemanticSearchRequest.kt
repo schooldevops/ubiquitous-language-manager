@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 자연어 의미 기반 용어 검색 요청
@@ -23,15 +24,19 @@ import jakarta.validation.Valid
 data class SemanticSearchRequest(
 
     @get:Size(min=1)
+    @Schema(example = "주문이 발생한 날짜", required = true, description = "자연어 질의문")
     @get:JsonProperty("query", required = true) val query: kotlin.String,
 
+    @Schema(example = "[\"주문\"]", description = "검색 대상 도메인 필터")
     @get:JsonProperty("domainNames") val domainNames: kotlin.collections.List<kotlin.String>? = null,
 
     @field:Valid
+    @Schema(example = "[\"Approved\"]", description = "검색 대상 용어 상태 필터")
     @get:JsonProperty("statuses") val statuses: kotlin.collections.List<TermStatus>? = null,
 
     @get:Min(1)
     @get:Max(50)
+    @Schema(example = "5", description = "반환할 후보 개수")
     @get:JsonProperty("limit") val limit: kotlin.Int? = 5
     ) {
 

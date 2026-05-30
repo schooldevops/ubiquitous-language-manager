@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 용어 표현 매핑 등록 요청
@@ -26,17 +27,22 @@ import jakarta.validation.Valid
 data class TermExpressionCreateRequest(
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("expressionType", required = true) val expressionType: ExpressionType,
 
     @get:Size(min=1,max=500)
+    @Schema(example = "customerNumber", required = true, description = "")
     @get:JsonProperty("expressionValue", required = true) val expressionValue: kotlin.String,
 
+    @Schema(example = "true", required = true, description = "")
     @get:JsonProperty("isStandard", required = true) val isStandard: kotlin.Boolean,
 
     @get:Size(max=20)
+    @Schema(example = "en", description = "")
     @get:JsonProperty("language") val language: kotlin.String? = null,
 
     @get:Size(max=50)
+    @Schema(example = "camelCase", description = "")
     @get:JsonProperty("style") val style: kotlin.String? = null
     ) {
 

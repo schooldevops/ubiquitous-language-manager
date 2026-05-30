@@ -29,123 +29,123 @@
 
 ```mermaid
 erDiagram
-    TERM_MASTER {
-        varchar term_id PK
-        varchar term_no UK
-        varchar domain_name
-        varchar usage_type
-        varchar korean_name
-        varchar english_name
-        varchar english_abbreviation
-        text business_definition
-        text usage_context
-        varchar physical_type
-        integer digits
-        integer decimal_point
-        varchar status
-        varchar owner
-        varchar version
-        timestamptz created_at
-        timestamptz updated_at
+    TERM_MASTER_표준용어마스터 {
+        varchar term_id PK "용어ID"
+        varchar term_no UK "용어번호"
+        varchar domain_name "도메인명"
+        varchar usage_type "사용구분"
+        varchar korean_name "한글용어명"
+        varchar english_name "영문용어명"
+        varchar english_abbreviation "영문약어"
+        text business_definition "업무정의"
+        text usage_context "사용맥락"
+        varchar physical_type "물리타입"
+        integer digits "자릿수"
+        integer decimal_point "소수점자리수"
+        varchar status "상태"
+        varchar owner "소유자"
+        varchar version "버전"
+        timestamptz created_at "생성일시"
+        timestamptz updated_at "수정일시"
     }
 
-    TERM_EXPRESSION {
-        bigint expression_id PK
-        varchar term_id FK
-        varchar expression_type
-        varchar expression_value
-        varchar language
-        varchar style
-        boolean is_standard
-        timestamptz created_at
-        timestamptz updated_at
+    TERM_EXPRESSION_용어표현매핑 {
+        bigint expression_id PK "표현ID"
+        varchar term_id FK "용어ID"
+        varchar expression_type "표현유형"
+        varchar expression_value "표현값"
+        varchar language "언어"
+        varchar style "표기스타일"
+        boolean is_standard "표준여부"
+        timestamptz created_at "생성일시"
+        timestamptz updated_at "수정일시"
     }
 
-    TERM_ALIAS {
-        varchar alias_id PK
-        varchar term_id FK
-        varchar alias_name UK
-        varchar alias_type
-        varchar recommendation_action
-        text reason
-        timestamptz created_at
-        timestamptz updated_at
+    TERM_ALIAS_용어별칭 {
+        varchar alias_id PK "별칭ID"
+        varchar term_id FK "용어ID"
+        varchar alias_name UK "별칭명"
+        varchar alias_type "별칭유형"
+        varchar recommendation_action "권장조치"
+        text reason "사유"
+        timestamptz created_at "생성일시"
+        timestamptz updated_at "수정일시"
     }
 
-    TERM_RELATIONSHIP {
-        bigint relationship_id PK
-        varchar source_term_id FK
-        varchar relationship_type
-        varchar target_term_id FK
-        text description
-        timestamptz created_at
-        timestamptz updated_at
+    TERM_RELATIONSHIP_용어관계 {
+        bigint relationship_id PK "관계ID"
+        varchar source_term_id FK "출발용어ID"
+        varchar relationship_type "관계유형"
+        varchar target_term_id FK "대상용어ID"
+        text description "관계설명"
+        timestamptz created_at "생성일시"
+        timestamptz updated_at "수정일시"
     }
 
-    TERM_CHANGE_HISTORY {
-        bigint change_history_id PK
-        varchar term_id FK
-        varchar change_type
-        varchar previous_status
-        varchar new_status
-        jsonb previous_value
-        jsonb new_value
-        text reason
-        varchar requested_by
-        varchar approved_by
-        varchar impact_analysis_id
-        timestamptz created_at
+    TERM_CHANGE_HISTORY_용어변경이력 {
+        bigint change_history_id PK "변경이력ID"
+        varchar term_id FK "용어ID"
+        varchar change_type "변경유형"
+        varchar previous_status "이전상태"
+        varchar new_status "신규상태"
+        jsonb previous_value "이전값"
+        jsonb new_value "신규값"
+        text reason "변경사유"
+        varchar requested_by "요청자"
+        varchar approved_by "승인자"
+        varchar impact_analysis_id "영향도분석ID"
+        timestamptz created_at "생성일시"
     }
 
-    TERM_CANDIDATE {
-        varchar candidate_id PK
-        varchar requested_by
-        timestamptz requested_at
-        varchar related_project
-        varchar related_system
-        varchar domain_name
-        varchar korean_name
-        varchar english_name
-        varchar english_abbreviation
-        varchar usage_type
-        varchar physical_type
-        integer digits
-        integer decimal_point
-        text business_definition
-        text usage_context
-        text example_values
-        varchar planned_db_column
-        varchar planned_api_field
-        varchar planned_code_variable
-        varchar planned_ui_label
-        varchar status
-        text review_result
-        varchar promoted_term_id FK
-        timestamptz created_at
-        timestamptz updated_at
+    TERM_CANDIDATE_신규용어후보 {
+        varchar candidate_id PK "후보ID"
+        varchar requested_by "요청자"
+        timestamptz requested_at "요청일시"
+        varchar related_project "관련프로젝트"
+        varchar related_system "관련시스템"
+        varchar domain_name "도메인명"
+        varchar korean_name "한글용어명"
+        varchar english_name "영문용어명"
+        varchar english_abbreviation "영문약어"
+        varchar usage_type "사용구분"
+        varchar physical_type "물리타입"
+        integer digits "자릿수"
+        integer decimal_point "소수점자리수"
+        text business_definition "업무정의"
+        text usage_context "사용맥락"
+        text example_values "예시값"
+        varchar planned_db_column "예정DB컬럼명"
+        varchar planned_api_field "예정API필드명"
+        varchar planned_code_variable "예정코드변수명"
+        varchar planned_ui_label "예정화면라벨"
+        varchar status "상태"
+        text review_result "검토결과"
+        varchar promoted_term_id FK "승격용어ID"
+        timestamptz created_at "생성일시"
+        timestamptz updated_at "수정일시"
     }
 
-    TERM_REVIEW_REQUEST {
-        varchar review_request_id PK
-        varchar candidate_id FK
-        varchar term_id FK
-        varchar review_type
-        varchar status
-        varchar requested_by
-        varchar reviewer
-        text review_comment
-        timestamptz created_at
-        timestamptz reviewed_at
+    TERM_REVIEW_REQUEST_용어검토요청 {
+        varchar review_request_id PK "검토요청ID"
+        varchar candidate_id FK "후보ID"
+        varchar term_id FK "용어ID"
+        varchar review_type "검토유형"
+        varchar status "상태"
+        varchar requested_by "요청자"
+        varchar reviewer "검토자"
+        text review_comment "검토의견"
+        timestamptz created_at "생성일시"
+        timestamptz reviewed_at "검토일시"
     }
 
-    TERM_MASTER ||--o{ TERM_EXPRESSION : has
-    TERM_MASTER ||--o{ TERM_ALIAS : has
-    TERM_MASTER ||--o{ TERM_RELATIONSHIP : source
-    TERM_MASTER ||--o{ TERM_RELATIONSHIP : target
-    TERM_MASTER ||--o{ TERM_CHANGE_HISTORY : changed
-    TERM_MASTER ||--o{ TERM_CANDIDATE : promoted
-    TERM_MASTER ||--o{ TERM_REVIEW_REQUEST : reviewed
-    TERM_CANDIDATE ||--o{ TERM_REVIEW_REQUEST : reviewed
+    TERM_MASTER_표준용어마스터 ||--o{ TERM_EXPRESSION_용어표현매핑 : has
+    TERM_MASTER_표준용어마스터 ||--o{ TERM_ALIAS_용어별칭 : has
+    TERM_MASTER_표준용어마스터 ||--o{ TERM_RELATIONSHIP_용어관계 : source
+    TERM_MASTER_표준용어마스터 ||--o{ TERM_RELATIONSHIP_용어관계 : target
+    TERM_MASTER_표준용어마스터 ||--o{ TERM_CHANGE_HISTORY_용어변경이력 : changed
+    TERM_MASTER_표준용어마스터 ||--o{ TERM_CANDIDATE_신규용어후보 : promoted
+    TERM_MASTER_표준용어마스터 ||--o{ TERM_REVIEW_REQUEST_용어검토요청 : reviewed
+    TERM_CANDIDATE_신규용어후보 ||--o{ TERM_REVIEW_REQUEST_용어검토요청 : reviewed
 ```
 
 ## 4. 권장 확장 ERD
@@ -154,67 +154,67 @@ erDiagram
 
 ```mermaid
 erDiagram
-    PROMPT_TEMPLATE {
-        varchar template_id PK
-        varchar template_type
-        varchar name
-        varchar version
-        varchar status
-        text description
-        text body
-        text version_policy
-        timestamptz created_at
-        timestamptz updated_at
+    PROMPT_TEMPLATE_프롬프트템플릿 {
+        varchar template_id PK "템플릿ID"
+        varchar template_type "템플릿유형"
+        varchar name "템플릿명"
+        varchar version "버전"
+        varchar status "상태"
+        text description "설명"
+        text body "본문"
+        text version_policy "버전정책"
+        timestamptz created_at "생성일시"
+        timestamptz updated_at "수정일시"
     }
 
-    PROMPT_TEMPLATE_VARIABLE {
-        bigint variable_id PK
-        varchar template_id FK
-        varchar variable_name
-        text description
-        boolean required
-        varchar source
-        timestamptz created_at
+    PROMPT_TEMPLATE_VARIABLE_프롬프트변수 {
+        bigint variable_id PK "변수ID"
+        varchar template_id FK "템플릿ID"
+        varchar variable_name "변수명"
+        text description "설명"
+        boolean required "필수여부"
+        varchar source "출처"
+        timestamptz created_at "생성일시"
     }
 
-    PROMPT_TEMPLATE_VERSION {
-        bigint version_id PK
-        varchar template_id FK
-        varchar version
-        varchar status
-        text body
-        text change_reason
-        varchar created_by
-        timestamptz created_at
+    PROMPT_TEMPLATE_VERSION_프롬프트버전 {
+        bigint version_id PK "버전ID"
+        varchar template_id FK "템플릿ID"
+        varchar version "버전"
+        varchar status "상태"
+        text body "본문"
+        text change_reason "변경사유"
+        varchar created_by "생성자"
+        timestamptz created_at "생성일시"
     }
 
-    PROMPT_TEMPLATE_HISTORY {
-        bigint history_id PK
-        varchar template_id FK
-        varchar version
-        varchar change_type
-        text reason
-        varchar actor
-        timestamptz created_at
+    PROMPT_TEMPLATE_HISTORY_프롬프트변경이력 {
+        bigint history_id PK "이력ID"
+        varchar template_id FK "템플릿ID"
+        varchar version "버전"
+        varchar change_type "변경유형"
+        text reason "사유"
+        varchar actor "행위자"
+        timestamptz created_at "생성일시"
     }
 
-    GRAPH_SYNC_LOG {
-        bigint log_id PK
-        varchar mode
-        boolean success
-        integer created_nodes
-        integer updated_nodes
-        integer created_edges
-        integer updated_edges
-        integer skipped_items
-        integer retry_count
-        text message
-        timestamptz created_at
+    GRAPH_SYNC_LOG_그래프동기화로그 {
+        bigint log_id PK "로그ID"
+        varchar mode "동기화모드"
+        boolean success "성공여부"
+        integer created_nodes "생성노드수"
+        integer updated_nodes "수정노드수"
+        integer created_edges "생성엣지수"
+        integer updated_edges "수정엣지수"
+        integer skipped_items "건너뜀항목수"
+        integer retry_count "재시도수"
+        text message "메시지"
+        timestamptz created_at "생성일시"
     }
 
-    PROMPT_TEMPLATE ||--o{ PROMPT_TEMPLATE_VARIABLE : has
-    PROMPT_TEMPLATE ||--o{ PROMPT_TEMPLATE_VERSION : versions
-    PROMPT_TEMPLATE ||--o{ PROMPT_TEMPLATE_HISTORY : changed
+    PROMPT_TEMPLATE_프롬프트템플릿 ||--o{ PROMPT_TEMPLATE_VARIABLE_프롬프트변수 : has
+    PROMPT_TEMPLATE_프롬프트템플릿 ||--o{ PROMPT_TEMPLATE_VERSION_프롬프트버전 : versions
+    PROMPT_TEMPLATE_프롬프트템플릿 ||--o{ PROMPT_TEMPLATE_HISTORY_프롬프트변경이력 : changed
 ```
 
 ## 5. 적재 순서
@@ -419,4 +419,3 @@ API(GET /orders) -> uses -> APIField(customerNumber)
 | AI | 데이터 사전 우선 조회, 없는 용어는 후보 분리 |
 | Graphify | 관계/영향도 분석 전용 |
 | RAG | 자연어 검색, 설명, 문서 검토 전용 |
-

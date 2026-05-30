@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * PR 변경 파일 표준 용어 검증 결과
@@ -26,19 +27,25 @@ import jakarta.validation.Valid
  */
 data class PullRequestArtifactReviewResult(
 
+    @Schema(example = "123", required = true, description = "PR 번호 또는 외부 시스템 PR 식별자")
     @get:JsonProperty("pullRequestId", required = true) val pullRequestId: kotlin.String,
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "파일별 검증 결과")
     @get:JsonProperty("results", required = true) val results: kotlin.collections.List<ArtifactValidationResult>,
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("summary", required = true) val summary: ArtifactValidationSummary,
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "전체 파일의 표준 위반 또는 권고 사항")
     @get:JsonProperty("issues", required = true) val issues: kotlin.collections.List<ValidationIssue>,
 
+    @Schema(example = "1", required = true, description = "CLI/CI 호환 종료 코드")
     @get:JsonProperty("exitCode", required = true) val exitCode: kotlin.Int,
 
+    @Schema(example = "aulms", description = "저장소 이름")
     @get:JsonProperty("repository") val repository: kotlin.String? = null
     ) {
 

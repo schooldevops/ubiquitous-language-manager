@@ -98,6 +98,36 @@ domainTerms:
           application/json:
             schema:
               $ref: '../schemas/relationship.yaml#/RelationshipSearchResponse'
+            examples:
+              customerDomain:
+                value:
+                  query: 고객
+                  items:
+                    - termId: T-000001
+                      standardTerm: 고객번호
+                      englishName: Customer Number
+                      relationshipType: broaderThan
+                      direction: OUTGOING
+                      reason: 고객 도메인의 핵심 식별 용어
+                    - termId: T-000003
+                      standardTerm: 고객명
+                      englishName: Customer Name
+                      relationshipType: relatedTo
+                      direction: OUTGOING
+                      reason: 고객번호와 함께 고객 기본정보를 구성
+                  paths:
+                    - nodes:
+                        - nodeKey: domain:고객
+                          nodeType: Domain
+                          label: 고객
+                        - nodeKey: term:T-000001
+                          nodeType: Term
+                          label: 고객번호
+                      edges:
+                        - edgeKey: DOMAIN_TERM:domain:고객:term:T-000001
+                          relationshipType: broaderThan
+                          fromNodeKey: domain:고객
+                          toNodeKey: term:T-000001
       '401':
         $ref: '../openapi.yaml#/components/responses/Unauthorized'
       '403':
@@ -173,6 +203,16 @@ deprecatedUsages:
           application/json:
             schema:
               $ref: '../schemas/relationship.yaml#/DeprecatedUsageResponse'
+            examples:
+              custIdUsages:
+                value:
+                  items:
+                    - expression: CUST_ID
+                      aliasType: Forbidden
+                      termId: T-000001
+                      standardTerm: 고객번호
+                      recommendedExpression: CUST_NO
+                      reason: 기술 ID와 업무 고객번호가 혼동될 수 있음
       '401':
         $ref: '../openapi.yaml#/components/responses/Unauthorized'
       '403':

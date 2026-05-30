@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 기획서 용어 검토 옵션
@@ -20,10 +21,13 @@ import jakarta.validation.Valid
  */
 data class DocumentReviewOptions(
 
+    @Schema(example = "true", description = "미매핑 표현을 신규 용어 후보로 반환할지 여부")
     @get:JsonProperty("includeCandidateTerms") val includeCandidateTerms: kotlin.Boolean? = true,
 
+    @Schema(example = "true", description = "Rule Engine 검증 결과를 포함할지 여부")
     @get:JsonProperty("includeValidationIssues") val includeValidationIssues: kotlin.Boolean? = true,
 
+    @Schema(example = "true", description = "표준화 문장 추천을 포함할지 여부")
     @get:JsonProperty("normalizeSentences") val normalizeSentences: kotlin.Boolean? = true
     ) {
 

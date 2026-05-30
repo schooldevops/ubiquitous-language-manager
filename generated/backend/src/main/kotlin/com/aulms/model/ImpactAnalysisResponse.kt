@@ -17,6 +17,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 용어 변경 영향도 분석 응답
@@ -31,26 +32,34 @@ import jakarta.validation.Valid
  */
 data class ImpactAnalysisResponse(
 
+    @Schema(example = "T-000001", required = true, description = "")
     @get:JsonProperty("termId", required = true) val termId: kotlin.String,
 
+    @Schema(example = "고객번호", required = true, description = "")
     @get:JsonProperty("standardTerm", required = true) val standardTerm: kotlin.String,
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("changeType", required = true) val changeType: ImpactChangeType,
 
+    @Schema(example = "true", required = true, description = "")
     @get:JsonProperty("includeTwoHop", required = true) val includeTwoHop: kotlin.Boolean,
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("riskLevel", required = true) val riskLevel: ImpactRiskLevel,
 
     @get:Min(0)
     @get:Max(100)
+    @Schema(example = "85", required = true, description = "")
     @get:JsonProperty("riskScore", required = true) val riskScore: kotlin.Int,
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "영향받는 시스템, DB, API, DTO, 문서, 테스트")
     @get:JsonProperty("impactedTargets", required = true) val impactedTargets: kotlin.collections.List<ImpactTarget>,
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "권장 조치 목록")
     @get:JsonProperty("recommendations", required = true) val recommendations: kotlin.collections.List<ImpactRecommendation>
     ) {
 

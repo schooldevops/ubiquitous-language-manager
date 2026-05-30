@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 영향 대상
@@ -25,18 +26,24 @@ import jakarta.validation.Valid
  */
 data class ImpactTarget(
 
+    @Schema(example = "API_FIELD", required = true, description = "")
     @get:JsonProperty("targetType", required = true) val targetType: ImpactTarget.TargetType,
 
+    @Schema(example = "customerNumber", required = true, description = "")
     @get:JsonProperty("targetName", required = true) val targetName: kotlin.String,
 
+    @Schema(example = "DICTIONARY", required = true, description = "")
     @get:JsonProperty("systemCode", required = true) val systemCode: kotlin.String,
 
+    @Schema(example = "apiField:DICTIONARY.고객.customerNumber", required = true, description = "")
     @get:JsonProperty("location", required = true) val location: kotlin.String,
 
     @get:Min(1)
     @get:Max(2)
+    @Schema(example = "1", required = true, description = "")
     @get:JsonProperty("hop", required = true) val hop: kotlin.Int,
 
+    @Schema(example = "customerNumber API 필드가 고객번호를 표현함", required = true, description = "")
     @get:JsonProperty("reason", required = true) val reason: kotlin.String
     ) {
 

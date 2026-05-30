@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 후보 승격 결과
@@ -22,9 +23,11 @@ import jakarta.validation.Valid
 data class CandidatePromotionResult(
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("candidate", required = true) val candidate: TermCandidate,
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("term", required = true) val term: Term
     ) {
 

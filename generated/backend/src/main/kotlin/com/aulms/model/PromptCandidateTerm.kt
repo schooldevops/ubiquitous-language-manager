@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 프롬프트에 주입할 신규 용어 후보
@@ -22,14 +23,19 @@ import jakarta.validation.Valid
  */
 data class PromptCandidateTerm(
 
+    @Schema(example = "고객선호배송시간대", required = true, description = "")
     @get:JsonProperty("candidateTerm", required = true) val candidateTerm: kotlin.String,
 
+    @Schema(example = "데이터 사전에 일치하는 승인 용어가 없음", required = true, description = "")
     @get:JsonProperty("reason", required = true) val reason: kotlin.String,
 
+    @Schema(example = "true", required = true, description = "")
     @get:JsonProperty("approvalRequired", required = true) val approvalRequired: kotlin.Boolean,
 
+    @Schema(example = "Customer Preferred Delivery Time Slot", description = "")
     @get:JsonProperty("recommendedEnglishName") val recommendedEnglishName: kotlin.String? = null,
 
+    @Schema(example = "CUST_PREF_DLV_TM_SLOT", description = "")
     @get:JsonProperty("recommendedAbbreviation") val recommendedAbbreviation: kotlin.String? = null
     ) {
 

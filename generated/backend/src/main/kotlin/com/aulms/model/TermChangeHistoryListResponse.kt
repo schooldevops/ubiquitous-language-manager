@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 용어 변경 이력 목록 응답
@@ -22,9 +23,11 @@ import jakarta.validation.Valid
 data class TermChangeHistoryListResponse(
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("items", required = true) val items: kotlin.collections.List<TermChangeHistory>,
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("page", required = true) val page: PageMetadata
     ) {
 

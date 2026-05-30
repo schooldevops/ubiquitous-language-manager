@@ -8,6 +8,11 @@ package com.aulms.api
 import com.aulms.model.ErrorResponse
 import com.aulms.model.TermAlias
 import com.aulms.model.TermAliasCreateRequest
+import io.swagger.v3.oas.annotations.*
+import io.swagger.v3.oas.annotations.enums.*
+import io.swagger.v3.oas.annotations.media.*
+import io.swagger.v3.oas.annotations.responses.*
+import io.swagger.v3.oas.annotations.security.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -34,24 +39,78 @@ import kotlin.collections.Map
 @Validated
 interface AliasApi {
 
-
+    @Operation(
+        tags = ["Alias",],
+        summary = "용어 별칭 등록",
+        operationId = "createTermAlias",
+        description = """""",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [Content(
+                mediaType = "application/json",
+                examples = [
+                    ExampleObject(name = "customerId", value = "{\n  \"aliasName\": \"\uACE0\uAC1DID\",\n  \"aliasType\": \"Synonym\",\n  \"recommendationAction\": \"\uACE0\uAC1D\uBC88\uD638\uB85C \uBCC0\uD658 \uAD8C\uC7A5\",\n  \"reason\": \"\uC5C5\uBB34 \uACE0\uAC1D \uC2DD\uBCC4 \uBC88\uD638 \uC758\uBBF8\uB85C \uC0AC\uC6A9\uB418\uB294 \uACBD\uC6B0 \uD45C\uC900 \uC6A9\uC5B4\uB294 \uACE0\uAC1D\uBC88\uD638\"\n}")
+                ]
+            )]
+        ),
+        responses = [
+            ApiResponse(responseCode = "201", description = "별칭 등록 성공", content = [Content(schema = Schema(implementation = TermAlias::class), examples = [
+                ExampleObject(name = "customerIdAlias", value = "{\n  \"aliasId\": \"A-000001\",\n  \"termId\": \"T-000001\",\n  \"aliasName\": \"\uACE0\uAC1DID\",\n  \"aliasType\": \"Synonym\",\n  \"recommendationAction\": \"\uACE0\uAC1D\uBC88\uD638\uB85C \uBCC0\uD658 \uAD8C\uC7A5\",\n  \"reason\": \"\uC5C5\uBB34 \uACE0\uAC1D \uC2DD\uBCC4 \uBC88\uD638 \uC758\uBBF8\uB85C \uC0AC\uC6A9\uB418\uB294 \uACBD\uC6B0 \uD45C\uC900 \uC6A9\uC5B4\uB294 \uACE0\uAC1D\uBC88\uD638\"\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "404", description = "리소스 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "termNotFound", value = "{\n  \"code\": \"TERM_NOT_FOUND\",\n  \"message\": \"\uD45C\uC900 \uC6A9\uC5B4\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"termId=T-000123\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "409", description = "중복 또는 상태 충돌", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "duplicateTerm", value = "{\n  \"code\": \"TERM_DUPLICATED\",\n  \"message\": \"\uC774\uBBF8 \uB4F1\uB85D\uB41C \uD45C\uC900 \uC6A9\uC5B4\uC785\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName=\uACE0\uAC1D\uBC88\uD638, domainName=\uACE0\uAC1D\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.POST],
             value = ["/terms/{termId}/aliases"],
             produces = ["application/json"],
             consumes = ["application/json"]
     )
-    fun createTermAlias( @PathVariable("termId") termId: kotlin.String, @Valid @RequestBody termAliasCreateRequest: TermAliasCreateRequest): ResponseEntity<TermAlias> {
+    fun createTermAlias(@Parameter(description = "용어 식별자", required = true) @PathVariable("termId") termId: kotlin.String,@Parameter(description = "", required = true) @Valid @RequestBody termAliasCreateRequest: TermAliasCreateRequest): ResponseEntity<TermAlias> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Alias",],
+        summary = "용어 별칭 목록 조회",
+        operationId = "listTermAliases",
+        description = """""",
+        responses = [
+            ApiResponse(responseCode = "200", description = "별칭 목록 조회 성공", content = [Content(array = ArraySchema(schema = Schema(implementation = TermAlias::class)), examples = [
+                ExampleObject(name = "customerNumberAliases", value = "[\n  {\n    \"aliasId\": \"A-000001\",\n    \"termId\": \"T-000001\",\n    \"aliasName\": \"\uACE0\uAC1DID\",\n    \"aliasType\": \"Synonym\",\n    \"recommendationAction\": \"\uACE0\uAC1D\uBC88\uD638\uB85C \uBCC0\uD658 \uAD8C\uC7A5\",\n    \"reason\": \"\uC5C5\uBB34 \uACE0\uAC1D \uC2DD\uBCC4 \uBC88\uD638 \uC758\uBBF8\uB85C \uC0AC\uC6A9\uB418\uB294 \uACBD\uC6B0 \uD45C\uC900 \uC6A9\uC5B4\uB294 \uACE0\uAC1D\uBC88\uD638\"\n  },\n  {\n    \"aliasId\": \"A-000002\",\n    \"termId\": \"T-000001\",\n    \"aliasName\": \"CUST_ID\",\n    \"aliasType\": \"Forbidden\",\n    \"recommendationAction\": \"CUST_NO \uC0AC\uC6A9\",\n    \"reason\": \"\uAE30\uC220 ID\uC640 \uC5C5\uBB34 \uACE0\uAC1D\uBC88\uD638\uAC00 \uD63C\uB3D9\uB420 \uC218 \uC788\uC74C\"\n  }\n]")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "404", description = "리소스 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "termNotFound", value = "{\n  \"code\": \"TERM_NOT_FOUND\",\n  \"message\": \"\uD45C\uC900 \uC6A9\uC5B4\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"termId=T-000123\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.GET],
             value = ["/terms/{termId}/aliases"],
             produces = ["application/json"]
     )
-    fun listTermAliases( @PathVariable("termId") termId: kotlin.String): ResponseEntity<List<TermAlias>> {
+    fun listTermAliases(@Parameter(description = "용어 식별자", required = true) @PathVariable("termId") termId: kotlin.String): ResponseEntity<List<TermAlias>> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }

@@ -10,6 +10,11 @@ import com.aulms.model.Term
 import com.aulms.model.TermApprovalRequest
 import com.aulms.model.TermChangeHistoryListResponse
 import com.aulms.model.TermDeprecationRequest
+import io.swagger.v3.oas.annotations.*
+import io.swagger.v3.oas.annotations.enums.*
+import io.swagger.v3.oas.annotations.media.*
+import io.swagger.v3.oas.annotations.responses.*
+import io.swagger.v3.oas.annotations.security.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -36,35 +41,123 @@ import kotlin.collections.Map
 @Validated
 interface GovernanceApi {
 
-
+    @Operation(
+        tags = ["Governance",],
+        summary = "표준 용어 승인",
+        operationId = "approveTerm",
+        description = """""",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [Content(
+                mediaType = "application/json",
+                examples = [
+                    ExampleObject(name = "approveCustomerNumber", value = "{\n  \"approver\": \"data.steward\",\n  \"reason\": \"\uC5C5\uBB34 \uC815\uC758\uC640 \uC0B0\uCD9C\uBB3C \uD45C\uD604 \uAC80\uD1A0 \uC644\uB8CC\"\n}")
+                ]
+            )]
+        ),
+        responses = [
+            ApiResponse(responseCode = "200", description = "표준 용어 승인 성공", content = [Content(schema = Schema(implementation = Term::class), examples = [
+                ExampleObject(name = "approvedCustomerNumber", value = "{\n  \"termId\": \"T-000001\",\n  \"termNumber\": \"TERM-000001\",\n  \"domainName\": \"\uACE0\uAC1D\",\n  \"usageType\": \"\uD45C\uC900\uD56D\uBAA9\",\n  \"koreanName\": \"\uACE0\uAC1D\uBC88\uD638\",\n  \"englishName\": \"Customer Number\",\n  \"englishAbbreviation\": \"CUST_NO\",\n  \"businessDefinition\": \"\uD68C\uC0AC\uC5D0\uC11C \uACE0\uAC1D\uC744 \uC5C5\uBB34\uC801\uC73C\uB85C \uC2DD\uBCC4\uD558\uAE30 \uC704\uD574 \uC0AC\uC6A9\uD558\uB294 \uBC88\uD638\",\n  \"usageContext\": \"\uC8FC\uBB38, \uACC4\uC57D, \uCCAD\uAD6C, \uC0C1\uB2F4 \uB4F1\uC5D0\uC11C \uACE0\uAC1D \uC2DD\uBCC4 \uAE30\uC900\uC73C\uB85C \uC0AC\uC6A9\",\n  \"physicalType\": \"VARCHAR\",\n  \"digits\": 20,\n  \"decimalPoint\": 0,\n  \"status\": \"Approved\",\n  \"owner\": \"\uACE0\uAC1D\uB3C4\uBA54\uC778 \uB370\uC774\uD130\uC2A4\uD29C\uC5B4\uB4DC\",\n  \"version\": \"1.0\",\n  \"expressions\": [\n\n  ],\n  \"aliases\": [\n\n  ],\n  \"createdAt\": \"2026-05-30T09:00:00+09:00\",\n  \"updatedAt\": \"2026-05-30T10:00:00+09:00\"\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "404", description = "리소스 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "termNotFound", value = "{\n  \"code\": \"TERM_NOT_FOUND\",\n  \"message\": \"\uD45C\uC900 \uC6A9\uC5B4\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"termId=T-000123\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "409", description = "중복 또는 상태 충돌", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "duplicateTerm", value = "{\n  \"code\": \"TERM_DUPLICATED\",\n  \"message\": \"\uC774\uBBF8 \uB4F1\uB85D\uB41C \uD45C\uC900 \uC6A9\uC5B4\uC785\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName=\uACE0\uAC1D\uBC88\uD638, domainName=\uACE0\uAC1D\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.POST],
             value = ["/terms/{termId}/approve"],
             produces = ["application/json"],
             consumes = ["application/json"]
     )
-    fun approveTerm( @PathVariable("termId") termId: kotlin.String, @Valid @RequestBody termApprovalRequest: TermApprovalRequest): ResponseEntity<Term> {
+    fun approveTerm(@Parameter(description = "용어 식별자", required = true) @PathVariable("termId") termId: kotlin.String,@Parameter(description = "", required = true) @Valid @RequestBody termApprovalRequest: TermApprovalRequest): ResponseEntity<Term> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Governance",],
+        summary = "표준 용어 폐기",
+        operationId = "deprecateTerm",
+        description = """""",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [Content(
+                mediaType = "application/json",
+                examples = [
+                    ExampleObject(name = "deprecateCustId", value = "{\n  \"approver\": \"data.steward\",\n  \"replacementTermId\": \"T-000001\",\n  \"reason\": \"CUST_ID\uB294 \uAE30\uC220 ID\uC640 \uD63C\uB3D9 \uAC00\uB2A5\uD558\uC5EC \uACE0\uAC1D\uBC88\uD638\uB85C \uB300\uCCB4\",\n  \"impactAnalysisId\": \"IA-000001\"\n}")
+                ]
+            )]
+        ),
+        responses = [
+            ApiResponse(responseCode = "200", description = "표준 용어 폐기 성공", content = [Content(schema = Schema(implementation = Term::class), examples = [
+                ExampleObject(name = "deprecatedCustomerId", value = "{\n  \"termId\": \"T-000123\",\n  \"termNumber\": \"TERM-000123\",\n  \"domainName\": \"\uACE0\uAC1D\",\n  \"usageType\": \"\uD45C\uC900\uD56D\uBAA9\",\n  \"koreanName\": \"\uACE0\uAC1DID\",\n  \"englishName\": \"Customer ID\",\n  \"englishAbbreviation\": \"CUST_ID\",\n  \"businessDefinition\": \"\uACE0\uAC1D \uC2DD\uBCC4 \uD45C\uD604\uC73C\uB85C \uC0AC\uC6A9\uB418\uC5C8\uC73C\uB098 \uACE0\uAC1D\uBC88\uD638\uC640 \uD63C\uB3D9\uB418\uC5B4 \uD3D0\uAE30\",\n  \"usageContext\": \"\uAE30\uC874 API\uC640 \uBB38\uC11C\uC5D0\uC11C\uB9CC \uCC38\uC870\",\n  \"physicalType\": \"VARCHAR\",\n  \"digits\": 20,\n  \"decimalPoint\": 0,\n  \"status\": \"Deprecated\",\n  \"owner\": \"\uACE0\uAC1D\uB3C4\uBA54\uC778 \uB370\uC774\uD130\uC2A4\uD29C\uC5B4\uB4DC\",\n  \"version\": \"2.0\",\n  \"expressions\": [\n\n  ],\n  \"aliases\": [\n\n  ],\n  \"createdAt\": \"2026-05-29T09:00:00+09:00\",\n  \"updatedAt\": \"2026-05-30T10:00:00+09:00\"\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "404", description = "리소스 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "termNotFound", value = "{\n  \"code\": \"TERM_NOT_FOUND\",\n  \"message\": \"\uD45C\uC900 \uC6A9\uC5B4\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"termId=T-000123\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "409", description = "중복 또는 상태 충돌", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "duplicateTerm", value = "{\n  \"code\": \"TERM_DUPLICATED\",\n  \"message\": \"\uC774\uBBF8 \uB4F1\uB85D\uB41C \uD45C\uC900 \uC6A9\uC5B4\uC785\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName=\uACE0\uAC1D\uBC88\uD638, domainName=\uACE0\uAC1D\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.POST],
             value = ["/terms/{termId}/deprecate"],
             produces = ["application/json"],
             consumes = ["application/json"]
     )
-    fun deprecateTerm( @PathVariable("termId") termId: kotlin.String, @Valid @RequestBody termDeprecationRequest: TermDeprecationRequest): ResponseEntity<Term> {
+    fun deprecateTerm(@Parameter(description = "용어 식별자", required = true) @PathVariable("termId") termId: kotlin.String,@Parameter(description = "", required = true) @Valid @RequestBody termDeprecationRequest: TermDeprecationRequest): ResponseEntity<Term> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Governance",],
+        summary = "용어 변경 이력 조회",
+        operationId = "listTermHistory",
+        description = """""",
+        responses = [
+            ApiResponse(responseCode = "200", description = "용어 변경 이력 조회 성공", content = [Content(schema = Schema(implementation = TermChangeHistoryListResponse::class), examples = [
+                ExampleObject(name = "customerNumberHistory", value = "{\n  \"items\": [\n    {\n      \"changeHistoryId\": 1,\n      \"termId\": \"T-000001\",\n      \"changeType\": \"CREATE\",\n      \"newStatus\": \"Draft\",\n      \"reason\": \"\uC2E0\uADDC \uD45C\uC900 \uC6A9\uC5B4 \uB4F1\uB85D\",\n      \"requestedBy\": \"planner\",\n      \"createdAt\": \"2026-05-30T09:00:00+09:00\"\n    },\n    {\n      \"changeHistoryId\": 2,\n      \"termId\": \"T-000001\",\n      \"changeType\": \"APPROVE\",\n      \"previousStatus\": \"Draft\",\n      \"newStatus\": \"Approved\",\n      \"reason\": \"\uC5C5\uBB34 \uC815\uC758\uC640 \uC0B0\uCD9C\uBB3C \uD45C\uD604 \uAC80\uD1A0 \uC644\uB8CC\",\n      \"requestedBy\": \"planner\",\n      \"approvedBy\": \"data.steward\",\n      \"impactAnalysisId\": \"IA-000001\",\n      \"createdAt\": \"2026-05-30T10:00:00+09:00\"\n    }\n  ],\n  \"page\": {\n    \"page\": 0,\n    \"size\": 20,\n    \"totalElements\": 2,\n    \"totalPages\": 1\n  }\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "404", description = "리소스 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "termNotFound", value = "{\n  \"code\": \"TERM_NOT_FOUND\",\n  \"message\": \"\uD45C\uC900 \uC6A9\uC5B4\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"termId=T-000123\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.GET],
             value = ["/terms/{termId}/history"],
             produces = ["application/json"]
     )
-    fun listTermHistory( @PathVariable("termId") termId: kotlin.String,@Min(0) @Valid @RequestParam(value = "page", required = false, defaultValue = "0") page: kotlin.Int,@Min(1) @Max(200)  @Valid @RequestParam(value = "size", required = false, defaultValue = "20") size: kotlin.Int): ResponseEntity<TermChangeHistoryListResponse> {
+    fun listTermHistory(@Parameter(description = "용어 식별자", required = true) @PathVariable("termId") termId: kotlin.String,@Min(0)@Parameter(description = "", schema = Schema(defaultValue = "0")) @Valid @RequestParam(value = "page", required = false, defaultValue = "0") page: kotlin.Int,@Min(1) @Max(200) @Parameter(description = "", schema = Schema(defaultValue = "20")) @Valid @RequestParam(value = "size", required = false, defaultValue = "20") size: kotlin.Int): ResponseEntity<TermChangeHistoryListResponse> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }

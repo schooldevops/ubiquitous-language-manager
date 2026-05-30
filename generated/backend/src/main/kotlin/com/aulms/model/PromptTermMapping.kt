@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 프롬프트에 주입할 표준 용어 매핑
@@ -27,19 +28,26 @@ import jakarta.validation.Valid
  */
 data class PromptTermMapping(
 
+    @Schema(example = "고객번호", required = true, description = "")
     @get:JsonProperty("concept", required = true) val concept: kotlin.String,
 
+    @Schema(example = "고객번호", required = true, description = "")
     @get:JsonProperty("standardTerm", required = true) val standardTerm: kotlin.String,
 
+    @Schema(example = "Customer Number", required = true, description = "")
     @get:JsonProperty("englishName", required = true) val englishName: kotlin.String,
 
+    @Schema(example = "CUST_NO", required = true, description = "")
     @get:JsonProperty("dbColumn", required = true) val dbColumn: kotlin.String,
 
+    @Schema(example = "customerNumber", required = true, description = "")
     @get:JsonProperty("apiField", required = true) val apiField: kotlin.String,
 
+    @Schema(example = "customerNumber", required = true, description = "")
     @get:JsonProperty("codeVariable", required = true) val codeVariable: kotlin.String,
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("status", required = true) val status: TermStatus
     ) {
 

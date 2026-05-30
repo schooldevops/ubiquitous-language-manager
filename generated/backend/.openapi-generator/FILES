@@ -1,5 +1,6 @@
 README.md
 pom.xml
+src/main/kotlin/com/aulms/SpringDocConfiguration.kt
 src/main/kotlin/com/aulms/api/AIApi.kt
 src/main/kotlin/com/aulms/api/AliasApi.kt
 src/main/kotlin/com/aulms/api/ApiUtil.kt

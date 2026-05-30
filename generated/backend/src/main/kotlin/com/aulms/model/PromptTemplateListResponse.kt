@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 프롬프트 템플릿 목록 응답
@@ -20,6 +21,7 @@ import jakarta.validation.Valid
 data class PromptTemplateListResponse(
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("items", required = true) val items: kotlin.collections.List<PromptTemplateSummary>
     ) {
 

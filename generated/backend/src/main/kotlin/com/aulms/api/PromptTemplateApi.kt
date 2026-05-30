@@ -13,6 +13,11 @@ import com.aulms.model.PromptTemplatePreviewResponse
 import com.aulms.model.PromptTemplateStatus
 import com.aulms.model.PromptTemplateType
 import com.aulms.model.PromptTemplateVersionListResponse
+import io.swagger.v3.oas.annotations.*
+import io.swagger.v3.oas.annotations.enums.*
+import io.swagger.v3.oas.annotations.media.*
+import io.swagger.v3.oas.annotations.responses.*
+import io.swagger.v3.oas.annotations.security.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -39,44 +44,132 @@ import kotlin.collections.Map
 @Validated
 interface PromptTemplateApi {
 
-
+    @Operation(
+        tags = ["PromptTemplate",],
+        summary = "프롬프트 템플릿 상세 조회",
+        operationId = "getPromptTemplate",
+        description = """템플릿 본문, 변수, 버전 정책, 변경 이력을 조회한다.""",
+        responses = [
+            ApiResponse(responseCode = "200", description = "프롬프트 템플릿 상세 조회 성공", content = [Content(schema = Schema(implementation = PromptTemplate::class), examples = [
+                ExampleObject(name = "vibeCodingTemplate", value = "{\n  \"templateId\": \"PT-VIBE-001\",\n  \"type\": \"VibeCoding\",\n  \"name\": \"\uC0AC\uB0B4 \uB370\uC774\uD130 \uC0AC\uC804 \uAE30\uBC18 \uAC1C\uBC1C \uADDC\uCE59\",\n  \"version\": \"1.0.0\",\n  \"status\": \"Active\",\n  \"description\": \"DB, API, DTO, Entity, \uD14C\uC2A4\uD2B8 \uC0DD\uC131 \uC2DC \uD45C\uC900 \uC6A9\uC5B4\uB97C \uAC15\uC81C\uD558\uB294 \uD504\uB86C\uD504\uD2B8\",\n  \"body\": \"# \uC0AC\uB0B4 \uB370\uC774\uD130 \uC0AC\uC804 \uAE30\uBC18 \uAC1C\uBC1C \uADDC\uCE59\\n\uC694\uAD6C\uC0AC\uD56D: {{requirementText}}\\n\uD45C\uC900 \uC6A9\uC5B4 \uB9E4\uD551: {{termMappings}}\\n\uC2E0\uADDC \uD6C4\uBCF4: {{candidateTerms}}\\n\",\n  \"variables\": [\n    {\n      \"name\": \"requirementText\",\n      \"description\": \"\uC0AC\uC6A9\uC790\uAC00 \uC785\uB825\uD55C \uC694\uAD6C\uC0AC\uD56D\",\n      \"required\": true,\n      \"source\": \"UserInput\"\n    },\n    {\n      \"name\": \"termMappings\",\n      \"description\": \"\uB370\uC774\uD130 \uC0AC\uC804 \uAC80\uC0C9 \uACB0\uACFC\uB85C \uD655\uC815\uB41C \uD45C\uC900 \uC6A9\uC5B4 \uB9E4\uD551 \uBAA9\uB85D\",\n      \"required\": true,\n      \"source\": \"DictionarySearch\"\n    }\n  ],\n  \"versionPolicy\": \"MAJOR\uB294 \uCD9C\uB825 \uAD6C\uC870 \uBCC0\uACBD, MINOR\uB294 \uADDC\uCE59 \uCD94\uAC00, PATCH\uB294 \uBB38\uAD6C \uBCF4\uC644\uC5D0 \uC0AC\uC6A9\uD55C\uB2E4.\",\n  \"histories\": [\n    {\n      \"historyId\": \"PT-HIST-000001\",\n      \"templateId\": \"PT-VIBE-001\",\n      \"version\": \"1.0.0\",\n      \"changeType\": \"Created\",\n      \"reason\": \"MVP3 \uAE30\uBCF8 \uD15C\uD50C\uB9BF \uB4F1\uB85D\",\n      \"actor\": \"system\",\n      \"createdAt\": \"2026-05-30T09:00:00+09:00\"\n    }\n  ],\n  \"createdAt\": \"2026-05-30T09:00:00+09:00\",\n  \"updatedAt\": \"2026-05-30T09:00:00+09:00\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "404", description = "리소스 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "termNotFound", value = "{\n  \"code\": \"TERM_NOT_FOUND\",\n  \"message\": \"\uD45C\uC900 \uC6A9\uC5B4\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"termId=T-000123\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.GET],
             value = ["/prompt-templates/{templateId}"],
             produces = ["application/json"]
     )
-    fun getPromptTemplate( @PathVariable("templateId") templateId: kotlin.String): ResponseEntity<PromptTemplate> {
+    fun getPromptTemplate(@Parameter(description = "프롬프트 템플릿 식별자", required = true) @PathVariable("templateId") templateId: kotlin.String): ResponseEntity<PromptTemplate> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["PromptTemplate",],
+        summary = "프롬프트 템플릿 버전 목록 조회",
+        operationId = "listPromptTemplateVersions",
+        description = """템플릿의 버전별 변경 사유와 활성 여부를 조회한다.""",
+        responses = [
+            ApiResponse(responseCode = "200", description = "프롬프트 템플릿 버전 목록 조회 성공", content = [Content(schema = Schema(implementation = PromptTemplateVersionListResponse::class), examples = [
+                ExampleObject(name = "vibeCodingVersions", value = "{\n  \"items\": [\n    {\n      \"templateId\": \"PT-VIBE-001\",\n      \"version\": \"1.0.0\",\n      \"status\": \"Active\",\n      \"changeReason\": \"MVP3 \uAE30\uBCF8 \uBC14\uC774\uBE0C\uCF54\uB529 \uD504\uB86C\uD504\uD2B8 \uB4F1\uB85D\",\n      \"createdBy\": \"system\",\n      \"createdAt\": \"2026-05-30T09:00:00+09:00\"\n    },\n    {\n      \"templateId\": \"PT-VIBE-001\",\n      \"version\": \"1.1.0\",\n      \"status\": \"Draft\",\n      \"changeReason\": \"OpenAPI \uC608\uC81C \uC0DD\uC131 \uADDC\uCE59 \uCD94\uAC00\",\n      \"createdBy\": \"data.steward\",\n      \"createdAt\": \"2026-05-30T10:00:00+09:00\"\n    }\n  ]\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "404", description = "리소스 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "termNotFound", value = "{\n  \"code\": \"TERM_NOT_FOUND\",\n  \"message\": \"\uD45C\uC900 \uC6A9\uC5B4\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"termId=T-000123\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.GET],
             value = ["/prompt-templates/{templateId}/versions"],
             produces = ["application/json"]
     )
-    fun listPromptTemplateVersions( @PathVariable("templateId") templateId: kotlin.String): ResponseEntity<PromptTemplateVersionListResponse> {
+    fun listPromptTemplateVersions(@Parameter(description = "프롬프트 템플릿 식별자", required = true) @PathVariable("templateId") templateId: kotlin.String): ResponseEntity<PromptTemplateVersionListResponse> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["PromptTemplate",],
+        summary = "프롬프트 템플릿 목록 조회",
+        operationId = "listPromptTemplates",
+        description = """바이브코딩과 기획서 작성에 사용할 데이터 사전 기반 AI 프롬프트 템플릿 목록을 조회한다.""",
+        responses = [
+            ApiResponse(responseCode = "200", description = "프롬프트 템플릿 목록 조회 성공", content = [Content(schema = Schema(implementation = PromptTemplateListResponse::class), examples = [
+                ExampleObject(name = "defaultTemplates", value = "{\n  \"items\": [\n    {\n      \"templateId\": \"PT-VIBE-001\",\n      \"type\": \"VibeCoding\",\n      \"name\": \"\uC0AC\uB0B4 \uB370\uC774\uD130 \uC0AC\uC804 \uAE30\uBC18 \uAC1C\uBC1C \uADDC\uCE59\",\n      \"version\": \"1.0.0\",\n      \"status\": \"Active\",\n      \"description\": \"DB, API, DTO, Entity, \uD14C\uC2A4\uD2B8 \uC0DD\uC131 \uC2DC \uD45C\uC900 \uC6A9\uC5B4\uB97C \uAC15\uC81C\uD558\uB294 \uD504\uB86C\uD504\uD2B8\",\n      \"updatedAt\": \"2026-05-28T09:00:00+09:00\"\n    },\n    {\n      \"templateId\": \"PT-PLAN-001\",\n      \"type\": \"Planning\",\n      \"name\": \"\uB370\uC774\uD130 \uC0AC\uC804 \uAE30\uBC18 \uAE30\uD68D\uC11C \uC791\uC131 \uADDC\uCE59\",\n      \"version\": \"1.0.0\",\n      \"status\": \"Active\",\n      \"description\": \"\uC694\uAD6C\uC0AC\uD56D\uACFC \uAE30\uD68D\uC11C \uD45C\uD604\uC744 \uD45C\uC900 \uC6A9\uC5B4\uB85C \uC815\uADDC\uD654\uD558\uB294 \uD504\uB86C\uD504\uD2B8\",\n      \"updatedAt\": \"2026-05-28T09:00:00+09:00\"\n    }\n  ]\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.GET],
             value = ["/prompt-templates"],
             produces = ["application/json"]
     )
-    fun listPromptTemplates( @Valid @RequestParam(value = "type", required = false) type: PromptTemplateType?, @Valid @RequestParam(value = "status", required = false) status: PromptTemplateStatus?): ResponseEntity<PromptTemplateListResponse> {
+    fun listPromptTemplates(@Parameter(description = "템플릿 유형 필터", schema = Schema(allowableValues = ["VibeCoding", "Planning"])) @Valid @RequestParam(value = "type", required = false) type: PromptTemplateType?,@Parameter(description = "템플릿 상태 필터", schema = Schema(allowableValues = ["Draft", "Active", "Deprecated"])) @Valid @RequestParam(value = "status", required = false) status: PromptTemplateStatus?): ResponseEntity<PromptTemplateListResponse> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["PromptTemplate",],
+        summary = "프롬프트 템플릿 미리보기",
+        operationId = "previewPromptTemplate",
+        description = """요구사항, 데이터 사전 검색 결과, 신규 후보를 템플릿 변수로 주입해 AI 도구에 전달할 최종 프롬프트를 생성한다.""",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [Content(
+                mediaType = "application/json",
+                examples = [
+                    ExampleObject(name = "customerOrderApi", value = "{\n  \"requirementText\": \"\uACE0\uAC1D\uBCC4 \uC8FC\uBB38 \uB0B4\uC5ED\uC744 \uC870\uD68C\uD558\uB294 API \uB9CC\uB4E4\uC5B4\uC918.\",\n  \"termMappings\": [\n    {\n      \"concept\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"englishName\": \"Customer Number\",\n      \"dbColumn\": \"CUST_NO\",\n      \"apiField\": \"customerNumber\",\n      \"codeVariable\": \"customerNumber\",\n      \"status\": \"Approved\"\n    },\n    {\n      \"concept\": \"\uC8FC\uBB38\uBC88\uD638\",\n      \"standardTerm\": \"\uC8FC\uBB38\uBC88\uD638\",\n      \"englishName\": \"Order Number\",\n      \"dbColumn\": \"ORD_NO\",\n      \"apiField\": \"orderNumber\",\n      \"codeVariable\": \"orderNumber\",\n      \"status\": \"Approved\"\n    }\n  ],\n  \"candidateTerms\": [\n\n  ]\n}")
+                ]
+            )]
+        ),
+        responses = [
+            ApiResponse(responseCode = "200", description = "프롬프트 템플릿 미리보기 성공", content = [Content(schema = Schema(implementation = PromptTemplatePreviewResponse::class), examples = [
+                ExampleObject(name = "customerOrderApiPrompt", value = "{\n  \"templateId\": \"PT-VIBE-001\",\n  \"version\": \"1.0.0\",\n  \"renderedPrompt\": \"# \uC0AC\uB0B4 \uB370\uC774\uD130 \uC0AC\uC804 \uAE30\uBC18 \uAC1C\uBC1C \uADDC\uCE59\\n\uC694\uAD6C\uC0AC\uD56D: \uACE0\uAC1D\uBCC4 \uC8FC\uBB38 \uB0B4\uC5ED\uC744 \uC870\uD68C\uD558\uB294 API \uB9CC\uB4E4\uC5B4\uC918.\\n\uD45C\uC900 \uC6A9\uC5B4:\\n- \uACE0\uAC1D\uBC88\uD638 / CUST_NO / customerNumber\\n- \uC8FC\uBB38\uBC88\uD638 / ORD_NO / orderNumber\\n\uB370\uC774\uD130 \uC0AC\uC804\uC5D0 \uC5C6\uB294 \uC6A9\uC5B4\uB294 \uC2E0\uADDC \uD6C4\uBCF4\uB85C \uBD84\uB9AC\uD55C\uB2E4.\\n\",\n  \"injectedVariables\": [\n    \"requirementText\",\n    \"termMappings\",\n    \"candidateTerms\"\n  ]\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "404", description = "리소스 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "termNotFound", value = "{\n  \"code\": \"TERM_NOT_FOUND\",\n  \"message\": \"\uD45C\uC900 \uC6A9\uC5B4\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"termId=T-000123\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.POST],
             value = ["/prompt-templates/{templateId}/preview"],
             produces = ["application/json"],
             consumes = ["application/json"]
     )
-    fun previewPromptTemplate( @PathVariable("templateId") templateId: kotlin.String, @Valid @RequestBody promptTemplatePreviewRequest: PromptTemplatePreviewRequest): ResponseEntity<PromptTemplatePreviewResponse> {
+    fun previewPromptTemplate(@Parameter(description = "프롬프트 템플릿 식별자", required = true) @PathVariable("templateId") templateId: kotlin.String,@Parameter(description = "", required = true) @Valid @RequestBody promptTemplatePreviewRequest: PromptTemplatePreviewRequest): ResponseEntity<PromptTemplatePreviewResponse> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }

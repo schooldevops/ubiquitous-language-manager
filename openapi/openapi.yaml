@@ -285,29 +285,64 @@ components:
         application/json:
           schema:
             $ref: './schemas/common.yaml#/ErrorResponse'
+          examples:
+            invalidRequest:
+              value:
+                code: INVALID_REQUEST
+                message: 요청 값이 올바르지 않습니다.
+                detail: koreanName은 필수입니다.
+                traceId: 01HX8R7P9Q6RZC6Q9VQ0X7Z3WB
     Unauthorized:
       description: 인증 필요
       content:
         application/json:
           schema:
             $ref: './schemas/common.yaml#/ErrorResponse'
+          examples:
+            missingToken:
+              value:
+                code: UNAUTHORIZED
+                message: 인증 토큰이 필요합니다.
+                detail: Authorization Bearer 토큰을 전달해야 합니다.
+                traceId: 01HX8R7P9Q6RZC6Q9VQ0X7Z3WB
     Forbidden:
       description: 권한 없음
       content:
         application/json:
           schema:
             $ref: './schemas/common.yaml#/ErrorResponse'
+          examples:
+            forbidden:
+              value:
+                code: FORBIDDEN
+                message: 요청한 작업을 수행할 권한이 없습니다.
+                detail: DATA_STEWARD 권한이 필요합니다.
+                traceId: 01HX8R7P9Q6RZC6Q9VQ0X7Z3WB
     NotFound:
       description: 리소스 없음
       content:
         application/json:
           schema:
             $ref: './schemas/common.yaml#/ErrorResponse'
+          examples:
+            termNotFound:
+              value:
+                code: TERM_NOT_FOUND
+                message: 표준 용어를 찾을 수 없습니다.
+                detail: termId=T-000123
+                traceId: 01HX8R7P9Q6RZC6Q9VQ0X7Z3WB
     Conflict:
       description: 중복 또는 상태 충돌
       content:
         application/json:
           schema:
             $ref: './schemas/common.yaml#/ErrorResponse'
+          examples:
+            duplicateTerm:
+              value:
+                code: TERM_DUPLICATED
+                message: 이미 등록된 표준 용어입니다.
+                detail: koreanName=고객번호, domainName=고객
+                traceId: 01HX8R7P9Q6RZC6Q9VQ0X7Z3WB
 security:
   - bearerAuth: []

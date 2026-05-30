@@ -35,6 +35,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.25")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 }

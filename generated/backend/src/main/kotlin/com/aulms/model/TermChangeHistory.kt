@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 용어 변경 이력
@@ -30,26 +31,36 @@ import jakarta.validation.Valid
  */
 data class TermChangeHistory(
 
+    @Schema(example = "1", required = true, description = "")
     @get:JsonProperty("changeHistoryId", required = true) val changeHistoryId: kotlin.Long,
 
+    @Schema(example = "APPROVE", required = true, description = "")
     @get:JsonProperty("changeType", required = true) val changeType: kotlin.String,
 
+    @Schema(example = "업무 정의와 산출물 표현 검토 완료", required = true, description = "")
     @get:JsonProperty("reason", required = true) val reason: kotlin.String,
 
+    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("createdAt", required = true) val createdAt: java.time.OffsetDateTime,
 
+    @Schema(example = "T-000001", description = "")
     @get:JsonProperty("termId") val termId: kotlin.String? = null,
 
     @field:Valid
+    @Schema(example = "null", description = "")
     @get:JsonProperty("previousStatus") val previousStatus: TermStatus? = null,
 
     @field:Valid
+    @Schema(example = "null", description = "")
     @get:JsonProperty("newStatus") val newStatus: TermStatus? = null,
 
+    @Schema(example = "planner", description = "")
     @get:JsonProperty("requestedBy") val requestedBy: kotlin.String? = null,
 
+    @Schema(example = "data.steward", description = "")
     @get:JsonProperty("approvedBy") val approvedBy: kotlin.String? = null,
 
+    @Schema(example = "IA-000001", description = "")
     @get:JsonProperty("impactAnalysisId") val impactAnalysisId: kotlin.String? = null
     ) {
 

@@ -13,6 +13,11 @@ import com.aulms.model.TermCandidateCreateRequest
 import com.aulms.model.TermCandidateListResponse
 import com.aulms.model.TermCandidatePromoteRequest
 import com.aulms.model.TermCandidateReviewRequest
+import io.swagger.v3.oas.annotations.*
+import io.swagger.v3.oas.annotations.enums.*
+import io.swagger.v3.oas.annotations.media.*
+import io.swagger.v3.oas.annotations.responses.*
+import io.swagger.v3.oas.annotations.security.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -39,56 +44,192 @@ import kotlin.collections.Map
 @Validated
 interface CandidateApi {
 
-
+    @Operation(
+        tags = ["Candidate",],
+        summary = "신규 용어 후보 등록",
+        operationId = "createCandidate",
+        description = """""",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [Content(
+                mediaType = "application/json",
+                examples = [
+                    ExampleObject(name = "preferredDeliveryTimeSlot", value = "{\n  \"koreanName\": \"\uACE0\uAC1D\uC120\uD638\uBC30\uC1A1\uC2DC\uAC04\uB300\",\n  \"englishName\": \"Customer Preferred Delivery Time Slot\",\n  \"englishAbbreviation\": \"CUST_PREF_DLV_TM_SLOT\",\n  \"domainName\": \"\uACE0\uAC1D\",\n  \"businessDefinition\": \"\uACE0\uAC1D\uC774 \uC120\uD638\uD558\uB294 \uBC30\uC1A1 \uC2DC\uAC04\uB300\",\n  \"usageContext\": \"\uBC30\uC1A1 \uC635\uC158 \uCD94\uCC9C\uACFC \uBC30\uC1A1 \uC694\uCCAD \uD654\uBA74\uC5D0\uC11C \uC0AC\uC6A9\",\n  \"physicalType\": \"VARCHAR\",\n  \"digits\": 20,\n  \"decimalPoint\": 0,\n  \"requestedBy\": \"planner01\"\n}")
+                ]
+            )]
+        ),
+        responses = [
+            ApiResponse(responseCode = "201", description = "후보 등록 성공", content = [Content(schema = Schema(implementation = TermCandidate::class), examples = [
+                ExampleObject(name = "preferredDeliveryTimeSlotDraft", value = "{\n  \"candidateId\": \"CAND-000001\",\n  \"koreanName\": \"\uACE0\uAC1D\uC120\uD638\uBC30\uC1A1\uC2DC\uAC04\uB300\",\n  \"englishName\": \"Customer Preferred Delivery Time Slot\",\n  \"englishAbbreviation\": \"CUST_PREF_DLV_TM_SLOT\",\n  \"domainName\": \"\uACE0\uAC1D\",\n  \"businessDefinition\": \"\uACE0\uAC1D\uC774 \uC120\uD638\uD558\uB294 \uBC30\uC1A1 \uC2DC\uAC04\uB300\",\n  \"usageContext\": \"\uBC30\uC1A1 \uC635\uC158 \uCD94\uCC9C\uACFC \uBC30\uC1A1 \uC694\uCCAD \uD654\uBA74\uC5D0\uC11C \uC0AC\uC6A9\",\n  \"physicalType\": \"VARCHAR\",\n  \"digits\": 20,\n  \"decimalPoint\": 0,\n  \"status\": \"Draft\",\n  \"requestedBy\": \"planner01\",\n  \"similarTerms\": [\n    {\n      \"termId\": \"T-000001\",\n      \"koreanName\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"englishName\": \"Customer Number\",\n      \"dbColumn\": \"CUST_NO\",\n      \"apiField\": \"customerNumber\",\n      \"reason\": \"\uAC19\uC740 \uACE0\uAC1D \uB3C4\uBA54\uC778\uC758 \uAE30\uC874 \uD45C\uC900 \uC6A9\uC5B4\"\n    }\n  ],\n  \"histories\": [\n    {\n      \"historyId\": \"CAND-HIST-000001\",\n      \"candidateId\": \"CAND-000001\",\n      \"status\": \"Draft\",\n      \"reason\": \"\uC2E0\uADDC \uD6C4\uBCF4 \uB4F1\uB85D\",\n      \"actor\": \"planner01\",\n      \"createdAt\": \"2026-05-30T09:00:00+09:00\"\n    }\n  ],\n  \"createdAt\": \"2026-05-30T09:00:00+09:00\",\n  \"updatedAt\": \"2026-05-30T09:00:00+09:00\"\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "409", description = "중복 또는 상태 충돌", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "duplicateTerm", value = "{\n  \"code\": \"TERM_DUPLICATED\",\n  \"message\": \"\uC774\uBBF8 \uB4F1\uB85D\uB41C \uD45C\uC900 \uC6A9\uC5B4\uC785\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName=\uACE0\uAC1D\uBC88\uD638, domainName=\uACE0\uAC1D\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.POST],
             value = ["/candidates"],
             produces = ["application/json"],
             consumes = ["application/json"]
     )
-    fun createCandidate( @Valid @RequestBody termCandidateCreateRequest: TermCandidateCreateRequest): ResponseEntity<TermCandidate> {
+    fun createCandidate(@Parameter(description = "", required = true) @Valid @RequestBody termCandidateCreateRequest: TermCandidateCreateRequest): ResponseEntity<TermCandidate> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Candidate",],
+        summary = "신규 용어 후보 상세 조회",
+        operationId = "getCandidate",
+        description = """""",
+        responses = [
+            ApiResponse(responseCode = "200", description = "후보 상세 조회 성공", content = [Content(schema = Schema(implementation = TermCandidate::class), examples = [
+                ExampleObject(name = "preferredDeliveryTimeSlot", value = "{\n  \"candidateId\": \"CAND-000001\",\n  \"koreanName\": \"\uACE0\uAC1D\uC120\uD638\uBC30\uC1A1\uC2DC\uAC04\uB300\",\n  \"englishName\": \"Customer Preferred Delivery Time Slot\",\n  \"englishAbbreviation\": \"CUST_PREF_DLV_TM_SLOT\",\n  \"domainName\": \"\uACE0\uAC1D\",\n  \"businessDefinition\": \"\uACE0\uAC1D\uC774 \uC120\uD638\uD558\uB294 \uBC30\uC1A1 \uC2DC\uAC04\uB300\",\n  \"usageContext\": \"\uBC30\uC1A1 \uC635\uC158 \uCD94\uCC9C\uACFC \uBC30\uC1A1 \uC694\uCCAD \uD654\uBA74\uC5D0\uC11C \uC0AC\uC6A9\",\n  \"physicalType\": \"VARCHAR\",\n  \"digits\": 20,\n  \"decimalPoint\": 0,\n  \"status\": \"Reviewing\",\n  \"requestedBy\": \"planner01\",\n  \"reviewedBy\": \"data.steward\",\n  \"similarTerms\": [\n    {\n      \"termId\": \"T-000001\",\n      \"koreanName\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"englishName\": \"Customer Number\",\n      \"dbColumn\": \"CUST_NO\",\n      \"apiField\": \"customerNumber\",\n      \"reason\": \"\uAC19\uC740 \uACE0\uAC1D \uB3C4\uBA54\uC778\uC758 \uAE30\uC874 \uD45C\uC900 \uC6A9\uC5B4\"\n    }\n  ],\n  \"histories\": [\n    {\n      \"historyId\": \"CAND-HIST-000001\",\n      \"candidateId\": \"CAND-000001\",\n      \"status\": \"Draft\",\n      \"reason\": \"\uC2E0\uADDC \uD6C4\uBCF4 \uB4F1\uB85D\",\n      \"actor\": \"planner01\",\n      \"createdAt\": \"2026-05-30T09:00:00+09:00\"\n    }\n  ],\n  \"createdAt\": \"2026-05-30T09:00:00+09:00\",\n  \"updatedAt\": \"2026-05-30T10:00:00+09:00\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "404", description = "리소스 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "termNotFound", value = "{\n  \"code\": \"TERM_NOT_FOUND\",\n  \"message\": \"\uD45C\uC900 \uC6A9\uC5B4\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"termId=T-000123\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.GET],
             value = ["/candidates/{candidateId}"],
             produces = ["application/json"]
     )
-    fun getCandidate( @PathVariable("candidateId") candidateId: kotlin.String): ResponseEntity<TermCandidate> {
+    fun getCandidate(@Parameter(description = "후보 식별자", required = true) @PathVariable("candidateId") candidateId: kotlin.String): ResponseEntity<TermCandidate> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Candidate",],
+        summary = "신규 용어 후보 목록 조회",
+        operationId = "listCandidates",
+        description = """""",
+        responses = [
+            ApiResponse(responseCode = "200", description = "후보 목록 조회 성공", content = [Content(schema = Schema(implementation = TermCandidateListResponse::class), examples = [
+                ExampleObject(name = "preferredDeliveryTimeSlotCandidates", value = "{\n  \"items\": [\n    {\n      \"candidateId\": \"CAND-000001\",\n      \"koreanName\": \"\uACE0\uAC1D\uC120\uD638\uBC30\uC1A1\uC2DC\uAC04\uB300\",\n      \"englishName\": \"Customer Preferred Delivery Time Slot\",\n      \"englishAbbreviation\": \"CUST_PREF_DLV_TM_SLOT\",\n      \"domainName\": \"\uACE0\uAC1D\",\n      \"status\": \"Draft\",\n      \"requestedBy\": \"planner01\"\n    }\n  ],\n  \"page\": {\n    \"page\": 0,\n    \"size\": 20,\n    \"totalElements\": 1,\n    \"totalPages\": 1\n  }\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.GET],
             value = ["/candidates"],
             produces = ["application/json"]
     )
-    fun listCandidates( @Valid @RequestParam(value = "q", required = false) q: kotlin.String?, @Valid @RequestParam(value = "status", required = false) status: CandidateStatus?, @Valid @RequestParam(value = "domainName", required = false) domainName: kotlin.String?,@Min(0) @Valid @RequestParam(value = "page", required = false, defaultValue = "0") page: kotlin.Int,@Min(1) @Max(200)  @Valid @RequestParam(value = "size", required = false, defaultValue = "20") size: kotlin.Int): ResponseEntity<TermCandidateListResponse> {
+    fun listCandidates(@Parameter(description = "후보 한글명, 영문명, 약어 검색어") @Valid @RequestParam(value = "q", required = false) q: kotlin.String?,@Parameter(description = "후보 상태 필터", schema = Schema(allowableValues = ["Draft", "Reviewing", "Approved", "Rejected", "Promoted"])) @Valid @RequestParam(value = "status", required = false) status: CandidateStatus?,@Parameter(description = "도메인명 필터") @Valid @RequestParam(value = "domainName", required = false) domainName: kotlin.String?,@Min(0)@Parameter(description = "", schema = Schema(defaultValue = "0")) @Valid @RequestParam(value = "page", required = false, defaultValue = "0") page: kotlin.Int,@Min(1) @Max(200) @Parameter(description = "", schema = Schema(defaultValue = "20")) @Valid @RequestParam(value = "size", required = false, defaultValue = "20") size: kotlin.Int): ResponseEntity<TermCandidateListResponse> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Candidate",],
+        summary = "신규 용어 후보 표준 용어 승격",
+        operationId = "promoteCandidate",
+        description = """""",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [Content(
+                mediaType = "application/json",
+                examples = [
+                    ExampleObject(name = "promotePreferredDeliveryTimeSlot", value = "{\n  \"approver\": \"data.steward\",\n  \"owner\": \"\uACE0\uAC1D\uB3C4\uBA54\uC778 \uB370\uC774\uD130\uC2A4\uD29C\uC5B4\uB4DC\",\n  \"reason\": \"\uD45C\uC900 \uC6A9\uC5B4\uB85C \uC2B9\uC778 \uBC0F \uAC1C\uBC1C \uBC18\uC601 \uAC00\uB2A5\"\n}")
+                ]
+            )]
+        ),
+        responses = [
+            ApiResponse(responseCode = "200", description = "후보 승격 성공", content = [Content(schema = Schema(implementation = CandidatePromotionResult::class), examples = [
+                ExampleObject(name = "promotedPreferredDeliveryTimeSlot", value = "{\n  \"candidate\": {\n    \"candidateId\": \"CAND-000001\",\n    \"koreanName\": \"\uACE0\uAC1D\uC120\uD638\uBC30\uC1A1\uC2DC\uAC04\uB300\",\n    \"englishName\": \"Customer Preferred Delivery Time Slot\",\n    \"englishAbbreviation\": \"CUST_PREF_DLV_TM_SLOT\",\n    \"domainName\": \"\uACE0\uAC1D\",\n    \"businessDefinition\": \"\uACE0\uAC1D\uC774 \uC120\uD638\uD558\uB294 \uBC30\uC1A1 \uC2DC\uAC04\uB300\",\n    \"usageContext\": \"\uBC30\uC1A1 \uC635\uC158 \uCD94\uCC9C\uACFC \uBC30\uC1A1 \uC694\uCCAD \uD654\uBA74\uC5D0\uC11C \uC0AC\uC6A9\",\n    \"physicalType\": \"VARCHAR\",\n    \"digits\": 20,\n    \"decimalPoint\": 0,\n    \"status\": \"Promoted\",\n    \"requestedBy\": \"planner01\",\n    \"reviewedBy\": \"data.steward\",\n    \"promotedTermId\": \"T-000018\",\n    \"similarTerms\": [\n\n    ],\n    \"histories\": [\n\n    ],\n    \"createdAt\": \"2026-05-30T09:00:00+09:00\",\n    \"updatedAt\": \"2026-05-30T11:00:00+09:00\"\n  },\n  \"term\": {\n    \"termId\": \"T-000018\",\n    \"termNumber\": \"TERM-000018\",\n    \"domainName\": \"\uACE0\uAC1D\",\n    \"usageType\": \"\uD45C\uC900\uD56D\uBAA9\",\n    \"koreanName\": \"\uACE0\uAC1D\uC120\uD638\uBC30\uC1A1\uC2DC\uAC04\uB300\",\n    \"englishName\": \"Customer Preferred Delivery Time Slot\",\n    \"englishAbbreviation\": \"CUST_PREF_DLV_TM_SLOT\",\n    \"businessDefinition\": \"\uACE0\uAC1D\uC774 \uC120\uD638\uD558\uB294 \uBC30\uC1A1 \uC2DC\uAC04\uB300\",\n    \"usageContext\": \"\uBC30\uC1A1 \uC635\uC158 \uCD94\uCC9C\uACFC \uBC30\uC1A1 \uC694\uCCAD \uD654\uBA74\uC5D0\uC11C \uC0AC\uC6A9\",\n    \"physicalType\": \"VARCHAR\",\n    \"digits\": 20,\n    \"decimalPoint\": 0,\n    \"status\": \"Approved\",\n    \"owner\": \"\uACE0\uAC1D\uB3C4\uBA54\uC778 \uB370\uC774\uD130\uC2A4\uD29C\uC5B4\uB4DC\",\n    \"version\": \"1.0\",\n    \"expressions\": [\n\n    ],\n    \"aliases\": [\n\n    ],\n    \"createdAt\": \"2026-05-30T11:00:00+09:00\",\n    \"updatedAt\": \"2026-05-30T11:00:00+09:00\"\n  }\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "404", description = "리소스 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "termNotFound", value = "{\n  \"code\": \"TERM_NOT_FOUND\",\n  \"message\": \"\uD45C\uC900 \uC6A9\uC5B4\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"termId=T-000123\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "409", description = "중복 또는 상태 충돌", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "duplicateTerm", value = "{\n  \"code\": \"TERM_DUPLICATED\",\n  \"message\": \"\uC774\uBBF8 \uB4F1\uB85D\uB41C \uD45C\uC900 \uC6A9\uC5B4\uC785\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName=\uACE0\uAC1D\uBC88\uD638, domainName=\uACE0\uAC1D\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.POST],
             value = ["/candidates/{candidateId}/promote"],
             produces = ["application/json"],
             consumes = ["application/json"]
     )
-    fun promoteCandidate( @PathVariable("candidateId") candidateId: kotlin.String, @Valid @RequestBody termCandidatePromoteRequest: TermCandidatePromoteRequest): ResponseEntity<CandidatePromotionResult> {
+    fun promoteCandidate(@Parameter(description = "후보 식별자", required = true) @PathVariable("candidateId") candidateId: kotlin.String,@Parameter(description = "", required = true) @Valid @RequestBody termCandidatePromoteRequest: TermCandidatePromoteRequest): ResponseEntity<CandidatePromotionResult> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Candidate",],
+        summary = "신규 용어 후보 검토",
+        operationId = "reviewCandidate",
+        description = """""",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [Content(
+                mediaType = "application/json",
+                examples = [
+                    ExampleObject(name = "approvePreferredDeliveryTimeSlot", value = "{\n  \"reviewer\": \"data.steward\",\n  \"decision\": \"Approve\",\n  \"reason\": \"\uC911\uBCF5 \uC5C6\uC74C, \uC57D\uC5B4\uC640 \uD0C0\uC785 \uC801\uD569\"\n}")
+                ]
+            )]
+        ),
+        responses = [
+            ApiResponse(responseCode = "200", description = "후보 검토 성공", content = [Content(schema = Schema(implementation = TermCandidate::class), examples = [
+                ExampleObject(name = "reviewedPreferredDeliveryTimeSlot", value = "{\n  \"candidateId\": \"CAND-000001\",\n  \"koreanName\": \"\uACE0\uAC1D\uC120\uD638\uBC30\uC1A1\uC2DC\uAC04\uB300\",\n  \"englishName\": \"Customer Preferred Delivery Time Slot\",\n  \"englishAbbreviation\": \"CUST_PREF_DLV_TM_SLOT\",\n  \"domainName\": \"\uACE0\uAC1D\",\n  \"businessDefinition\": \"\uACE0\uAC1D\uC774 \uC120\uD638\uD558\uB294 \uBC30\uC1A1 \uC2DC\uAC04\uB300\",\n  \"usageContext\": \"\uBC30\uC1A1 \uC635\uC158 \uCD94\uCC9C\uACFC \uBC30\uC1A1 \uC694\uCCAD \uD654\uBA74\uC5D0\uC11C \uC0AC\uC6A9\",\n  \"physicalType\": \"VARCHAR\",\n  \"digits\": 20,\n  \"decimalPoint\": 0,\n  \"status\": \"Approved\",\n  \"requestedBy\": \"planner01\",\n  \"reviewedBy\": \"data.steward\",\n  \"similarTerms\": [\n\n  ],\n  \"histories\": [\n    {\n      \"historyId\": \"CAND-HIST-000002\",\n      \"candidateId\": \"CAND-000001\",\n      \"status\": \"Approved\",\n      \"reason\": \"\uC911\uBCF5 \uC5C6\uC74C, \uC57D\uC5B4\uC640 \uD0C0\uC785 \uC801\uD569\",\n      \"actor\": \"data.steward\",\n      \"createdAt\": \"2026-05-30T10:00:00+09:00\"\n    }\n  ],\n  \"createdAt\": \"2026-05-30T09:00:00+09:00\",\n  \"updatedAt\": \"2026-05-30T10:00:00+09:00\"\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "404", description = "리소스 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "termNotFound", value = "{\n  \"code\": \"TERM_NOT_FOUND\",\n  \"message\": \"\uD45C\uC900 \uC6A9\uC5B4\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"termId=T-000123\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.POST],
             value = ["/candidates/{candidateId}/review"],
             produces = ["application/json"],
             consumes = ["application/json"]
     )
-    fun reviewCandidate( @PathVariable("candidateId") candidateId: kotlin.String, @Valid @RequestBody termCandidateReviewRequest: TermCandidateReviewRequest): ResponseEntity<TermCandidate> {
+    fun reviewCandidate(@Parameter(description = "후보 식별자", required = true) @PathVariable("candidateId") candidateId: kotlin.String,@Parameter(description = "", required = true) @Valid @RequestBody termCandidateReviewRequest: TermCandidateReviewRequest): ResponseEntity<TermCandidate> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }

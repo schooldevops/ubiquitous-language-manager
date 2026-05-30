@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 검색어가 매칭된 용어 표현 정보
@@ -25,12 +26,16 @@ import jakarta.validation.Valid
 data class MatchedExpression(
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("expressionType", required = true) val expressionType: ExpressionType,
 
+    @Schema(example = "고객ID", required = true, description = "데이터 사전에 등록된 표현값")
     @get:JsonProperty("expressionValue", required = true) val expressionValue: kotlin.String,
 
+    @Schema(example = "Alias", required = true, description = "검색어와 표현값의 매칭 방식")
     @get:JsonProperty("matchType", required = true) val matchType: MatchedExpression.MatchType,
 
+    @Schema(example = "고객ID", description = "사용자가 입력한 표현")
     @get:JsonProperty("inputExpression") val inputExpression: kotlin.String? = null
     ) {
 

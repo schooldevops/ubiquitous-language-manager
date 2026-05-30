@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * Graphify 경로
@@ -22,9 +23,11 @@ import jakarta.validation.Valid
 data class RelationshipPath(
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("nodes", required = true) val nodes: kotlin.collections.List<GraphPathNode>,
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("edges", required = true) val edges: kotlin.collections.List<GraphPathEdge>
     ) {
 

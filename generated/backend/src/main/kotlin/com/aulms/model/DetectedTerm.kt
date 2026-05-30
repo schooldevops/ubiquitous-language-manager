@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 기획서 본문에서 검출된 용어 표현
@@ -26,21 +27,28 @@ import jakarta.validation.Valid
  */
 data class DetectedTerm(
 
+    @Schema(example = "고객 ID", required = true, description = "본문에서 검출된 표현")
     @get:JsonProperty("expression", required = true) val expression: kotlin.String,
 
     @get:Min(0)
+    @Schema(example = "0", required = true, description = "문장 번호")
     @get:JsonProperty("sentenceIndex", required = true) val sentenceIndex: kotlin.Int,
 
     @get:Min(0)
+    @Schema(example = "0", required = true, description = "본문 내 시작 위치")
     @get:JsonProperty("startOffset", required = true) val startOffset: kotlin.Int,
 
     @get:Min(0)
+    @Schema(example = "5", required = true, description = "본문 내 종료 위치")
     @get:JsonProperty("endOffset", required = true) val endOffset: kotlin.Int,
 
+    @Schema(example = "Alias", required = true, description = "검출 방식")
     @get:JsonProperty("matchType", required = true) val matchType: DetectedTerm.MatchType,
 
+    @Schema(example = "T-000001", description = "매핑된 표준 용어 ID")
     @get:JsonProperty("mappedTermId") val mappedTermId: kotlin.String? = null,
 
+    @Schema(example = "고객번호", description = "매핑된 표준 용어명")
     @get:JsonProperty("standardTerm") val standardTerm: kotlin.String? = null
     ) {
 

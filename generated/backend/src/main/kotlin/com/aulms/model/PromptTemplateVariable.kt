@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 프롬프트 템플릿 변수
@@ -23,12 +24,16 @@ import jakarta.validation.Valid
  */
 data class PromptTemplateVariable(
 
+    @Schema(example = "termMappings", required = true, description = "")
     @get:JsonProperty("name", required = true) val name: kotlin.String,
 
+    @Schema(example = "데이터 사전 검색 결과로 확정된 표준 용어 매핑 목록", required = true, description = "")
     @get:JsonProperty("description", required = true) val description: kotlin.String,
 
+    @Schema(example = "true", required = true, description = "")
     @get:JsonProperty("required", required = true) val required: kotlin.Boolean,
 
+    @Schema(example = "DictionarySearch", required = true, description = "변수 값 출처")
     @get:JsonProperty("source", required = true) val source: PromptTemplateVariable.Source
     ) {
 

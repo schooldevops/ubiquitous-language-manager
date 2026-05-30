@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 프롬프트 템플릿 변경 이력
@@ -26,18 +27,25 @@ import jakarta.validation.Valid
  */
 data class PromptTemplateHistory(
 
+    @Schema(example = "PT-HIST-000001", required = true, description = "")
     @get:JsonProperty("historyId", required = true) val historyId: kotlin.String,
 
+    @Schema(example = "PT-VIBE-001", required = true, description = "")
     @get:JsonProperty("templateId", required = true) val templateId: kotlin.String,
 
+    @Schema(example = "1.0.0", required = true, description = "")
     @get:JsonProperty("version", required = true) val version: kotlin.String,
 
+    @Schema(example = "Created", required = true, description = "")
     @get:JsonProperty("changeType", required = true) val changeType: PromptTemplateHistory.ChangeType,
 
+    @Schema(example = "MVP3 기본 템플릿 등록", required = true, description = "")
     @get:JsonProperty("reason", required = true) val reason: kotlin.String,
 
+    @Schema(example = "system", required = true, description = "")
     @get:JsonProperty("actor", required = true) val actor: kotlin.String,
 
+    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("createdAt", required = true) val createdAt: java.time.OffsetDateTime
     ) {
 

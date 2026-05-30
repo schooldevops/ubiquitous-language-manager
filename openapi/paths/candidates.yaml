@@ -20,6 +20,7 @@ candidates:
         description: 후보 한글명, 영문명, 약어 검색어
         schema:
           type: string
+          example: 고객선호배송시간대
       - name: status
         in: query
         required: false
@@ -32,6 +33,7 @@ candidates:
         description: 도메인명 필터
         schema:
           type: string
+          example: 고객
       - name: page
         in: query
         required: false
@@ -56,6 +58,22 @@ candidates:
           application/json:
             schema:
               $ref: '../schemas/candidate.yaml#/TermCandidateListResponse'
+            examples:
+              preferredDeliveryTimeSlotCandidates:
+                value:
+                  items:
+                    - candidateId: CAND-000001
+                      koreanName: 고객선호배송시간대
+                      englishName: Customer Preferred Delivery Time Slot
+                      englishAbbreviation: CUST_PREF_DLV_TM_SLOT
+                      domainName: 고객
+                      status: Draft
+                      requestedBy: planner01
+                  page:
+                    page: 0
+                    size: 20
+                    totalElements: 1
+                    totalPages: 1
       '400':
         $ref: '../openapi.yaml#/components/responses/BadRequest'
       '401':
@@ -100,6 +118,37 @@ candidates:
           application/json:
             schema:
               $ref: '../schemas/candidate.yaml#/TermCandidate'
+            examples:
+              preferredDeliveryTimeSlotDraft:
+                value:
+                  candidateId: CAND-000001
+                  koreanName: 고객선호배송시간대
+                  englishName: Customer Preferred Delivery Time Slot
+                  englishAbbreviation: CUST_PREF_DLV_TM_SLOT
+                  domainName: 고객
+                  businessDefinition: 고객이 선호하는 배송 시간대
+                  usageContext: 배송 옵션 추천과 배송 요청 화면에서 사용
+                  physicalType: VARCHAR
+                  digits: 20
+                  decimalPoint: 0
+                  status: Draft
+                  requestedBy: planner01
+                  similarTerms:
+                    - termId: T-000001
+                      koreanName: 고객번호
+                      englishName: Customer Number
+                      dbColumn: CUST_NO
+                      apiField: customerNumber
+                      reason: 같은 고객 도메인의 기존 표준 용어
+                  histories:
+                    - historyId: CAND-HIST-000001
+                      candidateId: CAND-000001
+                      status: Draft
+                      reason: 신규 후보 등록
+                      actor: planner01
+                      createdAt: '2026-05-30T09:00:00+09:00'
+                  createdAt: '2026-05-30T09:00:00+09:00'
+                  updatedAt: '2026-05-30T09:00:00+09:00'
       '400':
         $ref: '../openapi.yaml#/components/responses/BadRequest'
       '401':
@@ -139,6 +188,38 @@ candidatesByCandidateId:
           application/json:
             schema:
               $ref: '../schemas/candidate.yaml#/TermCandidate'
+            examples:
+              preferredDeliveryTimeSlot:
+                value:
+                  candidateId: CAND-000001
+                  koreanName: 고객선호배송시간대
+                  englishName: Customer Preferred Delivery Time Slot
+                  englishAbbreviation: CUST_PREF_DLV_TM_SLOT
+                  domainName: 고객
+                  businessDefinition: 고객이 선호하는 배송 시간대
+                  usageContext: 배송 옵션 추천과 배송 요청 화면에서 사용
+                  physicalType: VARCHAR
+                  digits: 20
+                  decimalPoint: 0
+                  status: Reviewing
+                  requestedBy: planner01
+                  reviewedBy: data.steward
+                  similarTerms:
+                    - termId: T-000001
+                      koreanName: 고객번호
+                      englishName: Customer Number
+                      dbColumn: CUST_NO
+                      apiField: customerNumber
+                      reason: 같은 고객 도메인의 기존 표준 용어
+                  histories:
+                    - historyId: CAND-HIST-000001
+                      candidateId: CAND-000001
+                      status: Draft
+                      reason: 신규 후보 등록
+                      actor: planner01
+                      createdAt: '2026-05-30T09:00:00+09:00'
+                  createdAt: '2026-05-30T09:00:00+09:00'
+                  updatedAt: '2026-05-30T10:00:00+09:00'
       '401':
         $ref: '../openapi.yaml#/components/responses/Unauthorized'
       '403':
@@ -171,6 +252,12 @@ reviewCandidate:
         application/json:
           schema:
             $ref: '../schemas/candidate.yaml#/TermCandidateReviewRequest'
+          examples:
+            approvePreferredDeliveryTimeSlot:
+              value:
+                reviewer: data.steward
+                decision: Approve
+                reason: 중복 없음, 약어와 타입 적합
     responses:
       '200':
         description: 후보 검토 성공
@@ -178,6 +265,32 @@ reviewCandidate:
           application/json:
             schema:
               $ref: '../schemas/candidate.yaml#/TermCandidate'
+            examples:
+              reviewedPreferredDeliveryTimeSlot:
+                value:
+                  candidateId: CAND-000001
+                  koreanName: 고객선호배송시간대
+                  englishName: Customer Preferred Delivery Time Slot
+                  englishAbbreviation: CUST_PREF_DLV_TM_SLOT
+                  domainName: 고객
+                  businessDefinition: 고객이 선호하는 배송 시간대
+                  usageContext: 배송 옵션 추천과 배송 요청 화면에서 사용
+                  physicalType: VARCHAR
+                  digits: 20
+                  decimalPoint: 0
+                  status: Approved
+                  requestedBy: planner01
+                  reviewedBy: data.steward
+                  similarTerms: []
+                  histories:
+                    - historyId: CAND-HIST-000002
+                      candidateId: CAND-000001
+                      status: Approved
+                      reason: 중복 없음, 약어와 타입 적합
+                      actor: data.steward
+                      createdAt: '2026-05-30T10:00:00+09:00'
+                  createdAt: '2026-05-30T09:00:00+09:00'
+                  updatedAt: '2026-05-30T10:00:00+09:00'
       '400':
         $ref: '../openapi.yaml#/components/responses/BadRequest'
       '401':
@@ -211,6 +324,12 @@ promoteCandidate:
         application/json:
           schema:
             $ref: '../schemas/candidate.yaml#/TermCandidatePromoteRequest'
+          examples:
+            promotePreferredDeliveryTimeSlot:
+              value:
+                approver: data.steward
+                owner: 고객도메인 데이터스튜어드
+                reason: 표준 용어로 승인 및 개발 반영 가능
     responses:
       '200':
         description: 후보 승격 성공
@@ -218,6 +337,48 @@ promoteCandidate:
           application/json:
             schema:
               $ref: '../schemas/candidate.yaml#/CandidatePromotionResult'
+            examples:
+              promotedPreferredDeliveryTimeSlot:
+                value:
+                  candidate:
+                    candidateId: CAND-000001
+                    koreanName: 고객선호배송시간대
+                    englishName: Customer Preferred Delivery Time Slot
+                    englishAbbreviation: CUST_PREF_DLV_TM_SLOT
+                    domainName: 고객
+                    businessDefinition: 고객이 선호하는 배송 시간대
+                    usageContext: 배송 옵션 추천과 배송 요청 화면에서 사용
+                    physicalType: VARCHAR
+                    digits: 20
+                    decimalPoint: 0
+                    status: Promoted
+                    requestedBy: planner01
+                    reviewedBy: data.steward
+                    promotedTermId: T-000018
+                    similarTerms: []
+                    histories: []
+                    createdAt: '2026-05-30T09:00:00+09:00'
+                    updatedAt: '2026-05-30T11:00:00+09:00'
+                  term:
+                    termId: T-000018
+                    termNumber: TERM-000018
+                    domainName: 고객
+                    usageType: 표준항목
+                    koreanName: 고객선호배송시간대
+                    englishName: Customer Preferred Delivery Time Slot
+                    englishAbbreviation: CUST_PREF_DLV_TM_SLOT
+                    businessDefinition: 고객이 선호하는 배송 시간대
+                    usageContext: 배송 옵션 추천과 배송 요청 화면에서 사용
+                    physicalType: VARCHAR
+                    digits: 20
+                    decimalPoint: 0
+                    status: Approved
+                    owner: 고객도메인 데이터스튜어드
+                    version: '1.0'
+                    expressions: []
+                    aliases: []
+                    createdAt: '2026-05-30T11:00:00+09:00'
+                    updatedAt: '2026-05-30T11:00:00+09:00'
       '400':
         $ref: '../openapi.yaml#/components/responses/BadRequest'
       '401':

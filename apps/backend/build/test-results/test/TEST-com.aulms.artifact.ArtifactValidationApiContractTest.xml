@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.aulms.artifact.ArtifactValidationApiContractTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-05-29T08:16:53.490Z" hostname="NHY9M72K9J" time="0.146">
+<testsuite name="com.aulms.artifact.ArtifactValidationApiContractTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-05-30T08:13:01.959Z" hostname="NHY9M72K9J" time="0.111">
   <properties/>
-  <testcase name="sql mapper validates db columns and parameters()" classname="com.aulms.artifact.ArtifactValidationApiContractTest" time="0.049"/>
-  <testcase name="review pr endpoint aggregates file validation results()" classname="com.aulms.artifact.ArtifactValidationApiContractTest" time="0.051"/>
-  <testcase name="review ddl endpoint returns artifact validation issues()" classname="com.aulms.artifact.ArtifactValidationApiContractTest" time="0.009"/>
-  <testcase name="ddl CUST_ID column returns CUST_NO error()" classname="com.aulms.artifact.ArtifactValidationApiContractTest" time="0.005"/>
+  <testcase name="sql mapper validates db columns and parameters()" classname="com.aulms.artifact.ArtifactValidationApiContractTest" time="0.036"/>
+  <testcase name="review pr endpoint aggregates file validation results()" classname="com.aulms.artifact.ArtifactValidationApiContractTest" time="0.036"/>
+  <testcase name="review ddl endpoint returns artifact validation issues()" classname="com.aulms.artifact.ArtifactValidationApiContractTest" time="0.007"/>
+  <testcase name="ddl CUST_ID column returns CUST_NO error()" classname="com.aulms.artifact.ArtifactValidationApiContractTest" time="0.004"/>
   <testcase name="review code endpoint infers kotlin source and returns artifact validation issues()" classname="com.aulms.artifact.ArtifactValidationApiContractTest" time="0.004"/>
   <testcase name="openapi customerId field recommends customerNumber()" classname="com.aulms.artifact.ArtifactValidationApiContractTest" time="0.004"/>
   <testcase name="review openapi endpoint returns artifact validation issues()" classname="com.aulms.artifact.ArtifactValidationApiContractTest" time="0.004"/>
-  <testcase name="test sentence customer ID recommends customer number()" classname="com.aulms.artifact.ArtifactValidationApiContractTest" time="0.008"/>
-  <testcase name="kotlin customerId property recommends customerNumber()" classname="com.aulms.artifact.ArtifactValidationApiContractTest" time="0.004"/>
-  <system-out><![CDATA[2026-05-29T17:16:53.465+09:00  INFO 34828 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.aulms.artifact.ArtifactValidationApiContractTest]: ArtifactValidationApiContractTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-05-29T17:16:53.487+09:00  INFO 34828 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.aulms.AulmsBackendApplication for test class com.aulms.artifact.ArtifactValidationApiContractTest
+  <testcase name="test sentence customer ID recommends customer number()" classname="com.aulms.artifact.ArtifactValidationApiContractTest" time="0.006"/>
+  <testcase name="kotlin customerId property recommends customerNumber()" classname="com.aulms.artifact.ArtifactValidationApiContractTest" time="0.003"/>
+  <system-out><![CDATA[2026-05-30T17:13:01.940+09:00  INFO 85462 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.aulms.artifact.ArtifactValidationApiContractTest]: ArtifactValidationApiContractTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-30T17:13:01.956+09:00  INFO 85462 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.aulms.AulmsBackendApplication for test class com.aulms.artifact.ArtifactValidationApiContractTest
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

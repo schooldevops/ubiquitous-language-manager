@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 검색 결과 목록 응답
@@ -22,12 +23,15 @@ import jakarta.validation.Valid
  */
 data class SearchResponse(
 
+    @Schema(example = "고객ID", required = true, description = "사용자가 입력한 검색어")
     @get:JsonProperty("query", required = true) val query: kotlin.String,
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "검색 결과 목록")
     @get:JsonProperty("items", required = true) val items: kotlin.collections.List<SearchResult>,
 
     @field:Valid
+    @Schema(example = "null", description = "")
     @get:JsonProperty("page") val page: PageMetadata? = null
     ) {
 

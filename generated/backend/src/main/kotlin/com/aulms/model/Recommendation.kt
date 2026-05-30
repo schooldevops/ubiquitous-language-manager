@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 표준 용어 사용 권고
@@ -25,16 +26,22 @@ import jakarta.validation.Valid
  */
 data class Recommendation(
 
+    @Schema(example = "UseStandardTerm", required = true, description = "권고 조치")
     @get:JsonProperty("action", required = true) val action: Recommendation.Action,
 
+    @Schema(example = "customerNumber", required = true, description = "권고 표준 표현")
     @get:JsonProperty("recommendedExpression", required = true) val recommendedExpression: kotlin.String,
 
+    @Schema(example = "고객ID는 고객번호의 유사어이며 표준 API 필드명은 customerNumber임", required = true, description = "권고 사유")
     @get:JsonProperty("reason", required = true) val reason: kotlin.String,
 
+    @Schema(example = "T-000001", description = "권고 표준 용어 식별자")
     @get:JsonProperty("recommendedTermId") val recommendedTermId: kotlin.String? = null,
 
+    @Schema(example = "고객번호", description = "권고 표준 용어명")
     @get:JsonProperty("recommendedTerm") val recommendedTerm: kotlin.String? = null,
 
+    @Schema(example = "Warning", description = "권고 중요도")
     @get:JsonProperty("severity") val severity: Recommendation.Severity? = null
     ) {
 

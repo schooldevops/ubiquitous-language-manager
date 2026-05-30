@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 프롬프트 템플릿 미리보기 응답
@@ -21,12 +22,16 @@ import jakarta.validation.Valid
  */
 data class PromptTemplatePreviewResponse(
 
+    @Schema(example = "PT-VIBE-001", required = true, description = "")
     @get:JsonProperty("templateId", required = true) val templateId: kotlin.String,
 
+    @Schema(example = "1.0.0", required = true, description = "")
     @get:JsonProperty("version", required = true) val version: kotlin.String,
 
+    @Schema(example = "null", required = true, description = "변수 주입이 완료된 최종 프롬프트")
     @get:JsonProperty("renderedPrompt", required = true) val renderedPrompt: kotlin.String,
 
+    @Schema(example = "[\"requirementText\",\"termMappings\",\"candidateTerms\"]", required = true, description = "실제 주입된 변수명 목록")
     @get:JsonProperty("injectedVariables", required = true) val injectedVariables: kotlin.collections.List<kotlin.String>
     ) {
 

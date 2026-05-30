@@ -9,6 +9,11 @@ import com.aulms.model.ColumnSystemUsageResponse
 import com.aulms.model.DeprecatedUsageResponse
 import com.aulms.model.ErrorResponse
 import com.aulms.model.RelationshipSearchResponse
+import io.swagger.v3.oas.annotations.*
+import io.swagger.v3.oas.annotations.enums.*
+import io.swagger.v3.oas.annotations.media.*
+import io.swagger.v3.oas.annotations.responses.*
+import io.swagger.v3.oas.annotations.security.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -35,17 +40,51 @@ import kotlin.collections.Map
 @Validated
 interface RelationshipApi {
 
-
+    @Operation(
+        tags = ["Relationship",],
+        summary = "컬럼 사용 시스템 조회",
+        operationId = "getColumnSystems",
+        description = """Graphify 그래프에서 특정 DB 컬럼을 사용하는 시스템, 테이블, API 필드를 조회한다.""",
+        responses = [
+            ApiResponse(responseCode = "200", description = "컬럼 사용 시스템 조회 성공", content = [Content(schema = Schema(implementation = ColumnSystemUsageResponse::class), examples = [
+                ExampleObject(name = "custNo", value = "{\n  \"columnName\": \"CUST_NO\",\n  \"items\": [\n    {\n      \"systemCode\": \"DICTIONARY\",\n      \"systemName\": \"\uB370\uC774\uD130 \uC0AC\uC804\",\n      \"tableName\": \"\uACE0\uAC1D\",\n      \"columnName\": \"CUST_NO\",\n      \"termId\": \"T-000001\",\n      \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"apiFields\": [\n        \"customerNumber\"\n      ]\n    }\n  ]\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.GET],
             value = ["/relationships/columns/{columnName}/systems"],
             produces = ["application/json"]
     )
-    fun getColumnSystems( @PathVariable("columnName") columnName: kotlin.String): ResponseEntity<ColumnSystemUsageResponse> {
+    fun getColumnSystems(@Parameter(description = "DB 컬럼명", required = true) @PathVariable("columnName") columnName: kotlin.String): ResponseEntity<ColumnSystemUsageResponse> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Relationship",],
+        summary = "폐기어와 금지어 사용 위치 조회",
+        operationId = "getDeprecatedUsages",
+        description = """Graphify 그래프에서 Deprecated 또는 Forbidden alias 사용 위치와 대체 표준 용어를 조회한다.""",
+        responses = [
+            ApiResponse(responseCode = "200", description = "폐기어와 금지어 사용 위치 조회 성공", content = [Content(schema = Schema(implementation = DeprecatedUsageResponse::class), examples = [
+                ExampleObject(name = "custIdUsages", value = "{\n  \"items\": [\n    {\n      \"expression\": \"CUST_ID\",\n      \"aliasType\": \"Forbidden\",\n      \"termId\": \"T-000001\",\n      \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"recommendedExpression\": \"CUST_NO\",\n      \"reason\": \"\uAE30\uC220 ID\uC640 \uC5C5\uBB34 \uACE0\uAC1D\uBC88\uD638\uAC00 \uD63C\uB3D9\uB420 \uC218 \uC788\uC74C\"\n    }\n  ]\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.GET],
             value = ["/relationships/deprecated"],
@@ -55,23 +94,60 @@ interface RelationshipApi {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Relationship",],
+        summary = "도메인별 표준 용어 관계 검색",
+        operationId = "getDomainTerms",
+        description = """Graphify 그래프에서 특정 도메인에 속한 표준 용어를 조회한다.""",
+        responses = [
+            ApiResponse(responseCode = "200", description = "도메인별 용어 조회 성공", content = [Content(schema = Schema(implementation = RelationshipSearchResponse::class), examples = [
+                ExampleObject(name = "customerDomain", value = "{\n  \"query\": \"\uACE0\uAC1D\",\n  \"items\": [\n    {\n      \"termId\": \"T-000001\",\n      \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"englishName\": \"Customer Number\",\n      \"relationshipType\": \"broaderThan\",\n      \"direction\": \"OUTGOING\",\n      \"reason\": \"\uACE0\uAC1D \uB3C4\uBA54\uC778\uC758 \uD575\uC2EC \uC2DD\uBCC4 \uC6A9\uC5B4\"\n    },\n    {\n      \"termId\": \"T-000003\",\n      \"standardTerm\": \"\uACE0\uAC1D\uBA85\",\n      \"englishName\": \"Customer Name\",\n      \"relationshipType\": \"relatedTo\",\n      \"direction\": \"OUTGOING\",\n      \"reason\": \"\uACE0\uAC1D\uBC88\uD638\uC640 \uD568\uAED8 \uACE0\uAC1D \uAE30\uBCF8\uC815\uBCF4\uB97C \uAD6C\uC131\"\n    }\n  ],\n  \"paths\": [\n    {\n      \"nodes\": [\n        {\n          \"nodeKey\": \"domain:\uACE0\uAC1D\",\n          \"nodeType\": \"Domain\",\n          \"label\": \"\uACE0\uAC1D\"\n        },\n        {\n          \"nodeKey\": \"term:T-000001\",\n          \"nodeType\": \"Term\",\n          \"label\": \"\uACE0\uAC1D\uBC88\uD638\"\n        }\n      ],\n      \"edges\": [\n        {\n          \"edgeKey\": \"DOMAIN_TERM:domain:\uACE0\uAC1D:term:T-000001\",\n          \"relationshipType\": \"broaderThan\",\n          \"fromNodeKey\": \"domain:\uACE0\uAC1D\",\n          \"toNodeKey\": \"term:T-000001\"\n        }\n      ]\n    }\n  ]\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.GET],
             value = ["/relationships/domains/{domainName}/terms"],
             produces = ["application/json"]
     )
-    fun getDomainTerms( @PathVariable("domainName") domainName: kotlin.String): ResponseEntity<RelationshipSearchResponse> {
+    fun getDomainTerms(@Parameter(description = "도메인명", required = true) @PathVariable("domainName") domainName: kotlin.String): ResponseEntity<RelationshipSearchResponse> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Relationship",],
+        summary = "용어 관계 검색",
+        operationId = "getTermRelationships",
+        description = """Graphify 그래프에서 특정 표준 용어와 연결된 관련 용어와 경로를 조회한다.""",
+        responses = [
+            ApiResponse(responseCode = "200", description = "용어 관계 검색 성공", content = [Content(schema = Schema(implementation = RelationshipSearchResponse::class), examples = [
+                ExampleObject(name = "customerNumber", value = "{\n  \"query\": \"T-000001\",\n  \"items\": [\n    {\n      \"termId\": \"T-000004\",\n      \"standardTerm\": \"\uC8FC\uBB38\uBC88\uD638\",\n      \"englishName\": \"Order Number\",\n      \"relationshipType\": \"usedWith\",\n      \"direction\": \"OUTGOING\",\n      \"reason\": \"\uACE0\uAC1D\uBC88\uD638\uB294 \uC8FC\uBB38\uBC88\uD638\uC640 \uD568\uAED8 \uC8FC\uBB38 \uC870\uD68C \uC870\uAC74\uACFC \uC751\uB2F5\uC5D0\uC11C \uC0AC\uC6A9\"\n    }\n  ],\n  \"paths\": [\n    {\n      \"nodes\": [\n        {\n          \"nodeKey\": \"term:T-000001\",\n          \"nodeType\": \"Term\",\n          \"label\": \"\uACE0\uAC1D\uBC88\uD638\"\n        },\n        {\n          \"nodeKey\": \"term:T-000004\",\n          \"nodeType\": \"Term\",\n          \"label\": \"\uC8FC\uBB38\uBC88\uD638\"\n        }\n      ],\n      \"edges\": [\n        {\n          \"edgeKey\": \"TERM_RELATIONSHIP:term:T-000001:usedWith:term:T-000004\",\n          \"relationshipType\": \"usedWith\",\n          \"fromNodeKey\": \"term:T-000001\",\n          \"toNodeKey\": \"term:T-000004\"\n        }\n      ]\n    }\n  ]\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "404", description = "리소스 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "termNotFound", value = "{\n  \"code\": \"TERM_NOT_FOUND\",\n  \"message\": \"\uD45C\uC900 \uC6A9\uC5B4\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"termId=T-000123\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.GET],
             value = ["/relationships/terms/{termId}"],
             produces = ["application/json"]
     )
-    fun getTermRelationships( @PathVariable("termId") termId: kotlin.String, @Valid @RequestParam(value = "relationshipType", required = false) relationshipType: kotlin.String?): ResponseEntity<RelationshipSearchResponse> {
+    fun getTermRelationships(@Parameter(description = "기준 용어 ID", required = true) @PathVariable("termId") termId: kotlin.String,@Parameter(description = "관계 유형 필터") @Valid @RequestParam(value = "relationshipType", required = false) relationshipType: kotlin.String?): ResponseEntity<RelationshipSearchResponse> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }

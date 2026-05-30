@@ -8,6 +8,11 @@ package com.aulms.api
 import com.aulms.model.ErrorResponse
 import com.aulms.model.ImpactAnalysisResponse
 import com.aulms.model.ImpactChangeType
+import io.swagger.v3.oas.annotations.*
+import io.swagger.v3.oas.annotations.enums.*
+import io.swagger.v3.oas.annotations.media.*
+import io.swagger.v3.oas.annotations.responses.*
+import io.swagger.v3.oas.annotations.security.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -34,13 +39,33 @@ import kotlin.collections.Map
 @Validated
 interface ImpactApi {
 
-
+    @Operation(
+        tags = ["Impact",],
+        summary = "용어 변경 영향도 분석",
+        operationId = "getTermImpact",
+        description = """Graphify 그래프를 이용해 특정 표준 용어 변경 시 영향받는 시스템, DB, API, DTO, 문서, 테스트를 조회한다.""",
+        responses = [
+            ApiResponse(responseCode = "200", description = "영향도 분석 성공", content = [Content(schema = Schema(implementation = ImpactAnalysisResponse::class), examples = [
+                ExampleObject(name = "customerIdToCustomerNumber", summary = "\uACE0\uAC1DID\uC5D0\uC11C \uACE0\uAC1D\uBC88\uD638\uB85C \uBCC0\uACBD \uC601\uD5A5\uB3C4", value = "{\n  \"termId\": \"T-000001\",\n  \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n  \"changeType\": \"API_FIELD_RENAME\",\n  \"includeTwoHop\": true,\n  \"riskLevel\": \"HIGH\",\n  \"riskScore\": 85,\n  \"impactedTargets\": [\n    {\n      \"targetType\": \"DB_COLUMN\",\n      \"targetName\": \"CUST_NO\",\n      \"systemCode\": \"DICTIONARY\",\n      \"location\": \"column:DICTIONARY.\uACE0\uAC1D.CUST_NO\",\n      \"hop\": 1,\n      \"reason\": \"CUST_NO \uCEEC\uB7FC\uC774 \uACE0\uAC1D\uBC88\uD638\uB97C \uD45C\uD604\uD568\"\n    },\n    {\n      \"targetType\": \"API_FIELD\",\n      \"targetName\": \"customerNumber\",\n      \"systemCode\": \"DICTIONARY\",\n      \"location\": \"apiField:DICTIONARY.\uACE0\uAC1D.customerNumber\",\n      \"hop\": 1,\n      \"reason\": \"customerNumber API \uD544\uB4DC\uAC00 \uACE0\uAC1D\uBC88\uD638\uB97C \uD45C\uD604\uD568\"\n    },\n    {\n      \"targetType\": \"DTO\",\n      \"targetName\": \"customerNumber\",\n      \"systemCode\": \"DICTIONARY\",\n      \"location\": \"dtoField:DICTIONARY.\uACE0\uAC1D.customerNumber\",\n      \"hop\": 1,\n      \"reason\": \"customerNumber DTO \uD544\uB4DC\uAC00 \uACE0\uAC1D\uBC88\uD638\uB97C \uD45C\uD604\uD568\"\n    },\n    {\n      \"targetType\": \"DOCUMENT\",\n      \"targetName\": \"\uACE0\uAC1D\uBC88\uD638 \uAE30\uD68D\uC11C \uD45C\uD604\",\n      \"systemCode\": \"DOCUMENT\",\n      \"location\": \"document:planning/customer-order.md\",\n      \"hop\": 2,\n      \"reason\": \"\uAE30\uD68D\uC11C\uAC00 \uACE0\uAC1D\uBC88\uD638\uB97C \uC5B8\uAE09\uD568\"\n    },\n    {\n      \"targetType\": \"TEST_CASE\",\n      \"targetName\": \"\uACE0\uAC1D\uBC88\uD638 \uD544\uC218 \uAC80\uC99D\",\n      \"systemCode\": \"TEST\",\n      \"location\": \"testCase:CustomerOrderApiTest.customerNumberRequired\",\n      \"hop\": 2,\n      \"reason\": \"\uD14C\uC2A4\uD2B8 \uCF00\uC774\uC2A4\uAC00 \uACE0\uAC1D\uBC88\uD638\uB97C \uAC80\uC99D\uD568\"\n    }\n  ],\n  \"recommendations\": [\n    {\n      \"priority\": 1,\n      \"action\": \"API v2\uC5D0\uC11C customerNumber \uC720\uC9C0, customerId \uC785\uB825\uC740 deprecated \uCC98\uB9AC\",\n      \"reason\": \"API \uD544\uB4DC\uBA85 \uBCC0\uACBD\uC740 \uC678\uBD80 \uC5F0\uB3D9 \uC601\uD5A5\uC774 \uD07C\"\n    },\n    {\n      \"priority\": 2,\n      \"action\": \"DDL, DTO, OpenAPI, \uD14C\uC2A4\uD2B8\uB97C \uAC19\uC740 \uBC30\uD3EC \uB2E8\uC704\uC5D0\uC11C \uAC80\uC99D\",\n      \"reason\": \"DB/API/\uCF54\uB4DC/\uD14C\uC2A4\uD2B8 \uAC04 \uBA85\uCE6D \uBD88\uC77C\uCE58\uB97C \uBC29\uC9C0\"\n    }\n  ]\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "404", description = "리소스 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "termNotFound", value = "{\n  \"code\": \"TERM_NOT_FOUND\",\n  \"message\": \"\uD45C\uC900 \uC6A9\uC5B4\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"termId=T-000123\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.GET],
             value = ["/impact/terms/{termId}"],
             produces = ["application/json"]
     )
-    fun getTermImpact( @PathVariable("termId") termId: kotlin.String, @Valid @RequestParam(value = "changeType", required = false) changeType: ImpactChangeType?, @Valid @RequestParam(value = "includeTwoHop", required = false, defaultValue = "false") includeTwoHop: kotlin.Boolean): ResponseEntity<ImpactAnalysisResponse> {
+    fun getTermImpact(@Parameter(description = "영향도 분석 기준 용어 ID", required = true) @PathVariable("termId") termId: kotlin.String,@Parameter(description = "변경 유형", schema = Schema(allowableValues = ["DESCRIPTION_UPDATE", "ALIAS_ADD", "API_FIELD_RENAME", "DB_COLUMN_RENAME", "PHYSICAL_TYPE_CHANGE", "DIGITS_CHANGE", "DEPRECATE_TERM"])) @Valid @RequestParam(value = "changeType", required = false) changeType: ImpactChangeType?,@Parameter(description = "2-hop 관계까지 확장 조회할지 여부", schema = Schema(defaultValue = "false")) @Valid @RequestParam(value = "includeTwoHop", required = false, defaultValue = "false") includeTwoHop: kotlin.Boolean): ResponseEntity<ImpactAnalysisResponse> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }

@@ -45,7 +45,7 @@ AULMS는 데이터 사전을 유비쿼터스 랭기지로 확장해 기획서, O
 
 ```bash
 cd apps/backend
-gradle bootRun
+./gradlew bootRun
 ```
 
 기본 URL:
@@ -54,11 +54,23 @@ gradle bootRun
 http://localhost:8080
 ```
 
+Swagger UI:
+
+```text
+http://localhost:8080/swagger-ui/index.html
+```
+
+OpenAPI JSON:
+
+```text
+http://localhost:8080/v3/api-docs
+```
+
 테스트:
 
 ```bash
 cd apps/backend
-gradle test
+./gradlew test
 ```
 
 ## 클라이언트 실행

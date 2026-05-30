@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 폐기어와 금지어 사용 위치 응답
@@ -20,6 +21,7 @@ import jakarta.validation.Valid
 data class DeprecatedUsageResponse(
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("items", required = true) val items: kotlin.collections.List<DeprecatedUsage>
     ) {
 

@@ -109,6 +109,23 @@ openapiReview:
         application/json:
           schema:
             $ref: '../schemas/artifact-validation.yaml#/ArtifactValidationRequest'
+          examples:
+            openapiCustomerId:
+              value:
+                sourceType: OPENAPI
+                filePath: openapi/customer-order.yaml
+                content: |
+                  components:
+                    schemas:
+                      CustomerOrderResponse:
+                        type: object
+                        properties:
+                          customerId:
+                            type: string
+                domainNames:
+                  - 고객
+                  - 주문
+                includeSuggestions: true
     responses:
       '200':
         description: OpenAPI 산출물 검증 성공
@@ -116,6 +133,25 @@ openapiReview:
           application/json:
             schema:
               $ref: '../schemas/artifact-validation.yaml#/ArtifactValidationResult'
+            examples:
+              customerIdWarning:
+                value:
+                  filePath: openapi/customer-order.yaml
+                  sourceType: OPENAPI
+                  checkedCount: 1
+                  summary:
+                    errorCount: 0
+                    warningCount: 1
+                    infoCount: 0
+                  issues:
+                    - severity: WARNING
+                      source: OPENAPI
+                      location: openapi/customer-order.yaml#/components/schemas/CustomerOrderResponse/properties/customerId
+                      inputExpression: customerId
+                      standardTerm: 고객번호
+                      recommendedExpression: customerNumber
+                      reason: 고객번호의 표준 API 필드명은 customerNumber입니다.
+                  exitCode: 0
       '400':
         $ref: '../openapi.yaml#/components/responses/BadRequest'
       '401':
@@ -142,6 +178,20 @@ ddlReview:
         application/json:
           schema:
             $ref: '../schemas/artifact-validation.yaml#/ArtifactValidationRequest'
+          examples:
+            ddlCustId:
+              value:
+                sourceType: DDL
+                filePath: db/customer_order.sql
+                content: |
+                  CREATE TABLE CUSTOMER_ORDER (
+                    CUST_ID VARCHAR(20),
+                    ORD_NO VARCHAR(20)
+                  );
+                domainNames:
+                  - 고객
+                  - 주문
+                includeSuggestions: true
     responses:
       '200':
         description: DDL 산출물 검증 성공
@@ -149,6 +199,25 @@ ddlReview:
           application/json:
             schema:
               $ref: '../schemas/artifact-validation.yaml#/ArtifactValidationResult'
+            examples:
+              custIdWarning:
+                value:
+                  filePath: db/customer_order.sql
+                  sourceType: DDL
+                  checkedCount: 2
+                  summary:
+                    errorCount: 1
+                    warningCount: 0
+                    infoCount: 1
+                  issues:
+                    - severity: ERROR
+                      source: DDL
+                      location: db/customer_order.sql:2
+                      inputExpression: CUST_ID
+                      standardTerm: 고객번호
+                      recommendedExpression: CUST_NO
+                      reason: CUST_ID는 금지어이며 고객번호의 표준 DB 컬럼명은 CUST_NO입니다.
+                  exitCode: 1
       '400':
         $ref: '../openapi.yaml#/components/responses/BadRequest'
       '401':
@@ -175,6 +244,20 @@ codeReview:
         application/json:
           schema:
             $ref: '../schemas/artifact-validation.yaml#/ArtifactValidationRequest'
+          examples:
+            kotlinCustomerId:
+              value:
+                sourceType: KOTLIN
+                filePath: apps/backend/src/main/kotlin/CustomerOrderResponse.kt
+                content: |
+                  data class CustomerOrderResponse(
+                      val customerId: String,
+                      val orderNumber: String
+                  )
+                domainNames:
+                  - 고객
+                  - 주문
+                includeSuggestions: true
     responses:
       '200':
         description: 코드 산출물 검증 성공
@@ -182,6 +265,25 @@ codeReview:
           application/json:
             schema:
               $ref: '../schemas/artifact-validation.yaml#/ArtifactValidationResult'
+            examples:
+              customerIdWarning:
+                value:
+                  filePath: apps/backend/src/main/kotlin/CustomerOrderResponse.kt
+                  sourceType: KOTLIN
+                  checkedCount: 2
+                  summary:
+                    errorCount: 0
+                    warningCount: 1
+                    infoCount: 1
+                  issues:
+                    - severity: WARNING
+                      source: CODE
+                      location: CustomerOrderResponse.kt:2
+                      inputExpression: customerId
+                      standardTerm: 고객번호
+                      recommendedExpression: customerNumber
+                      reason: 고객번호의 표준 코드 변수명은 customerNumber입니다.
+                  exitCode: 0
       '400':
         $ref: '../openapi.yaml#/components/responses/BadRequest'
       '401':
@@ -208,6 +310,28 @@ prReview:
         application/json:
           schema:
             $ref: '../schemas/artifact-validation.yaml#/PullRequestArtifactReviewRequest'
+          examples:
+            customerOrderPr:
+              value:
+                pullRequestId: '123'
+                repository: aulms
+                files:
+                  - filePath: openapi/customer-order.yaml
+                    sourceType: OPENAPI
+                    content: |
+                      components:
+                        schemas:
+                          CustomerOrderResponse:
+                            type: object
+                            properties:
+                              customerId:
+                                type: string
+                  - filePath: apps/backend/src/main/kotlin/CustomerOrderResponse.kt
+                    sourceType: KOTLIN
+                    content: |
+                      data class CustomerOrderResponse(val customerId: String)
+                failOnWarning: false
+                includeSuggestions: true
     responses:
       '200':
         description: PR 변경 파일 검증 성공
@@ -215,6 +339,57 @@ prReview:
           application/json:
             schema:
               $ref: '../schemas/artifact-validation.yaml#/PullRequestArtifactReviewResult'
+            examples:
+              customerOrderPrResult:
+                value:
+                  pullRequestId: '123'
+                  repository: aulms
+                  results:
+                    - filePath: openapi/customer-order.yaml
+                      sourceType: OPENAPI
+                      checkedCount: 1
+                      summary:
+                        errorCount: 0
+                        warningCount: 1
+                        infoCount: 0
+                      issues:
+                        - severity: WARNING
+                          source: OPENAPI
+                          location: openapi/customer-order.yaml#/components/schemas/CustomerOrderResponse/properties/customerId
+                          inputExpression: customerId
+                          standardTerm: 고객번호
+                          recommendedExpression: customerNumber
+                          reason: 고객번호의 표준 API 필드명은 customerNumber입니다.
+                      exitCode: 0
+                    - filePath: apps/backend/src/main/kotlin/CustomerOrderResponse.kt
+                      sourceType: KOTLIN
+                      checkedCount: 1
+                      summary:
+                        errorCount: 0
+                        warningCount: 1
+                        infoCount: 0
+                      issues:
+                        - severity: WARNING
+                          source: CODE
+                          location: CustomerOrderResponse.kt:1
+                          inputExpression: customerId
+                          standardTerm: 고객번호
+                          recommendedExpression: customerNumber
+                          reason: 고객번호의 표준 코드 변수명은 customerNumber입니다.
+                      exitCode: 0
+                  summary:
+                    errorCount: 0
+                    warningCount: 2
+                    infoCount: 0
+                  issues:
+                    - severity: WARNING
+                      source: OPENAPI
+                      location: openapi/customer-order.yaml#/components/schemas/CustomerOrderResponse/properties/customerId
+                      inputExpression: customerId
+                      standardTerm: 고객번호
+                      recommendedExpression: customerNumber
+                      reason: 고객번호의 표준 API 필드명은 customerNumber입니다.
+                  exitCode: 0
       '400':
         $ref: '../openapi.yaml#/components/responses/BadRequest'
       '401':

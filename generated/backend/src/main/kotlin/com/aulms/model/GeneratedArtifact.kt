@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import jakarta.validation.Valid
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 생성 산출물 placeholder
@@ -24,10 +25,13 @@ import jakarta.validation.Valid
 data class GeneratedArtifact(
 
     @field:Valid
+    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("artifactType", required = true) val artifactType: AssistTargetArtifact,
 
+    @Schema(example = "CustomerOrderResponse", required = true, description = "")
     @get:JsonProperty("name", required = true) val name: kotlin.String,
 
+    @Schema(example = "null", required = true, description = "표준 용어 기반으로 생성한 예시 내용")
     @get:JsonProperty("content", required = true) val content: kotlin.String
     ) {
 

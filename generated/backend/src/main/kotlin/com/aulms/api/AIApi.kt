@@ -8,6 +8,11 @@ package com.aulms.api
 import com.aulms.model.DevelopmentAssistRequest
 import com.aulms.model.DevelopmentAssistResponse
 import com.aulms.model.ErrorResponse
+import io.swagger.v3.oas.annotations.*
+import io.swagger.v3.oas.annotations.enums.*
+import io.swagger.v3.oas.annotations.media.*
+import io.swagger.v3.oas.annotations.responses.*
+import io.swagger.v3.oas.annotations.security.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -34,14 +39,42 @@ import kotlin.collections.Map
 @Validated
 interface AIApi {
 
-
+    @Operation(
+        tags = ["AI",],
+        summary = "AI 산출물 생성 지원",
+        operationId = "developmentAssist",
+        description = """요구사항 텍스트에서 업무 개념을 추출하고 데이터 사전 기반 표준 용어 매핑, 신규 후보, 표준 위반 경고, 산출물 예시를 생성한다.""",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [Content(
+                mediaType = "application/json",
+                examples = [
+                    ExampleObject(name = "customerOrders", value = "{\n  \"requirementText\": \"\uACE0\uAC1D\uBCC4 \uC8FC\uBB38 \uB0B4\uC5ED\uC744 \uC870\uD68C\uD558\uB294 API \uB9CC\uB4E4\uC5B4\uC918.\",\n  \"targetArtifacts\": [\n    \"DTO\",\n    \"OPENAPI_SCHEMA\",\n    \"SQL_EXAMPLE\"\n  ],\n  \"domainNames\": [\n    \"\uACE0\uAC1D\",\n    \"\uC8FC\uBB38\"\n  ]\n}")
+                ]
+            )]
+        ),
+        responses = [
+            ApiResponse(responseCode = "200", description = "AI 산출물 생성 지원 성공", content = [Content(schema = Schema(implementation = DevelopmentAssistResponse::class), examples = [
+                ExampleObject(name = "customerOrders", value = "{\n  \"requirementText\": \"\uACE0\uAC1D\uBCC4 \uC8FC\uBB38 \uB0B4\uC5ED\uC744 \uC870\uD68C\uD558\uB294 API \uB9CC\uB4E4\uC5B4\uC918.\",\n  \"extractedConcepts\": [\n    {\n      \"concept\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"reason\": \"\uACE0\uAC1D\uBCC4 \uC870\uD68C \uC870\uAC74\uC5D0\uC11C \uACE0\uAC1D \uC2DD\uBCC4 \uAE30\uC900\uC774 \uD544\uC694\uD568\",\n      \"confidence\": 0.95\n    },\n    {\n      \"concept\": \"\uC8FC\uBB38\uBC88\uD638\",\n      \"reason\": \"\uC8FC\uBB38 \uB0B4\uC5ED \uC751\uB2F5\uC758 \uC8FC\uBB38 \uC2DD\uBCC4\uC790\uAC00 \uD544\uC694\uD568\",\n      \"confidence\": 0.93\n    }\n  ],\n  \"termMappings\": [\n    {\n      \"concept\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"termId\": \"T-000001\",\n      \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"englishName\": \"Customer Number\",\n      \"dbColumn\": \"CUST_NO\",\n      \"apiField\": \"customerNumber\",\n      \"codeVariable\": \"customerNumber\",\n      \"status\": \"Approved\",\n      \"mappingSource\": \"Exact\",\n      \"recommendationReason\": \"\uC2B9\uC778\uB41C \uD45C\uC900 \uC6A9\uC5B4 \uB9E4\uD551\"\n    },\n    {\n      \"concept\": \"\uC8FC\uBB38\uBC88\uD638\",\n      \"termId\": \"T-000004\",\n      \"standardTerm\": \"\uC8FC\uBB38\uBC88\uD638\",\n      \"englishName\": \"Order Number\",\n      \"dbColumn\": \"ORD_NO\",\n      \"apiField\": \"orderNumber\",\n      \"codeVariable\": \"orderNumber\",\n      \"status\": \"Approved\",\n      \"mappingSource\": \"Exact\",\n      \"recommendationReason\": \"\uC2B9\uC778\uB41C \uD45C\uC900 \uC6A9\uC5B4 \uB9E4\uD551\"\n    }\n  ],\n  \"generatedArtifacts\": [\n    {\n      \"artifactType\": \"DTO\",\n      \"name\": \"CustomerOrderResponse\",\n      \"content\": \"data class CustomerOrderResponse(...)\"\n    }\n  ],\n  \"candidateTerms\": [\n\n  ],\n  \"warnings\": [\n\n  ]\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.POST],
             value = ["/ai/development-assist"],
             produces = ["application/json"],
             consumes = ["application/json"]
     )
-    fun developmentAssist( @Valid @RequestBody developmentAssistRequest: DevelopmentAssistRequest): ResponseEntity<DevelopmentAssistResponse> {
+    fun developmentAssist(@Parameter(description = "", required = true) @Valid @RequestBody developmentAssistRequest: DevelopmentAssistRequest): ResponseEntity<DevelopmentAssistResponse> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }

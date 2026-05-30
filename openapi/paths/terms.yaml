@@ -21,12 +21,14 @@ terms:
         description: 한글명, 영문명, 약어, API 필드명 검색어
         schema:
           type: string
+          example: 고객번호
       - name: domainName
         in: query
         required: false
         description: 도메인명 필터
         schema:
           type: string
+          example: 고객
       - name: status
         in: query
         required: false
@@ -126,6 +128,28 @@ terms:
           application/json:
             schema:
               $ref: '../schemas/term.yaml#/Term'
+            examples:
+              customerNumberDraft:
+                value:
+                  termId: T-000001
+                  termNumber: TERM-000001
+                  domainName: 고객
+                  usageType: 표준항목
+                  koreanName: 고객번호
+                  englishName: Customer Number
+                  englishAbbreviation: CUST_NO
+                  businessDefinition: 회사에서 고객을 업무적으로 식별하기 위해 사용하는 번호
+                  usageContext: 주문, 계약, 청구, 상담 등에서 고객 식별 기준으로 사용
+                  physicalType: VARCHAR
+                  digits: 20
+                  decimalPoint: 0
+                  status: Draft
+                  owner: 고객도메인 데이터스튜어드
+                  version: '1.0'
+                  expressions: []
+                  aliases: []
+                  createdAt: '2026-05-30T09:00:00+09:00'
+                  updatedAt: '2026-05-30T09:00:00+09:00'
       '400':
         $ref: '../openapi.yaml#/components/responses/BadRequest'
       '401':
@@ -165,6 +189,55 @@ termsByTermId:
           application/json:
             schema:
               $ref: '../schemas/term.yaml#/Term'
+            examples:
+              customerNumber:
+                value:
+                  termId: T-000001
+                  termNumber: TERM-000001
+                  domainName: 고객
+                  usageType: 표준항목
+                  koreanName: 고객번호
+                  englishName: Customer Number
+                  englishAbbreviation: CUST_NO
+                  businessDefinition: 회사에서 고객을 업무적으로 식별하기 위해 사용하는 번호
+                  usageContext: 주문, 계약, 청구, 상담 등에서 고객 식별 기준으로 사용
+                  physicalType: VARCHAR
+                  digits: 20
+                  decimalPoint: 0
+                  status: Approved
+                  owner: 고객도메인 데이터스튜어드
+                  version: '1.1'
+                  expressions:
+                    - expressionId: 1
+                      termId: T-000001
+                      expressionType: Korean
+                      expressionValue: 고객번호
+                      language: ko
+                      style: standard
+                      isStandard: true
+                    - expressionId: 2
+                      termId: T-000001
+                      expressionType: API_FIELD
+                      expressionValue: customerNumber
+                      language: en
+                      style: camelCase
+                      isStandard: true
+                    - expressionId: 3
+                      termId: T-000001
+                      expressionType: DB_COLUMN
+                      expressionValue: CUST_NO
+                      language: en
+                      style: UPPER_SNAKE_CASE
+                      isStandard: true
+                  aliases:
+                    - aliasId: A-000001
+                      termId: T-000001
+                      aliasName: 고객ID
+                      aliasType: Synonym
+                      recommendationAction: 고객번호로 변환 권장
+                      reason: 업무 고객 식별 번호 의미로 사용되는 경우 표준 용어는 고객번호
+                  createdAt: '2026-05-30T09:00:00+09:00'
+                  updatedAt: '2026-05-30T10:00:00+09:00'
       '401':
         $ref: '../openapi.yaml#/components/responses/Unauthorized'
       '403':
@@ -187,6 +260,23 @@ termsByTermId:
         application/json:
           schema:
             $ref: '../schemas/term.yaml#/TermUpdateRequest'
+          examples:
+            customerNumberDefinition:
+              value:
+                domainName: 고객
+                usageType: 표준항목
+                koreanName: 고객번호
+                englishName: Customer Number
+                englishAbbreviation: CUST_NO
+                businessDefinition: 회사에서 고객을 업무적으로 식별하기 위해 사용하는 업무 고객 번호
+                usageContext: 주문, 계약, 청구, 상담 등 고객 단위 업무 처리에서 사용
+                physicalType: VARCHAR
+                digits: 20
+                decimalPoint: 0
+                owner: 고객도메인 데이터스튜어드
+                status: Approved
+                version: '1.1'
+                changeReason: 업무 정의와 사용 맥락 보완
     responses:
       '200':
         description: 표준 용어 수정 성공
@@ -194,6 +284,28 @@ termsByTermId:
           application/json:
             schema:
               $ref: '../schemas/term.yaml#/Term'
+            examples:
+              updatedCustomerNumber:
+                value:
+                  termId: T-000001
+                  termNumber: TERM-000001
+                  domainName: 고객
+                  usageType: 표준항목
+                  koreanName: 고객번호
+                  englishName: Customer Number
+                  englishAbbreviation: CUST_NO
+                  businessDefinition: 회사에서 고객을 업무적으로 식별하기 위해 사용하는 업무 고객 번호
+                  usageContext: 주문, 계약, 청구, 상담 등 고객 단위 업무 처리에서 사용
+                  physicalType: VARCHAR
+                  digits: 20
+                  decimalPoint: 0
+                  status: Approved
+                  owner: 고객도메인 데이터스튜어드
+                  version: '1.1'
+                  expressions: []
+                  aliases: []
+                  createdAt: '2026-05-30T09:00:00+09:00'
+                  updatedAt: '2026-05-30T10:00:00+09:00'
       '400':
         $ref: '../openapi.yaml#/components/responses/BadRequest'
       '401':
@@ -229,6 +341,11 @@ approveTerm:
         application/json:
           schema:
             $ref: '../schemas/term.yaml#/TermApprovalRequest'
+          examples:
+            approveCustomerNumber:
+              value:
+                approver: data.steward
+                reason: 업무 정의와 산출물 표현 검토 완료
     responses:
       '200':
         description: 표준 용어 승인 성공
@@ -236,6 +353,28 @@ approveTerm:
           application/json:
             schema:
               $ref: '../schemas/term.yaml#/Term'
+            examples:
+              approvedCustomerNumber:
+                value:
+                  termId: T-000001
+                  termNumber: TERM-000001
+                  domainName: 고객
+                  usageType: 표준항목
+                  koreanName: 고객번호
+                  englishName: Customer Number
+                  englishAbbreviation: CUST_NO
+                  businessDefinition: 회사에서 고객을 업무적으로 식별하기 위해 사용하는 번호
+                  usageContext: 주문, 계약, 청구, 상담 등에서 고객 식별 기준으로 사용
+                  physicalType: VARCHAR
+                  digits: 20
+                  decimalPoint: 0
+                  status: Approved
+                  owner: 고객도메인 데이터스튜어드
+                  version: '1.0'
+                  expressions: []
+                  aliases: []
+                  createdAt: '2026-05-30T09:00:00+09:00'
+                  updatedAt: '2026-05-30T10:00:00+09:00'
       '400':
         $ref: '../openapi.yaml#/components/responses/BadRequest'
       '401':
@@ -271,6 +410,13 @@ deprecateTerm:
         application/json:
           schema:
             $ref: '../schemas/term.yaml#/TermDeprecationRequest'
+          examples:
+            deprecateCustId:
+              value:
+                approver: data.steward
+                replacementTermId: T-000001
+                reason: CUST_ID는 기술 ID와 혼동 가능하여 고객번호로 대체
+                impactAnalysisId: IA-000001
     responses:
       '200':
         description: 표준 용어 폐기 성공
@@ -278,6 +424,28 @@ deprecateTerm:
           application/json:
             schema:
               $ref: '../schemas/term.yaml#/Term'
+            examples:
+              deprecatedCustomerId:
+                value:
+                  termId: T-000123
+                  termNumber: TERM-000123
+                  domainName: 고객
+                  usageType: 표준항목
+                  koreanName: 고객ID
+                  englishName: Customer ID
+                  englishAbbreviation: CUST_ID
+                  businessDefinition: 고객 식별 표현으로 사용되었으나 고객번호와 혼동되어 폐기
+                  usageContext: 기존 API와 문서에서만 참조
+                  physicalType: VARCHAR
+                  digits: 20
+                  decimalPoint: 0
+                  status: Deprecated
+                  owner: 고객도메인 데이터스튜어드
+                  version: '2.0'
+                  expressions: []
+                  aliases: []
+                  createdAt: '2026-05-29T09:00:00+09:00'
+                  updatedAt: '2026-05-30T10:00:00+09:00'
       '400':
         $ref: '../openapi.yaml#/components/responses/BadRequest'
       '401':
@@ -337,6 +505,32 @@ termHistory:
           application/json:
             schema:
               $ref: '../schemas/term.yaml#/TermChangeHistoryListResponse'
+            examples:
+              customerNumberHistory:
+                value:
+                  items:
+                    - changeHistoryId: 1
+                      termId: T-000001
+                      changeType: CREATE
+                      newStatus: Draft
+                      reason: 신규 표준 용어 등록
+                      requestedBy: planner
+                      createdAt: '2026-05-30T09:00:00+09:00'
+                    - changeHistoryId: 2
+                      termId: T-000001
+                      changeType: APPROVE
+                      previousStatus: Draft
+                      newStatus: Approved
+                      reason: 업무 정의와 산출물 표현 검토 완료
+                      requestedBy: planner
+                      approvedBy: data.steward
+                      impactAnalysisId: IA-000001
+                      createdAt: '2026-05-30T10:00:00+09:00'
+                  page:
+                    page: 0
+                    size: 20
+                    totalElements: 2
+                    totalPages: 1
       '401':
         $ref: '../openapi.yaml#/components/responses/Unauthorized'
       '403':
@@ -376,6 +570,30 @@ termExpressions:
               type: array
               items:
                 $ref: '../schemas/term.yaml#/TermExpression'
+            examples:
+              customerNumberExpressions:
+                value:
+                  - expressionId: 1
+                    termId: T-000001
+                    expressionType: Korean
+                    expressionValue: 고객번호
+                    language: ko
+                    style: standard
+                    isStandard: true
+                  - expressionId: 2
+                    termId: T-000001
+                    expressionType: API_FIELD
+                    expressionValue: customerNumber
+                    language: en
+                    style: camelCase
+                    isStandard: true
+                  - expressionId: 3
+                    termId: T-000001
+                    expressionType: DB_COLUMN
+                    expressionValue: CUST_NO
+                    language: en
+                    style: UPPER_SNAKE_CASE
+                    isStandard: true
       '401':
         $ref: '../openapi.yaml#/components/responses/Unauthorized'
       '403':
@@ -414,6 +632,16 @@ termExpressions:
           application/json:
             schema:
               $ref: '../schemas/term.yaml#/TermExpression'
+            examples:
+              apiField:
+                value:
+                  expressionId: 2
+                  termId: T-000001
+                  expressionType: API_FIELD
+                  expressionValue: customerNumber
+                  language: en
+                  style: camelCase
+                  isStandard: true
       '400':
         $ref: '../openapi.yaml#/components/responses/BadRequest'
       '401':
@@ -457,6 +685,21 @@ termAliases:
               type: array
               items:
                 $ref: '../schemas/term.yaml#/TermAlias'
+            examples:
+              customerNumberAliases:
+                value:
+                  - aliasId: A-000001
+                    termId: T-000001
+                    aliasName: 고객ID
+                    aliasType: Synonym
+                    recommendationAction: 고객번호로 변환 권장
+                    reason: 업무 고객 식별 번호 의미로 사용되는 경우 표준 용어는 고객번호
+                  - aliasId: A-000002
+                    termId: T-000001
+                    aliasName: CUST_ID
+                    aliasType: Forbidden
+                    recommendationAction: CUST_NO 사용
+                    reason: 기술 ID와 업무 고객번호가 혼동될 수 있음
       '401':
         $ref: '../openapi.yaml#/components/responses/Unauthorized'
       '403':
@@ -495,6 +738,15 @@ termAliases:
           application/json:
             schema:
               $ref: '../schemas/term.yaml#/TermAlias'
+            examples:
+              customerIdAlias:
+                value:
+                  aliasId: A-000001
+                  termId: T-000001
+                  aliasName: 고객ID
+                  aliasType: Synonym
+                  recommendationAction: 고객번호로 변환 권장
+                  reason: 업무 고객 식별 번호 의미로 사용되는 경우 표준 용어는 고객번호
       '400':
         $ref: '../openapi.yaml#/components/responses/BadRequest'
       '401':

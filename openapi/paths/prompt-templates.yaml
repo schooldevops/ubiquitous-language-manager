@@ -88,6 +88,40 @@ promptTemplatesByTemplateId:
           application/json:
             schema:
               $ref: '../schemas/prompt-template.yaml#/PromptTemplate'
+            examples:
+              vibeCodingTemplate:
+                value:
+                  templateId: PT-VIBE-001
+                  type: VibeCoding
+                  name: 사내 데이터 사전 기반 개발 규칙
+                  version: 1.0.0
+                  status: Active
+                  description: DB, API, DTO, Entity, 테스트 생성 시 표준 용어를 강제하는 프롬프트
+                  body: |
+                    # 사내 데이터 사전 기반 개발 규칙
+                    요구사항: {{requirementText}}
+                    표준 용어 매핑: {{termMappings}}
+                    신규 후보: {{candidateTerms}}
+                  variables:
+                    - name: requirementText
+                      description: 사용자가 입력한 요구사항
+                      required: true
+                      source: UserInput
+                    - name: termMappings
+                      description: 데이터 사전 검색 결과로 확정된 표준 용어 매핑 목록
+                      required: true
+                      source: DictionarySearch
+                  versionPolicy: MAJOR는 출력 구조 변경, MINOR는 규칙 추가, PATCH는 문구 보완에 사용한다.
+                  histories:
+                    - historyId: PT-HIST-000001
+                      templateId: PT-VIBE-001
+                      version: 1.0.0
+                      changeType: Created
+                      reason: MVP3 기본 템플릿 등록
+                      actor: system
+                      createdAt: '2026-05-30T09:00:00+09:00'
+                  createdAt: '2026-05-30T09:00:00+09:00'
+                  updatedAt: '2026-05-30T09:00:00+09:00'
       '401':
         $ref: '../openapi.yaml#/components/responses/Unauthorized'
       '403':
@@ -126,6 +160,22 @@ promptTemplateVersions:
           application/json:
             schema:
               $ref: '../schemas/prompt-template.yaml#/PromptTemplateVersionListResponse'
+            examples:
+              vibeCodingVersions:
+                value:
+                  items:
+                    - templateId: PT-VIBE-001
+                      version: 1.0.0
+                      status: Active
+                      changeReason: MVP3 기본 바이브코딩 프롬프트 등록
+                      createdBy: system
+                      createdAt: '2026-05-30T09:00:00+09:00'
+                    - templateId: PT-VIBE-001
+                      version: 1.1.0
+                      status: Draft
+                      changeReason: OpenAPI 예제 생성 규칙 추가
+                      createdBy: data.steward
+                      createdAt: '2026-05-30T10:00:00+09:00'
       '401':
         $ref: '../openapi.yaml#/components/responses/Unauthorized'
       '403':
@@ -188,6 +238,22 @@ previewPromptTemplate:
           application/json:
             schema:
               $ref: '../schemas/prompt-template.yaml#/PromptTemplatePreviewResponse'
+            examples:
+              customerOrderApiPrompt:
+                value:
+                  templateId: PT-VIBE-001
+                  version: 1.0.0
+                  renderedPrompt: |
+                    # 사내 데이터 사전 기반 개발 규칙
+                    요구사항: 고객별 주문 내역을 조회하는 API 만들어줘.
+                    표준 용어:
+                    - 고객번호 / CUST_NO / customerNumber
+                    - 주문번호 / ORD_NO / orderNumber
+                    데이터 사전에 없는 용어는 신규 후보로 분리한다.
+                  injectedVariables:
+                    - requirementText
+                    - termMappings
+                    - candidateTerms
       '400':
         $ref: '../openapi.yaml#/components/responses/BadRequest'
       '401':

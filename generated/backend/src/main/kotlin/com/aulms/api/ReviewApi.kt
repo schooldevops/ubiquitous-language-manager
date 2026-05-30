@@ -12,6 +12,11 @@ import com.aulms.model.DocumentReviewResult
 import com.aulms.model.ErrorResponse
 import com.aulms.model.PullRequestArtifactReviewRequest
 import com.aulms.model.PullRequestArtifactReviewResult
+import io.swagger.v3.oas.annotations.*
+import io.swagger.v3.oas.annotations.enums.*
+import io.swagger.v3.oas.annotations.media.*
+import io.swagger.v3.oas.annotations.responses.*
+import io.swagger.v3.oas.annotations.security.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -38,69 +43,238 @@ import kotlin.collections.Map
 @Validated
 interface ReviewApi {
 
-
+    @Operation(
+        tags = ["Review",],
+        summary = "코드 산출물 검증",
+        operationId = "reviewCodeArtifact",
+        description = """Kotlin, Java, TypeScript 코드의 DTO, Entity, Request/Response 필드명을 데이터 사전 CODE_VARIABLE 표현 기준으로 검증한다.""",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [Content(
+                mediaType = "application/json",
+                examples = [
+                    ExampleObject(name = "kotlinCustomerId", value = "{\n  \"sourceType\": \"KOTLIN\",\n  \"filePath\": \"apps/backend/src/main/kotlin/CustomerOrderResponse.kt\",\n  \"content\": \"data class CustomerOrderResponse(\\n    val customerId: String,\\n    val orderNumber: String\\n)\\n\",\n  \"domainNames\": [\n    \"\uACE0\uAC1D\",\n    \"\uC8FC\uBB38\"\n  ],\n  \"includeSuggestions\": true\n}")
+                ]
+            )]
+        ),
+        responses = [
+            ApiResponse(responseCode = "200", description = "코드 산출물 검증 성공", content = [Content(schema = Schema(implementation = ArtifactValidationResult::class), examples = [
+                ExampleObject(name = "customerIdWarning", value = "{\n  \"filePath\": \"apps/backend/src/main/kotlin/CustomerOrderResponse.kt\",\n  \"sourceType\": \"KOTLIN\",\n  \"checkedCount\": 2,\n  \"summary\": {\n    \"errorCount\": 0,\n    \"warningCount\": 1,\n    \"infoCount\": 1\n  },\n  \"issues\": [\n    {\n      \"severity\": \"WARNING\",\n      \"source\": \"CODE\",\n      \"location\": \"CustomerOrderResponse.kt:2\",\n      \"inputExpression\": \"customerId\",\n      \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"recommendedExpression\": \"customerNumber\",\n      \"reason\": \"\uACE0\uAC1D\uBC88\uD638\uC758 \uD45C\uC900 \uCF54\uB4DC \uBCC0\uC218\uBA85\uC740 customerNumber\uC785\uB2C8\uB2E4.\"\n    }\n  ],\n  \"exitCode\": 0\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.POST],
             value = ["/reviews/code"],
             produces = ["application/json"],
             consumes = ["application/json"]
     )
-    fun reviewCodeArtifact( @Valid @RequestBody artifactValidationRequest: ArtifactValidationRequest): ResponseEntity<ArtifactValidationResult> {
+    fun reviewCodeArtifact(@Parameter(description = "", required = true) @Valid @RequestBody artifactValidationRequest: ArtifactValidationRequest): ResponseEntity<ArtifactValidationResult> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Review",],
+        summary = "DDL 산출물 검증",
+        operationId = "reviewDdlArtifact",
+        description = """DB DDL 컬럼명과 물리 스펙을 데이터 사전 DB_COLUMN 표현 기준으로 검증한다.""",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [Content(
+                mediaType = "application/json",
+                examples = [
+                    ExampleObject(name = "ddlCustId", value = "{\n  \"sourceType\": \"DDL\",\n  \"filePath\": \"db/customer_order.sql\",\n  \"content\": \"CREATE TABLE CUSTOMER_ORDER (\\n  CUST_ID VARCHAR(20),\\n  ORD_NO VARCHAR(20)\\n);\\n\",\n  \"domainNames\": [\n    \"\uACE0\uAC1D\",\n    \"\uC8FC\uBB38\"\n  ],\n  \"includeSuggestions\": true\n}")
+                ]
+            )]
+        ),
+        responses = [
+            ApiResponse(responseCode = "200", description = "DDL 산출물 검증 성공", content = [Content(schema = Schema(implementation = ArtifactValidationResult::class), examples = [
+                ExampleObject(name = "custIdWarning", value = "{\n  \"filePath\": \"db/customer_order.sql\",\n  \"sourceType\": \"DDL\",\n  \"checkedCount\": 2,\n  \"summary\": {\n    \"errorCount\": 1,\n    \"warningCount\": 0,\n    \"infoCount\": 1\n  },\n  \"issues\": [\n    {\n      \"severity\": \"ERROR\",\n      \"source\": \"DDL\",\n      \"location\": \"db/customer_order.sql:2\",\n      \"inputExpression\": \"CUST_ID\",\n      \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"recommendedExpression\": \"CUST_NO\",\n      \"reason\": \"CUST_ID\uB294 \uAE08\uC9C0\uC5B4\uC774\uBA70 \uACE0\uAC1D\uBC88\uD638\uC758 \uD45C\uC900 DB \uCEEC\uB7FC\uBA85\uC740 CUST_NO\uC785\uB2C8\uB2E4.\"\n    }\n  ],\n  \"exitCode\": 1\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.POST],
             value = ["/reviews/ddl"],
             produces = ["application/json"],
             consumes = ["application/json"]
     )
-    fun reviewDdlArtifact( @Valid @RequestBody artifactValidationRequest: ArtifactValidationRequest): ResponseEntity<ArtifactValidationResult> {
+    fun reviewDdlArtifact(@Parameter(description = "", required = true) @Valid @RequestBody artifactValidationRequest: ArtifactValidationRequest): ResponseEntity<ArtifactValidationResult> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Review",],
+        summary = "기획서 용어 검토",
+        operationId = "reviewDocument",
+        description = """기획서 본문에서 비표준 용어를 탐지하고 표준 용어, 산출물 표현, 신규 용어 후보를 반환한다.""",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [Content(
+                mediaType = "application/json",
+                examples = [
+                    ExampleObject(name = "customerOrderSearch", value = "{\n  \"documentText\": \"\uACE0\uAC1D ID\uB97C \uC785\uB825\uD558\uBA74 \uC8FC\uBB38 \uB9AC\uC2A4\uD2B8\uB97C \uC870\uD68C\uD55C\uB2E4.\",\n  \"domainNames\": [\n    \"\uACE0\uAC1D\",\n    \"\uC8FC\uBB38\"\n  ],\n  \"options\": {\n    \"includeCandidateTerms\": true,\n    \"includeValidationIssues\": true,\n    \"normalizeSentences\": true\n  }\n}")
+                ]
+            )]
+        ),
+        responses = [
+            ApiResponse(responseCode = "200", description = "기획서 용어 검토 성공", content = [Content(schema = Schema(implementation = DocumentReviewResult::class), examples = [
+                ExampleObject(name = "customerOrderSearch", value = "{\n  \"originalText\": \"\uACE0\uAC1D ID\uB97C \uC785\uB825\uD558\uBA74 \uC8FC\uBB38 \uB9AC\uC2A4\uD2B8\uB97C \uC870\uD68C\uD55C\uB2E4.\",\n  \"recommendedText\": \"\uACE0\uAC1D\uBC88\uD638\uB97C \uC785\uB825\uD558\uBA74 \uC8FC\uBB38 \uBAA9\uB85D\uC744 \uC870\uD68C\uD55C\uB2E4.\",\n  \"detectedTerms\": [\n    {\n      \"expression\": \"\uACE0\uAC1D ID\",\n      \"sentenceIndex\": 0,\n      \"startOffset\": 0,\n      \"endOffset\": 5,\n      \"matchType\": \"Alias\",\n      \"mappedTermId\": \"T-000001\",\n      \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\"\n    },\n    {\n      \"expression\": \"\uC8FC\uBB38 \uB9AC\uC2A4\uD2B8\",\n      \"sentenceIndex\": 0,\n      \"startOffset\": 11,\n      \"endOffset\": 17,\n      \"matchType\": \"Alias\",\n      \"mappedTermId\": \"T-000009\",\n      \"standardTerm\": \"\uC8FC\uBB38\uBAA9\uB85D\"\n    }\n  ],\n  \"standardMappings\": [\n    {\n      \"inputExpression\": \"\uACE0\uAC1D ID\",\n      \"termId\": \"T-000001\",\n      \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"englishName\": \"Customer Number\",\n      \"dbColumn\": \"CUST_NO\",\n      \"apiField\": \"customerNumber\",\n      \"codeVariable\": \"customerNumber\",\n      \"reason\": \"\uACE0\uAC1D ID\uB294 \uACE0\uAC1D\uBC88\uD638\uC758 \uC720\uC0AC\uC5B4\uC785\uB2C8\uB2E4.\"\n    },\n    {\n      \"inputExpression\": \"\uC8FC\uBB38 \uB9AC\uC2A4\uD2B8\",\n      \"termId\": \"T-000009\",\n      \"standardTerm\": \"\uC8FC\uBB38\uBAA9\uB85D\",\n      \"englishName\": \"Order List\",\n      \"dbColumn\": \"ORD_LIST\",\n      \"apiField\": \"orderList\",\n      \"codeVariable\": \"orderList\",\n      \"reason\": \"\uC8FC\uBB38 \uB9AC\uC2A4\uD2B8\uB294 \uC8FC\uBB38\uBAA9\uB85D\uC758 \uC720\uC0AC\uC5B4\uC785\uB2C8\uB2E4.\"\n    }\n  ],\n  \"candidateTerms\": [\n\n  ],\n  \"validationIssues\": [\n    {\n      \"severity\": \"WARNING\",\n      \"source\": \"DOCUMENT\",\n      \"inputExpression\": \"\uACE0\uAC1D ID\",\n      \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"recommendedExpression\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"reason\": \"\uACE0\uAC1D ID\uB294 \uACE0\uAC1D\uBC88\uD638\uB85C \uD45C\uC900\uD654\uD574\uC57C \uD569\uB2C8\uB2E4.\"\n    }\n  ]\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.POST],
             value = ["/reviews/document"],
             produces = ["application/json"],
             consumes = ["application/json"]
     )
-    fun reviewDocument( @Valid @RequestBody documentReviewRequest: DocumentReviewRequest): ResponseEntity<DocumentReviewResult> {
+    fun reviewDocument(@Parameter(description = "", required = true) @Valid @RequestBody documentReviewRequest: DocumentReviewRequest): ResponseEntity<DocumentReviewResult> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Review",],
+        summary = "OpenAPI 산출물 검증",
+        operationId = "reviewOpenApiArtifact",
+        description = """OpenAPI YAML의 API 필드명을 데이터 사전 API_FIELD 표현 기준으로 검증한다.""",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [Content(
+                mediaType = "application/json",
+                examples = [
+                    ExampleObject(name = "openapiCustomerId", value = "{\n  \"sourceType\": \"OPENAPI\",\n  \"filePath\": \"openapi/customer-order.yaml\",\n  \"content\": \"components:\\n  schemas:\\n    CustomerOrderResponse:\\n      type: object\\n      properties:\\n        customerId:\\n          type: string\\n\",\n  \"domainNames\": [\n    \"\uACE0\uAC1D\",\n    \"\uC8FC\uBB38\"\n  ],\n  \"includeSuggestions\": true\n}")
+                ]
+            )]
+        ),
+        responses = [
+            ApiResponse(responseCode = "200", description = "OpenAPI 산출물 검증 성공", content = [Content(schema = Schema(implementation = ArtifactValidationResult::class), examples = [
+                ExampleObject(name = "customerIdWarning", value = "{\n  \"filePath\": \"openapi/customer-order.yaml\",\n  \"sourceType\": \"OPENAPI\",\n  \"checkedCount\": 1,\n  \"summary\": {\n    \"errorCount\": 0,\n    \"warningCount\": 1,\n    \"infoCount\": 0\n  },\n  \"issues\": [\n    {\n      \"severity\": \"WARNING\",\n      \"source\": \"OPENAPI\",\n      \"location\": \"openapi/customer-order.yaml#/components/schemas/CustomerOrderResponse/properties/customerId\",\n      \"inputExpression\": \"customerId\",\n      \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"recommendedExpression\": \"customerNumber\",\n      \"reason\": \"\uACE0\uAC1D\uBC88\uD638\uC758 \uD45C\uC900 API \uD544\uB4DC\uBA85\uC740 customerNumber\uC785\uB2C8\uB2E4.\"\n    }\n  ],\n  \"exitCode\": 0\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.POST],
             value = ["/reviews/openapi"],
             produces = ["application/json"],
             consumes = ["application/json"]
     )
-    fun reviewOpenApiArtifact( @Valid @RequestBody artifactValidationRequest: ArtifactValidationRequest): ResponseEntity<ArtifactValidationResult> {
+    fun reviewOpenApiArtifact(@Parameter(description = "", required = true) @Valid @RequestBody artifactValidationRequest: ArtifactValidationRequest): ResponseEntity<ArtifactValidationResult> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Review",],
+        summary = "PR 변경 파일 검증",
+        operationId = "reviewPullRequestArtifacts",
+        description = """PR 또는 CI에서 전달한 여러 변경 파일을 표준 용어 기준으로 검증하고 파일별 결과와 전체 집계를 반환한다.""",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [Content(
+                mediaType = "application/json",
+                examples = [
+                    ExampleObject(name = "customerOrderPr", value = "{\n  \"pullRequestId\": \"123\",\n  \"repository\": \"aulms\",\n  \"files\": [\n    {\n      \"filePath\": \"openapi/customer-order.yaml\",\n      \"sourceType\": \"OPENAPI\",\n      \"content\": \"components:\\n  schemas:\\n    CustomerOrderResponse:\\n      type: object\\n      properties:\\n        customerId:\\n          type: string\\n\"\n    },\n    {\n      \"filePath\": \"apps/backend/src/main/kotlin/CustomerOrderResponse.kt\",\n      \"sourceType\": \"KOTLIN\",\n      \"content\": \"data class CustomerOrderResponse(val customerId: String)\\n\"\n    }\n  ],\n  \"failOnWarning\": false,\n  \"includeSuggestions\": true\n}")
+                ]
+            )]
+        ),
+        responses = [
+            ApiResponse(responseCode = "200", description = "PR 변경 파일 검증 성공", content = [Content(schema = Schema(implementation = PullRequestArtifactReviewResult::class), examples = [
+                ExampleObject(name = "customerOrderPrResult", value = "{\n  \"pullRequestId\": \"123\",\n  \"repository\": \"aulms\",\n  \"results\": [\n    {\n      \"filePath\": \"openapi/customer-order.yaml\",\n      \"sourceType\": \"OPENAPI\",\n      \"checkedCount\": 1,\n      \"summary\": {\n        \"errorCount\": 0,\n        \"warningCount\": 1,\n        \"infoCount\": 0\n      },\n      \"issues\": [\n        {\n          \"severity\": \"WARNING\",\n          \"source\": \"OPENAPI\",\n          \"location\": \"openapi/customer-order.yaml#/components/schemas/CustomerOrderResponse/properties/customerId\",\n          \"inputExpression\": \"customerId\",\n          \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n          \"recommendedExpression\": \"customerNumber\",\n          \"reason\": \"\uACE0\uAC1D\uBC88\uD638\uC758 \uD45C\uC900 API \uD544\uB4DC\uBA85\uC740 customerNumber\uC785\uB2C8\uB2E4.\"\n        }\n      ],\n      \"exitCode\": 0\n    },\n    {\n      \"filePath\": \"apps/backend/src/main/kotlin/CustomerOrderResponse.kt\",\n      \"sourceType\": \"KOTLIN\",\n      \"checkedCount\": 1,\n      \"summary\": {\n        \"errorCount\": 0,\n        \"warningCount\": 1,\n        \"infoCount\": 0\n      },\n      \"issues\": [\n        {\n          \"severity\": \"WARNING\",\n          \"source\": \"CODE\",\n          \"location\": \"CustomerOrderResponse.kt:1\",\n          \"inputExpression\": \"customerId\",\n          \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n          \"recommendedExpression\": \"customerNumber\",\n          \"reason\": \"\uACE0\uAC1D\uBC88\uD638\uC758 \uD45C\uC900 \uCF54\uB4DC \uBCC0\uC218\uBA85\uC740 customerNumber\uC785\uB2C8\uB2E4.\"\n        }\n      ],\n      \"exitCode\": 0\n    }\n  ],\n  \"summary\": {\n    \"errorCount\": 0,\n    \"warningCount\": 2,\n    \"infoCount\": 0\n  },\n  \"issues\": [\n    {\n      \"severity\": \"WARNING\",\n      \"source\": \"OPENAPI\",\n      \"location\": \"openapi/customer-order.yaml#/components/schemas/CustomerOrderResponse/properties/customerId\",\n      \"inputExpression\": \"customerId\",\n      \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"recommendedExpression\": \"customerNumber\",\n      \"reason\": \"\uACE0\uAC1D\uBC88\uD638\uC758 \uD45C\uC900 API \uD544\uB4DC\uBA85\uC740 customerNumber\uC785\uB2C8\uB2E4.\"\n    }\n  ],\n  \"exitCode\": 0\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.POST],
             value = ["/reviews/pr"],
             produces = ["application/json"],
             consumes = ["application/json"]
     )
-    fun reviewPullRequestArtifacts( @Valid @RequestBody pullRequestArtifactReviewRequest: PullRequestArtifactReviewRequest): ResponseEntity<PullRequestArtifactReviewResult> {
+    fun reviewPullRequestArtifacts(@Parameter(description = "", required = true) @Valid @RequestBody pullRequestArtifactReviewRequest: PullRequestArtifactReviewRequest): ResponseEntity<PullRequestArtifactReviewResult> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
-
+    @Operation(
+        tags = ["Review",],
+        summary = "개발 산출물 표준 용어 검증",
+        operationId = "validateArtifact",
+        description = """OpenAPI YAML과 DB DDL에서 필드명, 컬럼명, 물리 스펙을 추출해 데이터 사전 기준으로 검증한다.""",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [Content(
+                mediaType = "application/json",
+                examples = [
+                    ExampleObject(name = "openapiCustomerId", value = "{\n  \"sourceType\": \"OPENAPI\",\n  \"filePath\": \"openapi/customer.yaml\",\n  \"content\": \"components:\\n  schemas:\\n    CustomerOrderResponse:\\n      type: object\\n      properties:\\n        customerId:\\n          type: string\\n\",\n  \"includeSuggestions\": true\n}"),
+                    ExampleObject(name = "ddlCustId", value = "{\n  \"sourceType\": \"DDL\",\n  \"filePath\": \"db/customer.sql\",\n  \"content\": \"CREATE TABLE CUSTOMER (\\n  CUST_ID VARCHAR(20)\\n);\\n\",\n  \"includeSuggestions\": true\n}")
+                ]
+            )]
+        ),
+        responses = [
+            ApiResponse(responseCode = "200", description = "개발 산출물 검증 성공", content = [Content(schema = Schema(implementation = ArtifactValidationResult::class), examples = [
+                ExampleObject(name = "customerIdWarning", value = "{\n  \"filePath\": \"openapi/customer.yaml\",\n  \"sourceType\": \"OPENAPI\",\n  \"checkedCount\": 1,\n  \"summary\": {\n    \"errorCount\": 0,\n    \"warningCount\": 1,\n    \"infoCount\": 0\n  },\n  \"issues\": [\n    {\n      \"severity\": \"WARNING\",\n      \"source\": \"OPENAPI\",\n      \"location\": \"openapi/customer.yaml#/components/schemas/CustomerOrderResponse/properties/customerId\",\n      \"inputExpression\": \"customerId\",\n      \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"recommendedExpression\": \"customerNumber\",\n      \"reason\": \"API \uD45C\uC900 \uD544\uB4DC\uBA85\uC740 customerNumber\uC785\uB2C8\uB2E4.\"\n    }\n  ],\n  \"exitCode\": 0\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
     @RequestMapping(
             method = [RequestMethod.POST],
             value = ["/artifact-validations"],
             produces = ["application/json"],
             consumes = ["application/json"]
     )
-    fun validateArtifact( @Valid @RequestBody artifactValidationRequest: ArtifactValidationRequest): ResponseEntity<ArtifactValidationResult> {
+    fun validateArtifact(@Parameter(description = "", required = true) @Valid @RequestBody artifactValidationRequest: ArtifactValidationRequest): ResponseEntity<ArtifactValidationResult> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }
