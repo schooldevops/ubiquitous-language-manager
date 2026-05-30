@@ -81,6 +81,75 @@ const sampleTerm: Term = {
   ],
 };
 
+const sampleOrderNumberTerm: Term = {
+  termId: "T-000004",
+  termNumber: "TERM-000004",
+  domainName: "주문",
+  usageType: "표준항목",
+  koreanName: "주문번호",
+  englishName: "Order Number",
+  englishAbbreviation: "ORD_NO",
+  businessDefinition: "회사에서 주문을 업무적으로 식별하기 위해 사용하는 번호",
+  usageContext: "주문 접수, 주문 조회, 주문 취소, 결제, 배송 등에서 주문 식별 기준으로 사용",
+  physicalType: "VARCHAR",
+  digits: 20,
+  decimalPoint: 0,
+  status: TermStatus.Approved,
+  owner: "주문도메인 데이터스튜어드",
+  version: "1.0",
+  expressions: [
+    { expressionId: 41, termId: "T-000004", expressionType: "Korean", expressionValue: "주문번호", language: "ko", style: "standard", isStandard: true },
+    { expressionId: 42, termId: "T-000004", expressionType: "English", expressionValue: "Order Number", language: "en", style: "title", isStandard: true },
+    { expressionId: 43, termId: "T-000004", expressionType: "DB_COLUMN", expressionValue: "ORD_NO", language: "en", style: "UPPER_SNAKE", isStandard: true },
+    { expressionId: 44, termId: "T-000004", expressionType: "API_FIELD", expressionValue: "orderNumber", language: "en", style: "camelCase", isStandard: true },
+    { expressionId: 45, termId: "T-000004", expressionType: "CODE_VARIABLE", expressionValue: "orderNumber", language: "en", style: "camelCase", isStandard: true },
+    { expressionId: 46, termId: "T-000004", expressionType: "UI_LABEL", expressionValue: "주문번호", language: "ko", style: "label", isStandard: true },
+    { expressionId: 47, termId: "T-000004", expressionType: "TEST_WORD", expressionValue: "주문번호", language: "ko", style: "gherkin", isStandard: true },
+  ],
+  aliases: [
+    { aliasId: "A-000041", termId: "T-000004", aliasName: "주문ID", aliasType: "Synonym", recommendationAction: "주문번호로 변환 권장", reason: "업무 주문 식별 번호 의미로 사용되는 경우 표준 용어는 주문번호" },
+    { aliasId: "A-000042", termId: "T-000004", aliasName: "orderId", aliasType: "Synonym", recommendationAction: "orderNumber로 변환 권장", reason: "API 표준 필드명은 orderNumber" },
+    { aliasId: "A-000043", termId: "T-000004", aliasName: "ORD_ID", aliasType: "Forbidden", recommendationAction: "ORD_NO 사용", reason: "기술 ID와 업무 주문번호가 혼동될 수 있음" },
+  ],
+};
+
+const sampleOrderDateTerm: Term = {
+  termId: "T-000005",
+  termNumber: "TERM-000005",
+  domainName: "주문",
+  usageType: "표준항목",
+  koreanName: "주문일자",
+  englishName: "Order Date",
+  englishAbbreviation: "ORD_DT",
+  businessDefinition: "주문이 업무적으로 발생한 날짜",
+  usageContext: "주문 목록, 주문 상세, 매출 집계, 주문 이력 조회에서 날짜 기준으로 사용",
+  physicalType: "DATE",
+  digits: 8,
+  decimalPoint: 0,
+  status: TermStatus.Approved,
+  owner: "주문도메인 데이터스튜어드",
+  version: "1.0",
+  expressions: [
+    { expressionId: 51, termId: "T-000005", expressionType: "Korean", expressionValue: "주문일자", language: "ko", style: "standard", isStandard: true },
+    { expressionId: 52, termId: "T-000005", expressionType: "English", expressionValue: "Order Date", language: "en", style: "title", isStandard: true },
+    { expressionId: 53, termId: "T-000005", expressionType: "DB_COLUMN", expressionValue: "ORD_DT", language: "en", style: "UPPER_SNAKE", isStandard: true },
+    { expressionId: 54, termId: "T-000005", expressionType: "API_FIELD", expressionValue: "orderDate", language: "en", style: "camelCase", isStandard: true },
+    { expressionId: 55, termId: "T-000005", expressionType: "CODE_VARIABLE", expressionValue: "orderDate", language: "en", style: "camelCase", isStandard: true },
+    { expressionId: 56, termId: "T-000005", expressionType: "UI_LABEL", expressionValue: "주문일자", language: "ko", style: "label", isStandard: true },
+    { expressionId: 57, termId: "T-000005", expressionType: "TEST_WORD", expressionValue: "주문일자", language: "ko", style: "gherkin", isStandard: true },
+  ],
+  aliases: [
+    { aliasId: "A-000051", termId: "T-000005", aliasName: "주문날짜", aliasType: "Synonym", recommendationAction: "주문일자로 변환 권장", reason: "날짜 단위 주문 발생 기준은 주문일자" },
+    { aliasId: "A-000052", termId: "T-000005", aliasName: "orderDatetime", aliasType: "Synonym", recommendationAction: "시분초가 필요하면 주문일시 신규 검토", reason: "주문일자는 날짜만 표현함" },
+  ],
+};
+
+const sampleTermMap: Record<string, Term> = {
+  [sampleTerm.termId]: sampleTerm,
+  [sampleOrderNumberTerm.termId]: sampleOrderNumberTerm,
+  [sampleOrderDateTerm.termId]: sampleOrderDateTerm,
+};
+
 const sampleTerms: TermSummary[] = [
   {
     termId: sampleTerm.termId,
@@ -94,25 +163,25 @@ const sampleTerms: TermSummary[] = [
     relatedSystems: ["CRM", "ORDER"],
   },
   {
-    termId: "T-000004",
-    termNumber: "TERM-000004",
-    domainName: "주문",
-    koreanName: "주문번호",
-    englishName: "Order Number",
-    englishAbbreviation: "ORD_NO",
+    termId: sampleOrderNumberTerm.termId,
+    termNumber: sampleOrderNumberTerm.termNumber,
+    domainName: sampleOrderNumberTerm.domainName,
+    koreanName: sampleOrderNumberTerm.koreanName,
+    englishName: sampleOrderNumberTerm.englishName,
+    englishAbbreviation: sampleOrderNumberTerm.englishAbbreviation,
     apiFieldName: "orderNumber",
-    status: TermStatus.Approved,
+    status: sampleOrderNumberTerm.status,
     relatedSystems: ["ORDER"],
   },
   {
-    termId: "T-000005",
-    termNumber: "TERM-000005",
-    domainName: "주문",
-    koreanName: "주문일자",
-    englishName: "Order Date",
-    englishAbbreviation: "ORD_DT",
+    termId: sampleOrderDateTerm.termId,
+    termNumber: sampleOrderDateTerm.termNumber,
+    domainName: sampleOrderDateTerm.domainName,
+    koreanName: sampleOrderDateTerm.koreanName,
+    englishName: sampleOrderDateTerm.englishName,
+    englishAbbreviation: sampleOrderDateTerm.englishAbbreviation,
     apiFieldName: "orderDate",
-    status: TermStatus.Approved,
+    status: sampleOrderDateTerm.status,
     relatedSystems: ["ORDER"],
   },
 ];
@@ -138,6 +207,55 @@ const sampleImpact: ImpactAnalysisResponse = {
     { priority: 2, action: "OpenAPI, DTO, 테스트, 기획서 용어를 함께 검토한다", reason: "유비쿼터스 랭기지는 산출물 간 표현 일관성이 핵심임" },
     { priority: 3, action: "변경 승인 후 RAG와 Graphify 인덱스를 재생성한다", reason: "2-hop 영향 대상까지 확장했으므로 관계 검색 결과도 최신화해야 함" },
   ],
+};
+
+const sampleOrderNumberImpact: ImpactAnalysisResponse = {
+  termId: "T-000004",
+  standardTerm: "주문번호",
+  changeType: ImpactChangeType.ApiFieldRename,
+  includeTwoHop: true,
+  riskLevel: ImpactRiskLevel.High,
+  riskScore: 88,
+  impactedTargets: [
+    { targetType: "SYSTEM", targetName: "ORDER", systemCode: "ORDER", location: "TERM_MASTER.T-000004", hop: 1, reason: "주문번호 용어를 사용하는 주문 기준 시스템" },
+    { targetType: "DB_TABLE", targetName: "ORDER_HEADER", systemCode: "ORDER", location: "ORDER.ORDER_HEADER", hop: 1, reason: "주문번호가 주문 헤더 대표 식별자로 사용됨" },
+    { targetType: "DB_COLUMN", targetName: "ORD_NO", systemCode: "ORDER", location: "ORDER.ORDER_HEADER.ORD_NO", hop: 1, reason: "ORD_NO 표현이 표준 용어 주문번호를 참조함" },
+    { targetType: "API_FIELD", targetName: "orderNumber", systemCode: "ORDER", location: "GET /orders/{orderNumber}", hop: 1, reason: "orderNumber 경로 변수와 응답 필드가 주문번호를 참조함" },
+    { targetType: "DTO", targetName: "OrderResponse.orderNumber", systemCode: "ORDER", location: "OrderResponse.orderNumber", hop: 1, reason: "DTO 필드가 주문번호 표준 표현을 사용함" },
+    { targetType: "DOCUMENT", targetName: "주문 상세 조회 기획서", systemCode: "PLANNING", location: "docs/planning/order-detail.md", hop: 2, reason: "주문번호 변경 시 기획서 용어 매핑표와 조회 조건 확인 필요" },
+    { targetType: "TEST_CASE", targetName: "주문번호로 주문 상세 조회", systemCode: "QA", location: "tests/order-detail-by-order-number.feature", hop: 2, reason: "Given/When/Then 테스트 용어와 오류 메시지 확인 필요" },
+  ],
+  recommendations: [
+    { priority: 1, action: "주문 조회 API 경로 변수와 응답 필드 호환성을 검토한다", reason: "주문번호는 주문 조회 계약에서 직접 사용됨" },
+    { priority: 2, action: "ORDER_HEADER.ORD_NO 참조 SQL과 DTO를 함께 점검한다", reason: "DB 컬럼, SQL Mapper, DTO 표현이 함께 변경되어야 함" },
+    { priority: 3, action: "주문번호 별칭 orderId, 주문ID 사용 위치를 표준화한다", reason: "기술 ID와 업무 주문번호 혼동을 줄여야 함" },
+  ],
+};
+
+const sampleOrderDateImpact: ImpactAnalysisResponse = {
+  termId: "T-000005",
+  standardTerm: "주문일자",
+  changeType: ImpactChangeType.ApiFieldRename,
+  includeTwoHop: true,
+  riskLevel: ImpactRiskLevel.Medium,
+  riskScore: 64,
+  impactedTargets: [
+    { targetType: "SYSTEM", targetName: "ORDER", systemCode: "ORDER", location: "TERM_MASTER.T-000005", hop: 1, reason: "주문일자 용어를 사용하는 주문 기준 시스템" },
+    { targetType: "DB_COLUMN", targetName: "ORD_DT", systemCode: "ORDER", location: "ORDER.ORDER_HEADER.ORD_DT", hop: 1, reason: "ORD_DT 표현이 표준 용어 주문일자를 참조함" },
+    { targetType: "API_FIELD", targetName: "orderDate", systemCode: "ORDER", location: "GET /orders response.orderDate", hop: 1, reason: "orderDate 응답 필드가 주문일자를 참조함" },
+    { targetType: "DOCUMENT", targetName: "주문 목록 기획서", systemCode: "PLANNING", location: "docs/planning/order-list.md", hop: 2, reason: "주문 목록 표시 항목과 기간 검색 조건 확인 필요" },
+  ],
+  recommendations: [
+    { priority: 1, action: "주문일자와 주문일시의 사용 기준을 명확히 한다", reason: "날짜와 시분초 정밀도 혼동 가능성이 있음" },
+    { priority: 2, action: "기간 검색 API의 from/to 필드명을 검토한다", reason: "주문일자 변경은 검색 조건에도 영향이 있음" },
+    { priority: 3, action: "집계/리포트 SQL의 날짜 기준을 확인한다", reason: "매출 집계 기준일로 사용될 수 있음" },
+  ],
+};
+
+const sampleImpactMap: Record<string, ImpactAnalysisResponse> = {
+  [sampleImpact.termId]: sampleImpact,
+  [sampleOrderNumberImpact.termId]: sampleOrderNumberImpact,
+  [sampleOrderDateImpact.termId]: sampleOrderDateImpact,
 };
 
 const sampleCandidate: TermCandidate = {
@@ -236,7 +354,10 @@ function fallbackList(q?: string, domainName?: string, status?: TermStatus): Ter
 export async function listTerms(q?: string, domainName?: string, status?: TermStatus): Promise<TermListResponse> {
   try {
     const response = await termApi.listTerms(q || undefined, domainName || undefined, status || undefined, 0, 20);
-    return response.data;
+    if (response.data.items.length > 0) {
+      return response.data;
+    }
+    return fallbackList(q, domainName, status);
   } catch {
     return fallbackList(q, domainName, status);
   }
@@ -247,7 +368,7 @@ export async function getTerm(termId: string): Promise<Term> {
     const response = await termApi.getTerm(termId);
     return response.data;
   } catch {
-    return termId === sampleTerm.termId ? sampleTerm : { ...sampleTerm, termId };
+    return sampleTermMap[termId] ?? { ...sampleTerm, termId };
   }
 }
 
@@ -266,7 +387,7 @@ export async function listExpressions(termId: string): Promise<TermExpression[]>
     const response = await expressionApi.listTermExpressions(termId);
     return response.data;
   } catch {
-    return sampleTerm.expressions;
+    return sampleTermMap[termId]?.expressions ?? sampleTerm.expressions;
   }
 }
 
@@ -280,7 +401,7 @@ export async function listAliases(termId: string): Promise<TermAlias[]> {
     const response = await aliasApi.listTermAliases(termId);
     return response.data;
   } catch {
-    return sampleTerm.aliases;
+    return sampleTermMap[termId]?.aliases ?? sampleTerm.aliases;
   }
 }
 
@@ -331,7 +452,8 @@ export async function getTermImpact(termId: string, changeType: ImpactChangeType
     const response = await impactApi.getTermImpact(termId, changeType, includeTwoHop);
     return response.data;
   } catch {
-    return { ...sampleImpact, termId };
+    const impact = sampleImpactMap[termId] ?? sampleImpact;
+    return { ...impact, termId, changeType, includeTwoHop };
   }
 }
 
