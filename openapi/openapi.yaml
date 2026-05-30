@@ -58,6 +58,16 @@ paths:
     $ref: './paths/search.yaml#/semanticSearch'
   /reviews/document:
     $ref: './paths/reviews.yaml#/documentReview'
+  /reviews/openapi:
+    $ref: './paths/reviews.yaml#/openapiReview'
+  /reviews/ddl:
+    $ref: './paths/reviews.yaml#/ddlReview'
+  /reviews/code:
+    $ref: './paths/reviews.yaml#/codeReview'
+  /reviews/pr:
+    $ref: './paths/reviews.yaml#/prReview'
+  /artifact-validations:
+    $ref: './paths/artifact-validations.yaml#/artifactValidation'
   /candidates:
     $ref: './paths/candidates.yaml#/candidates'
   /candidates/{candidateId}:
@@ -76,6 +86,16 @@ paths:
     $ref: './paths/prompt-templates.yaml#/previewPromptTemplate'
   /ai/development-assist:
     $ref: './paths/ai.yaml#/developmentAssist'
+  /relationships/terms/{termId}:
+    $ref: './paths/relationships.yaml#/termRelationships'
+  /relationships/domains/{domainName}/terms:
+    $ref: './paths/relationships.yaml#/domainTerms'
+  /relationships/columns/{columnName}/systems:
+    $ref: './paths/relationships.yaml#/columnSystems'
+  /relationships/deprecated:
+    $ref: './paths/relationships.yaml#/deprecatedUsages'
+  /impact/terms/{termId}:
+    $ref: './paths/impact.yaml#/termImpact'
 components:
   securitySchemes:
     bearerAuth:
@@ -158,6 +178,20 @@ components:
       $ref: './schemas/review.yaml#/StandardMapping'
     CandidateTerm:
       $ref: './schemas/review.yaml#/CandidateTerm'
+    ArtifactSourceType:
+      $ref: './schemas/artifact-validation.yaml#/ArtifactSourceType'
+    ArtifactValidationRequest:
+      $ref: './schemas/artifact-validation.yaml#/ArtifactValidationRequest'
+    ArtifactValidationResult:
+      $ref: './schemas/artifact-validation.yaml#/ArtifactValidationResult'
+    ArtifactValidationSummary:
+      $ref: './schemas/artifact-validation.yaml#/ArtifactValidationSummary'
+    PullRequestArtifactReviewRequest:
+      $ref: './schemas/artifact-validation.yaml#/PullRequestArtifactReviewRequest'
+    PullRequestArtifactFile:
+      $ref: './schemas/artifact-validation.yaml#/PullRequestArtifactFile'
+    PullRequestArtifactReviewResult:
+      $ref: './schemas/artifact-validation.yaml#/PullRequestArtifactReviewResult'
     CandidateStatus:
       $ref: './schemas/candidate.yaml#/CandidateStatus'
     TermCandidate:
@@ -216,6 +250,34 @@ components:
       $ref: './schemas/ai.yaml#/AssistCandidateTerm'
     StandardViolationWarning:
       $ref: './schemas/ai.yaml#/StandardViolationWarning'
+    RelationshipSearchResponse:
+      $ref: './schemas/relationship.yaml#/RelationshipSearchResponse'
+    RelationshipSearchResult:
+      $ref: './schemas/relationship.yaml#/RelationshipSearchResult'
+    RelationshipPath:
+      $ref: './schemas/relationship.yaml#/RelationshipPath'
+    GraphPathNode:
+      $ref: './schemas/relationship.yaml#/GraphPathNode'
+    GraphPathEdge:
+      $ref: './schemas/relationship.yaml#/GraphPathEdge'
+    ColumnSystemUsageResponse:
+      $ref: './schemas/relationship.yaml#/ColumnSystemUsageResponse'
+    ColumnSystemUsage:
+      $ref: './schemas/relationship.yaml#/ColumnSystemUsage'
+    DeprecatedUsageResponse:
+      $ref: './schemas/relationship.yaml#/DeprecatedUsageResponse'
+    DeprecatedUsage:
+      $ref: './schemas/relationship.yaml#/DeprecatedUsage'
+    ImpactAnalysisResponse:
+      $ref: './schemas/impact.yaml#/ImpactAnalysisResponse'
+    ImpactChangeType:
+      $ref: './schemas/impact.yaml#/ImpactChangeType'
+    ImpactRiskLevel:
+      $ref: './schemas/impact.yaml#/ImpactRiskLevel'
+    ImpactTarget:
+      $ref: './schemas/impact.yaml#/ImpactTarget'
+    ImpactRecommendation:
+      $ref: './schemas/impact.yaml#/ImpactRecommendation'
   responses:
     BadRequest:
       description: 요청 형식 또는 validation 오류

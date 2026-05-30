@@ -64,11 +64,21 @@ Class | Method | HTTP request | Description
 *GovernanceApi* | [**approveTerm**](docs/GovernanceApi.md#approveterm) | **POST** /terms/{termId}/approve | 표준 용어 승인
 *GovernanceApi* | [**deprecateTerm**](docs/GovernanceApi.md#deprecateterm) | **POST** /terms/{termId}/deprecate | 표준 용어 폐기
 *GovernanceApi* | [**listTermHistory**](docs/GovernanceApi.md#listtermhistory) | **GET** /terms/{termId}/history | 용어 변경 이력 조회
+*ImpactApi* | [**getTermImpact**](docs/ImpactApi.md#gettermimpact) | **GET** /impact/terms/{termId} | 용어 변경 영향도 분석
 *PromptTemplateApi* | [**getPromptTemplate**](docs/PromptTemplateApi.md#getprompttemplate) | **GET** /prompt-templates/{templateId} | 프롬프트 템플릿 상세 조회
 *PromptTemplateApi* | [**listPromptTemplateVersions**](docs/PromptTemplateApi.md#listprompttemplateversions) | **GET** /prompt-templates/{templateId}/versions | 프롬프트 템플릿 버전 목록 조회
 *PromptTemplateApi* | [**listPromptTemplates**](docs/PromptTemplateApi.md#listprompttemplates) | **GET** /prompt-templates | 프롬프트 템플릿 목록 조회
 *PromptTemplateApi* | [**previewPromptTemplate**](docs/PromptTemplateApi.md#previewprompttemplate) | **POST** /prompt-templates/{templateId}/preview | 프롬프트 템플릿 미리보기
+*RelationshipApi* | [**getColumnSystems**](docs/RelationshipApi.md#getcolumnsystems) | **GET** /relationships/columns/{columnName}/systems | 컬럼 사용 시스템 조회
+*RelationshipApi* | [**getDeprecatedUsages**](docs/RelationshipApi.md#getdeprecatedusages) | **GET** /relationships/deprecated | 폐기어와 금지어 사용 위치 조회
+*RelationshipApi* | [**getDomainTerms**](docs/RelationshipApi.md#getdomainterms) | **GET** /relationships/domains/{domainName}/terms | 도메인별 표준 용어 관계 검색
+*RelationshipApi* | [**getTermRelationships**](docs/RelationshipApi.md#gettermrelationships) | **GET** /relationships/terms/{termId} | 용어 관계 검색
+*ReviewApi* | [**reviewCodeArtifact**](docs/ReviewApi.md#reviewcodeartifact) | **POST** /reviews/code | 코드 산출물 검증
+*ReviewApi* | [**reviewDdlArtifact**](docs/ReviewApi.md#reviewddlartifact) | **POST** /reviews/ddl | DDL 산출물 검증
 *ReviewApi* | [**reviewDocument**](docs/ReviewApi.md#reviewdocument) | **POST** /reviews/document | 기획서 용어 검토
+*ReviewApi* | [**reviewOpenApiArtifact**](docs/ReviewApi.md#reviewopenapiartifact) | **POST** /reviews/openapi | OpenAPI 산출물 검증
+*ReviewApi* | [**reviewPullRequestArtifacts**](docs/ReviewApi.md#reviewpullrequestartifacts) | **POST** /reviews/pr | PR 변경 파일 검증
+*ReviewApi* | [**validateArtifact**](docs/ReviewApi.md#validateartifact) | **POST** /artifact-validations | 개발 산출물 표준 용어 검증
 *SearchApi* | [**aliasSearch**](docs/SearchApi.md#aliassearch) | **GET** /search/alias | 유사어 검색
 *SearchApi* | [**deprecatedSearch**](docs/SearchApi.md#deprecatedsearch) | **GET** /search/deprecated | 폐기어 검색
 *SearchApi* | [**domainSearch**](docs/SearchApi.md#domainsearch) | **GET** /search/domain/{domainName} | 도메인별 검색
@@ -83,6 +93,10 @@ Class | Method | HTTP request | Description
 ### Documentation For Models
 
  - [AliasType](docs/AliasType.md)
+ - [ArtifactSourceType](docs/ArtifactSourceType.md)
+ - [ArtifactValidationRequest](docs/ArtifactValidationRequest.md)
+ - [ArtifactValidationResult](docs/ArtifactValidationResult.md)
+ - [ArtifactValidationSummary](docs/ArtifactValidationSummary.md)
  - [AssistCandidateTerm](docs/AssistCandidateTerm.md)
  - [AssistTargetArtifact](docs/AssistTargetArtifact.md)
  - [AssistTermMapping](docs/AssistTermMapping.md)
@@ -90,8 +104,12 @@ Class | Method | HTTP request | Description
  - [CandidatePromotionResult](docs/CandidatePromotionResult.md)
  - [CandidateStatus](docs/CandidateStatus.md)
  - [CandidateTerm](docs/CandidateTerm.md)
+ - [ColumnSystemUsage](docs/ColumnSystemUsage.md)
+ - [ColumnSystemUsageResponse](docs/ColumnSystemUsageResponse.md)
  - [DeprecatedSearchResponse](docs/DeprecatedSearchResponse.md)
  - [DeprecatedSearchResult](docs/DeprecatedSearchResult.md)
+ - [DeprecatedUsage](docs/DeprecatedUsage.md)
+ - [DeprecatedUsageResponse](docs/DeprecatedUsageResponse.md)
  - [DetectedTerm](docs/DetectedTerm.md)
  - [DevelopmentAssistRequest](docs/DevelopmentAssistRequest.md)
  - [DevelopmentAssistResponse](docs/DevelopmentAssistResponse.md)
@@ -102,6 +120,13 @@ Class | Method | HTTP request | Description
  - [ExpressionType](docs/ExpressionType.md)
  - [ExtractedBusinessConcept](docs/ExtractedBusinessConcept.md)
  - [GeneratedArtifact](docs/GeneratedArtifact.md)
+ - [GraphPathEdge](docs/GraphPathEdge.md)
+ - [GraphPathNode](docs/GraphPathNode.md)
+ - [ImpactAnalysisResponse](docs/ImpactAnalysisResponse.md)
+ - [ImpactChangeType](docs/ImpactChangeType.md)
+ - [ImpactRecommendation](docs/ImpactRecommendation.md)
+ - [ImpactRiskLevel](docs/ImpactRiskLevel.md)
+ - [ImpactTarget](docs/ImpactTarget.md)
  - [MatchedExpression](docs/MatchedExpression.md)
  - [PageMetadata](docs/PageMetadata.md)
  - [PromptCandidateTerm](docs/PromptCandidateTerm.md)
@@ -117,7 +142,13 @@ Class | Method | HTTP request | Description
  - [PromptTemplateVersion](docs/PromptTemplateVersion.md)
  - [PromptTemplateVersionListResponse](docs/PromptTemplateVersionListResponse.md)
  - [PromptTermMapping](docs/PromptTermMapping.md)
+ - [PullRequestArtifactFile](docs/PullRequestArtifactFile.md)
+ - [PullRequestArtifactReviewRequest](docs/PullRequestArtifactReviewRequest.md)
+ - [PullRequestArtifactReviewResult](docs/PullRequestArtifactReviewResult.md)
  - [Recommendation](docs/Recommendation.md)
+ - [RelationshipPath](docs/RelationshipPath.md)
+ - [RelationshipSearchResponse](docs/RelationshipSearchResponse.md)
+ - [RelationshipSearchResult](docs/RelationshipSearchResult.md)
  - [RelationshipType](docs/RelationshipType.md)
  - [SearchResponse](docs/SearchResponse.md)
  - [SearchResult](docs/SearchResult.md)

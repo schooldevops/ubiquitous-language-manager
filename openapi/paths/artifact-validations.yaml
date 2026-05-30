@@ -1,0 +1,74 @@
+artifactValidation:
+  post:
+    tags:
+      - Review
+    summary: 개발 산출물 표준 용어 검증
+    description: OpenAPI YAML과 DB DDL에서 필드명, 컬럼명, 물리 스펙을 추출해 데이터 사전 기준으로 검증한다.
+    operationId: validateArtifact
+    x-required-roles:
+      - ADMIN
+      - DATA_STEWARD
+      - DEVELOPMENT_LEAD
+      - ARCHITECT
+      - DEVELOPER
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/artifact-validation.yaml#/ArtifactValidationRequest'
+          examples:
+            openapiCustomerId:
+              value:
+                sourceType: OPENAPI
+                filePath: openapi/customer.yaml
+                content: |
+                  components:
+                    schemas:
+                      CustomerOrderResponse:
+                        type: object
+                        properties:
+                          customerId:
+                            type: string
+                includeSuggestions: true
+            ddlCustId:
+              value:
+                sourceType: DDL
+                filePath: db/customer.sql
+                content: |
+                  CREATE TABLE CUSTOMER (
+                    CUST_ID VARCHAR(20)
+                  );
+                includeSuggestions: true
+    responses:
+      '200':
+        description: 개발 산출물 검증 성공
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/artifact-validation.yaml#/ArtifactValidationResult'
+            examples:
+              customerIdWarning:
+                value:
+                  filePath: openapi/customer.yaml
+                  sourceType: OPENAPI
+                  checkedCount: 1
+                  summary:
+                    errorCount: 0
+                    warningCount: 1
+                    infoCount: 0
+                  issues:
+                    - severity: WARNING
+                      source: OPENAPI
+                      location: openapi/customer.yaml#/components/schemas/CustomerOrderResponse/properties/customerId
+                      inputExpression: customerId
+                      standardTerm: 고객번호
+                      recommendedExpression: customerNumber
+                      reason: API 표준 필드명은 customerNumber입니다.
+                  exitCode: 0
+      '400':
+        $ref: '../openapi.yaml#/components/responses/BadRequest'
+      '401':
+        $ref: '../openapi.yaml#/components/responses/Unauthorized'
+      '403':
+        $ref: '../openapi.yaml#/components/responses/Forbidden'

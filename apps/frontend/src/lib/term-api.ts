@@ -7,9 +7,13 @@ import {
   CandidateStatus,
   Configuration,
   ExpressionApi,
+  ImpactApi,
+  ImpactChangeType,
+  ImpactRiskLevel,
   TermApi,
   TermStatus,
   type CandidatePromotionResult,
+  type ImpactAnalysisResponse,
   type Term,
   type TermAlias,
   type TermAliasCreateRequest,
@@ -43,6 +47,7 @@ const termApi = new TermApi(configuration, basePath, axiosInstance);
 const expressionApi = new ExpressionApi(configuration, basePath, axiosInstance);
 const aliasApi = new AliasApi(configuration, basePath, axiosInstance);
 const candidateApi = new CandidateApi(configuration, basePath, axiosInstance);
+const impactApi = new ImpactApi(configuration, basePath, axiosInstance);
 
 const sampleTerm: Term = {
   termId: "T-000001",
@@ -111,6 +116,29 @@ const sampleTerms: TermSummary[] = [
     relatedSystems: ["ORDER"],
   },
 ];
+
+const sampleImpact: ImpactAnalysisResponse = {
+  termId: "T-000001",
+  standardTerm: "고객번호",
+  changeType: ImpactChangeType.ApiFieldRename,
+  includeTwoHop: true,
+  riskLevel: ImpactRiskLevel.High,
+  riskScore: 91,
+  impactedTargets: [
+    { targetType: "SYSTEM", targetName: "DICTIONARY", systemCode: "DICTIONARY", location: "TERM_MASTER.T-000001", hop: 1, reason: "고객번호 용어를 관리하는 기준 시스템" },
+    { targetType: "DB_TABLE", targetName: "고객_MASTER", systemCode: "DICTIONARY", location: "DICTIONARY.고객_MASTER", hop: 1, reason: "고객번호 용어가 속한 고객 도메인 대표 테이블" },
+    { targetType: "DB_COLUMN", targetName: "CUST_NO", systemCode: "DICTIONARY", location: "column:DICTIONARY.고객.CUST_NO", hop: 1, reason: "CUST_NO 표현이 표준 용어 고객번호를 참조함" },
+    { targetType: "API_FIELD", targetName: "customerNumber", systemCode: "DICTIONARY", location: "apiField:DICTIONARY.고객.customerNumber", hop: 1, reason: "customerNumber 표현이 표준 용어 고객번호를 참조함" },
+    { targetType: "DTO", targetName: "customerNumber", systemCode: "DICTIONARY", location: "dtoField:DICTIONARY.고객.customerNumber", hop: 1, reason: "customerNumber 표현이 표준 용어 고객번호를 참조함" },
+    { targetType: "DOCUMENT", targetName: "고객번호 기획서 표현", systemCode: "PLANNING", location: "docs/planning/t-000001-requirements.md", hop: 2, reason: "고객번호 변경 시 기획서 용어 매핑표와 요구사항 문장 확인 필요" },
+    { targetType: "TEST_CASE", targetName: "고객번호 필수 검증", systemCode: "QA", location: "tests/t-000001-required.feature", hop: 2, reason: "고객번호 변경 시 Given/When/Then 테스트 용어와 오류 메시지 확인 필요" },
+  ],
+  recommendations: [
+    { priority: 1, action: "OpenAPI v2 필드와 하위 호환 기간을 정의한다", reason: "API 필드명 변경은 외부 계약과 프런트엔드 클라이언트에 직접 영향이 있음" },
+    { priority: 2, action: "OpenAPI, DTO, 테스트, 기획서 용어를 함께 검토한다", reason: "유비쿼터스 랭기지는 산출물 간 표현 일관성이 핵심임" },
+    { priority: 3, action: "변경 승인 후 RAG와 Graphify 인덱스를 재생성한다", reason: "2-hop 영향 대상까지 확장했으므로 관계 검색 결과도 최신화해야 함" },
+  ],
+};
 
 const sampleCandidate: TermCandidate = {
   candidateId: "CAND-000001",
@@ -298,9 +326,19 @@ export async function promoteCandidate(candidateId: string, request: TermCandida
   return response.data;
 }
 
-export { CandidateStatus, TermStatus };
+export async function getTermImpact(termId: string, changeType: ImpactChangeType = ImpactChangeType.ApiFieldRename, includeTwoHop = true): Promise<ImpactAnalysisResponse> {
+  try {
+    const response = await impactApi.getTermImpact(termId, changeType, includeTwoHop);
+    return response.data;
+  } catch {
+    return { ...sampleImpact, termId };
+  }
+}
+
+export { CandidateStatus, ImpactChangeType, ImpactRiskLevel, TermStatus };
 export type {
   CandidatePromotionResult,
+  ImpactAnalysisResponse,
   Term,
   TermAlias,
   TermCandidate,

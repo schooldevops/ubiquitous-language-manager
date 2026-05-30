@@ -1,0 +1,76 @@
+{
+  "pullRequestId": "123",
+  "repository": "aulms",
+  "results": [
+    {
+      "filePath": "apps/backend/src/main/kotlin/CustomerOrderResponse.kt",
+      "sourceType": "KOTLIN",
+      "checkedCount": 2,
+      "summary": {
+        "errorCount": 0,
+        "warningCount": 1,
+        "infoCount": 0
+      },
+      "issues": [
+        {
+          "severity": "WARNING",
+          "source": "KOTLIN",
+          "location": "apps/backend/src/main/kotlin/CustomerOrderResponse.kt:4",
+          "inputExpression": "customerId",
+          "standardTerm": "고객번호",
+          "recommendedExpression": "customerNumber",
+          "reason": "API/코드 표준 표현은 customerNumber입니다."
+        }
+      ],
+      "exitCode": 0
+    },
+    {
+      "filePath": "db/customer.sql",
+      "sourceType": "SQL",
+      "checkedCount": 1,
+      "summary": {
+        "errorCount": 1,
+        "warningCount": 0,
+        "infoCount": 0
+      },
+      "issues": [
+        {
+          "severity": "ERROR",
+          "source": "SQL",
+          "location": "db/customer.sql:2",
+          "inputExpression": "CUST_ID",
+          "standardTerm": "고객번호",
+          "recommendedExpression": "CUST_NO",
+          "reason": "Forbidden 표현입니다. CUST_NO를 사용해야 합니다."
+        }
+      ],
+      "exitCode": 1
+    }
+  ],
+  "summary": {
+    "errorCount": 1,
+    "warningCount": 1,
+    "infoCount": 0
+  },
+  "issues": [
+    {
+      "severity": "WARNING",
+      "source": "KOTLIN",
+      "location": "apps/backend/src/main/kotlin/CustomerOrderResponse.kt:4",
+      "inputExpression": "customerId",
+      "standardTerm": "고객번호",
+      "recommendedExpression": "customerNumber",
+      "reason": "API/코드 표준 표현은 customerNumber입니다."
+    },
+    {
+      "severity": "ERROR",
+      "source": "SQL",
+      "location": "db/customer.sql:2",
+      "inputExpression": "CUST_ID",
+      "standardTerm": "고객번호",
+      "recommendedExpression": "CUST_NO",
+      "reason": "Forbidden 표현입니다. CUST_NO를 사용해야 합니다."
+    }
+  ],
+  "exitCode": 1
+}

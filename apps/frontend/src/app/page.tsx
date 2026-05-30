@@ -1,12 +1,14 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { CheckCircle2, ClipboardCheck, Database, FilePenLine, Plus, Search, Tags, Upload } from "lucide-react";
+import { AlertTriangle, CheckCircle2, ClipboardCheck, Database, FilePenLine, GitBranch, Plus, Search, Tags, Upload } from "lucide-react";
 import {
   CandidateStatus,
+  ImpactChangeType,
   TermStatus,
   createCandidate,
   createTerm,
+  getTermImpact,
   getTerm,
   getCandidate,
   listCandidates,
@@ -19,6 +21,7 @@ import {
   type TermCandidateSummary,
   type TermCreateRequest,
   type TermSummary,
+  type ImpactAnalysisResponse,
 } from "@/lib/term-api";
 
 const statusOptions = [
@@ -70,6 +73,8 @@ export default function Home() {
   const [candidateForm, setCandidateForm] = useState<TermCandidateCreateRequest>(initialCandidateForm);
   const [candidates, setCandidates] = useState<TermCandidateSummary[]>([]);
   const [selectedCandidate, setSelectedCandidate] = useState<TermCandidate | null>(null);
+  const [impact, setImpact] = useState<ImpactAnalysisResponse | null>(null);
+  const [impactChangeType, setImpactChangeType] = useState<ImpactChangeType>(ImpactChangeType.ApiFieldRename);
   const [mode, setMode] = useState<"create" | "edit">("create");
   const [message, setMessage] = useState("샘플 데이터 또는 API 응답을 표시합니다.");
   const [candidateMessage, setCandidateMessage] = useState("미등록 표현을 후보로 등록하고 검토 후 표준 용어로 승격합니다.");
@@ -90,6 +95,7 @@ export default function Home() {
   async function selectTerm(termId: string) {
     const term = await getTerm(termId);
     setSelectedTerm(term);
+    await loadImpact(termId, impactChangeType);
     setMode("edit");
     setForm({
       domainName: term.domainName,
@@ -105,6 +111,12 @@ export default function Home() {
       owner: term.owner,
       status: term.status,
     });
+  }
+
+  async function loadImpact(termId = selectedTerm?.termId, changeType = impactChangeType) {
+    if (!termId) return;
+    const response = await getTermImpact(termId, changeType, true);
+    setImpact(response);
   }
 
   async function submitTerm(event: FormEvent<HTMLFormElement>) {
@@ -313,6 +325,93 @@ export default function Home() {
               </div>
             ) : (
               <div className="p-8 text-sm text-[var(--muted)]">용어를 선택하거나 신규 용어를 등록하세요.</div>
+            )}
+          </div>
+
+          <div className="rounded-md border border-[var(--line)] bg-white">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--line)] px-4 py-3">
+              <div className="flex items-center gap-2 font-semibold">
+                <GitBranch size={17} />
+                영향도 분석
+              </div>
+              <div className="flex items-center gap-2">
+                <select
+                  className="h-9 rounded-md border border-[var(--line)] px-3 text-sm"
+                  value={impactChangeType}
+                  onChange={(event) => {
+                    const nextType = event.target.value as ImpactChangeType;
+                    setImpactChangeType(nextType);
+                    void loadImpact(selectedTerm?.termId, nextType);
+                  }}
+                >
+                  {Object.values(ImpactChangeType).map((item) => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  className="inline-flex h-9 items-center gap-2 rounded-md bg-[var(--foreground)] px-3 text-sm font-medium text-white disabled:opacity-50"
+                  onClick={() => void loadImpact()}
+                  disabled={!selectedTerm}
+                >
+                  <Search size={15} />
+                  분석
+                </button>
+              </div>
+            </div>
+            {impact ? (
+              <div className="grid gap-4 p-4 xl:grid-cols-[220px_1fr]">
+                <div className="rounded-md border border-[var(--line)] bg-[#fbfcfd] p-4">
+                  <div className="text-xs font-medium text-[var(--muted)]">위험도</div>
+                  <div className={`mt-2 inline-flex items-center gap-2 rounded-sm px-2 py-1 text-sm font-semibold ${impact.riskLevel === "HIGH" ? "bg-[#fdecec] text-[var(--danger)]" : impact.riskLevel === "MEDIUM" ? "bg-[#fff4e5] text-[var(--warning)]" : "bg-[#e6f4f1] text-[var(--accent-strong)]"}`}>
+                    <AlertTriangle size={15} />
+                    {impact.riskLevel} {impact.riskScore}
+                  </div>
+                  <div className="mt-4 text-xs font-medium text-[var(--muted)]">대상</div>
+                  <div className="mt-1 text-2xl font-semibold">{impact.impactedTargets.length}</div>
+                  <div className="mt-4 text-xs text-[var(--muted)]">2-hop 포함: {impact.includeTwoHop ? "Y" : "N"}</div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="overflow-hidden rounded-md border border-[var(--line)]">
+                    <table className="w-full table-fixed text-left text-sm">
+                      <thead className="bg-[#eef2f5] text-xs text-[var(--muted)]">
+                        <tr>
+                          <th className="w-[14%] px-3 py-2">유형</th>
+                          <th className="w-[22%] px-3 py-2">대상</th>
+                          <th className="w-[14%] px-3 py-2">시스템</th>
+                          <th className="w-[12%] px-3 py-2">Hop</th>
+                          <th className="px-3 py-2">사유</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {impact.impactedTargets.map((target) => (
+                          <tr key={`${target.targetType}-${target.targetName}-${target.location}`} className="border-t border-[var(--line)]">
+                            <td className="px-3 py-2 font-medium">{target.targetType}</td>
+                            <td className="truncate px-3 py-2">{target.targetName}</td>
+                            <td className="truncate px-3 py-2 text-[var(--muted)]">{target.systemCode}</td>
+                            <td className="px-3 py-2 text-[var(--muted)]">{target.hop}</td>
+                            <td className="px-3 py-2 text-[var(--muted)]">{target.reason}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="grid gap-3 lg:grid-cols-3">
+                    {impact.recommendations.map((item) => (
+                      <div key={item.priority} className="rounded-md border border-[var(--line)] bg-[#fbfcfd] p-3 text-sm">
+                        <div className="font-semibold">P{item.priority}. {item.action}</div>
+                        <p className="mt-2 text-[var(--muted)]">{item.reason}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="p-8 text-sm text-[var(--muted)]">용어를 선택하면 변경 영향 대상을 조회합니다.</div>
             )}
           </div>
 

@@ -1,0 +1,40 @@
+package com.aulms.model
+
+import java.util.Objects
+import com.fasterxml.jackson.annotation.JsonValue
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+import jakarta.validation.constraints.DecimalMax
+import jakarta.validation.constraints.DecimalMin
+import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.Max
+import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Pattern
+import jakarta.validation.constraints.Size
+import jakarta.validation.Valid
+
+/**
+* 개발 산출물 유형
+* Values: AUTO,OPENAPI,DDL,KOTLIN,JAVA,TYPESCRIPT,SQL,TEST
+*/
+enum class ArtifactSourceType(@get:JsonValue val value: kotlin.String) {
+
+    AUTO("AUTO"),
+    OPENAPI("OPENAPI"),
+    DDL("DDL"),
+    KOTLIN("KOTLIN"),
+    JAVA("JAVA"),
+    TYPESCRIPT("TYPESCRIPT"),
+    SQL("SQL"),
+    TEST("TEST");
+
+    companion object {
+        @JvmStatic
+        @JsonCreator
+        fun forValue(value: kotlin.String): ArtifactSourceType {
+                return values().first{it -> it.value == value}
+        }
+    }
+}
+

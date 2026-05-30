@@ -1,0 +1,195 @@
+ArtifactSourceType:
+  type: string
+  description: 개발 산출물 유형
+  enum:
+    - AUTO
+    - OPENAPI
+    - DDL
+    - KOTLIN
+    - JAVA
+    - TYPESCRIPT
+    - SQL
+    - TEST
+  example: OPENAPI
+
+ArtifactValidationRequest:
+  type: object
+  description: 개발 산출물 표준 용어 검증 요청
+  required:
+    - sourceType
+    - filePath
+    - content
+  properties:
+    sourceType:
+      $ref: '#/ArtifactSourceType'
+    filePath:
+      type: string
+      description: 검증 대상 파일 경로
+      example: openapi/customer.yaml
+    content:
+      type: string
+      minLength: 1
+      description: 검증 대상 파일 본문
+    domainNames:
+      type: array
+      description: 검증 대상 도메인 필터
+      items:
+        type: string
+      example:
+        - 고객
+    failOnWarning:
+      type: boolean
+      description: WARNING도 실패 exitCode로 볼지 여부
+      default: false
+      example: false
+    includeSuggestions:
+      type: boolean
+      description: 권장 표현을 검증 결과에 포함할지 여부
+      default: true
+      example: true
+
+ArtifactValidationResult:
+  type: object
+  description: 개발 산출물 표준 용어 검증 결과
+  required:
+    - filePath
+    - sourceType
+    - checkedCount
+    - summary
+    - issues
+    - exitCode
+  properties:
+    filePath:
+      type: string
+      description: 검증 대상 파일 경로
+      example: openapi/customer.yaml
+    sourceType:
+      $ref: '#/ArtifactSourceType'
+    checkedCount:
+      type: integer
+      format: int32
+      minimum: 0
+      description: 검증한 표현 수
+      example: 1
+    summary:
+      $ref: '#/ArtifactValidationSummary'
+    issues:
+      type: array
+      description: 표준 위반 또는 권고 사항
+      items:
+        $ref: './common.yaml#/ValidationIssue'
+    exitCode:
+      type: integer
+      format: int32
+      description: CLI 호환 종료 코드. ERROR 또는 failOnWarning 조건이면 1.
+      example: 1
+
+ArtifactValidationSummary:
+  type: object
+  description: 검증 결과 집계
+  required:
+    - errorCount
+    - warningCount
+    - infoCount
+  properties:
+    errorCount:
+      type: integer
+      format: int32
+      minimum: 0
+      example: 1
+    warningCount:
+      type: integer
+      format: int32
+      minimum: 0
+      example: 1
+    infoCount:
+      type: integer
+      format: int32
+      minimum: 0
+      example: 0
+
+PullRequestArtifactFile:
+  type: object
+  description: PR 검증 대상 파일
+  required:
+    - filePath
+    - content
+  properties:
+    filePath:
+      type: string
+      description: 변경 파일 경로
+      example: apps/backend/src/main/kotlin/CustomerOrderResponse.kt
+    content:
+      type: string
+      minLength: 1
+      description: 변경 파일 본문
+    sourceType:
+      $ref: '#/ArtifactSourceType'
+
+PullRequestArtifactReviewRequest:
+  type: object
+  description: PR 변경 파일 표준 용어 검증 요청
+  required:
+    - pullRequestId
+    - files
+  properties:
+    pullRequestId:
+      type: string
+      description: PR 번호 또는 외부 시스템 PR 식별자
+      example: '123'
+    repository:
+      type: string
+      description: 저장소 이름
+      example: aulms
+    files:
+      type: array
+      minItems: 1
+      description: 검증할 변경 파일 목록
+      items:
+        $ref: '#/PullRequestArtifactFile'
+    failOnWarning:
+      type: boolean
+      description: WARNING도 실패 exitCode로 볼지 여부
+      default: false
+      example: false
+    includeSuggestions:
+      type: boolean
+      description: 권장 표현 포함 여부
+      default: true
+      example: true
+
+PullRequestArtifactReviewResult:
+  type: object
+  description: PR 변경 파일 표준 용어 검증 결과
+  required:
+    - pullRequestId
+    - results
+    - summary
+    - issues
+    - exitCode
+  properties:
+    pullRequestId:
+      type: string
+      description: PR 번호 또는 외부 시스템 PR 식별자
+      example: '123'
+    repository:
+      type: string
+      description: 저장소 이름
+      example: aulms
+    results:
+      type: array
+      description: 파일별 검증 결과
+      items:
+        $ref: '#/ArtifactValidationResult'
+    summary:
+      $ref: '#/ArtifactValidationSummary'
+    issues:
+      type: array
+      description: 전체 파일의 표준 위반 또는 권고 사항
+      items:
+        $ref: './common.yaml#/ValidationIssue'
+    exitCode:
+      type: integer
+      format: int32
+      description: CLI/CI 호환 종료 코드
+      example: 1

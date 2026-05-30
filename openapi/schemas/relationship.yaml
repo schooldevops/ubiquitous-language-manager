@@ -1,0 +1,204 @@
+RelationshipSearchResponse:
+  type: object
+  description: Graphify 관계 검색 응답
+  required:
+    - query
+    - items
+    - paths
+  properties:
+    query:
+      type: string
+      description: 검색 기준
+      example: T-000001
+    items:
+      type: array
+      description: 관계 검색 결과
+      items:
+        $ref: '#/RelationshipSearchResult'
+    paths:
+      type: array
+      description: Graphify 그래프 경로
+      items:
+        $ref: '#/RelationshipPath'
+
+RelationshipSearchResult:
+  type: object
+  description: 용어 관계 검색 결과
+  required:
+    - termId
+    - standardTerm
+    - englishName
+    - relationshipType
+    - direction
+    - reason
+  properties:
+    termId:
+      type: string
+      example: T-000004
+    standardTerm:
+      type: string
+      example: 주문번호
+    englishName:
+      type: string
+      example: Order Number
+    relationshipType:
+      type: string
+      example: usedWith
+    direction:
+      type: string
+      enum:
+        - OUTGOING
+        - INCOMING
+      example: OUTGOING
+    reason:
+      type: string
+      example: 고객번호는 주문번호와 함께 주문 조회 조건과 응답에서 사용
+
+RelationshipPath:
+  type: object
+  description: Graphify 경로
+  required:
+    - nodes
+    - edges
+  properties:
+    nodes:
+      type: array
+      items:
+        $ref: '#/GraphPathNode'
+    edges:
+      type: array
+      items:
+        $ref: '#/GraphPathEdge'
+
+GraphPathNode:
+  type: object
+  description: Graphify 경로 노드
+  required:
+    - nodeKey
+    - nodeType
+    - label
+  properties:
+    nodeKey:
+      type: string
+      example: term:T-000001
+    nodeType:
+      type: string
+      example: Term
+    label:
+      type: string
+      example: 고객번호
+
+GraphPathEdge:
+  type: object
+  description: Graphify 경로 관계
+  required:
+    - edgeKey
+    - relationshipType
+    - fromNodeKey
+    - toNodeKey
+  properties:
+    edgeKey:
+      type: string
+      example: TERM_RELATIONSHIP:term:T-000001:usedWith:term:T-000004
+    relationshipType:
+      type: string
+      example: usedWith
+    fromNodeKey:
+      type: string
+      example: term:T-000001
+    toNodeKey:
+      type: string
+      example: term:T-000004
+
+ColumnSystemUsageResponse:
+  type: object
+  description: 컬럼 사용 시스템 조회 응답
+  required:
+    - columnName
+    - items
+  properties:
+    columnName:
+      type: string
+      example: CUST_NO
+    items:
+      type: array
+      items:
+        $ref: '#/ColumnSystemUsage'
+
+ColumnSystemUsage:
+  type: object
+  description: 컬럼 사용 시스템 정보
+  required:
+    - systemCode
+    - systemName
+    - tableName
+    - columnName
+    - termId
+    - standardTerm
+    - apiFields
+  properties:
+    systemCode:
+      type: string
+      example: DICTIONARY
+    systemName:
+      type: string
+      example: 데이터 사전
+    tableName:
+      type: string
+      example: 고객
+    columnName:
+      type: string
+      example: CUST_NO
+    termId:
+      type: string
+      example: T-000001
+    standardTerm:
+      type: string
+      example: 고객번호
+    apiFields:
+      type: array
+      items:
+        type: string
+      example:
+        - customerNumber
+
+DeprecatedUsageResponse:
+  type: object
+  description: 폐기어와 금지어 사용 위치 응답
+  required:
+    - items
+  properties:
+    items:
+      type: array
+      items:
+        $ref: '#/DeprecatedUsage'
+
+DeprecatedUsage:
+  type: object
+  description: 폐기어 또는 금지어 사용 위치
+  required:
+    - expression
+    - aliasType
+    - termId
+    - standardTerm
+    - recommendedExpression
+    - reason
+  properties:
+    expression:
+      type: string
+      example: CUST_ID
+    aliasType:
+      type: string
+      example: Forbidden
+    termId:
+      type: string
+      example: T-000001
+    standardTerm:
+      type: string
+      example: 고객번호
+    recommendedExpression:
+      type: string
+      example: CUST_NO
+    reason:
+      type: string
+      example: 기술 ID와 업무 고객번호가 혼동될 수 있음

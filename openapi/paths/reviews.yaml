@@ -89,3 +89,135 @@ documentReview:
         $ref: '../openapi.yaml#/components/responses/Unauthorized'
       '403':
         $ref: '../openapi.yaml#/components/responses/Forbidden'
+
+openapiReview:
+  post:
+    tags:
+      - Review
+    summary: OpenAPI 산출물 검증
+    description: OpenAPI YAML의 API 필드명을 데이터 사전 API_FIELD 표현 기준으로 검증한다.
+    operationId: reviewOpenApiArtifact
+    x-required-roles:
+      - ADMIN
+      - DATA_STEWARD
+      - DEVELOPMENT_LEAD
+      - ARCHITECT
+      - DEVELOPER
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/artifact-validation.yaml#/ArtifactValidationRequest'
+    responses:
+      '200':
+        description: OpenAPI 산출물 검증 성공
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/artifact-validation.yaml#/ArtifactValidationResult'
+      '400':
+        $ref: '../openapi.yaml#/components/responses/BadRequest'
+      '401':
+        $ref: '../openapi.yaml#/components/responses/Unauthorized'
+      '403':
+        $ref: '../openapi.yaml#/components/responses/Forbidden'
+
+ddlReview:
+  post:
+    tags:
+      - Review
+    summary: DDL 산출물 검증
+    description: DB DDL 컬럼명과 물리 스펙을 데이터 사전 DB_COLUMN 표현 기준으로 검증한다.
+    operationId: reviewDdlArtifact
+    x-required-roles:
+      - ADMIN
+      - DATA_STEWARD
+      - DEVELOPMENT_LEAD
+      - ARCHITECT
+      - DEVELOPER
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/artifact-validation.yaml#/ArtifactValidationRequest'
+    responses:
+      '200':
+        description: DDL 산출물 검증 성공
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/artifact-validation.yaml#/ArtifactValidationResult'
+      '400':
+        $ref: '../openapi.yaml#/components/responses/BadRequest'
+      '401':
+        $ref: '../openapi.yaml#/components/responses/Unauthorized'
+      '403':
+        $ref: '../openapi.yaml#/components/responses/Forbidden'
+
+codeReview:
+  post:
+    tags:
+      - Review
+    summary: 코드 산출물 검증
+    description: Kotlin, Java, TypeScript 코드의 DTO, Entity, Request/Response 필드명을 데이터 사전 CODE_VARIABLE 표현 기준으로 검증한다.
+    operationId: reviewCodeArtifact
+    x-required-roles:
+      - ADMIN
+      - DATA_STEWARD
+      - DEVELOPMENT_LEAD
+      - ARCHITECT
+      - DEVELOPER
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/artifact-validation.yaml#/ArtifactValidationRequest'
+    responses:
+      '200':
+        description: 코드 산출물 검증 성공
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/artifact-validation.yaml#/ArtifactValidationResult'
+      '400':
+        $ref: '../openapi.yaml#/components/responses/BadRequest'
+      '401':
+        $ref: '../openapi.yaml#/components/responses/Unauthorized'
+      '403':
+        $ref: '../openapi.yaml#/components/responses/Forbidden'
+
+prReview:
+  post:
+    tags:
+      - Review
+    summary: PR 변경 파일 검증
+    description: PR 또는 CI에서 전달한 여러 변경 파일을 표준 용어 기준으로 검증하고 파일별 결과와 전체 집계를 반환한다.
+    operationId: reviewPullRequestArtifacts
+    x-required-roles:
+      - ADMIN
+      - DATA_STEWARD
+      - DEVELOPMENT_LEAD
+      - ARCHITECT
+      - DEVELOPER
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/artifact-validation.yaml#/PullRequestArtifactReviewRequest'
+    responses:
+      '200':
+        description: PR 변경 파일 검증 성공
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/artifact-validation.yaml#/PullRequestArtifactReviewResult'
+      '400':
+        $ref: '../openapi.yaml#/components/responses/BadRequest'
+      '401':
+        $ref: '../openapi.yaml#/components/responses/Unauthorized'
+      '403':
+        $ref: '../openapi.yaml#/components/responses/Forbidden'

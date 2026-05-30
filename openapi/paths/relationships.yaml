@@ -1,0 +1,179 @@
+termRelationships:
+  get:
+    tags:
+      - Relationship
+    summary: 용어 관계 검색
+    description: Graphify 그래프에서 특정 표준 용어와 연결된 관련 용어와 경로를 조회한다.
+    operationId: getTermRelationships
+    x-required-roles:
+      - ADMIN
+      - DATA_STEWARD
+      - DEVELOPMENT_LEAD
+      - ARCHITECT
+      - PLANNER
+      - DEVELOPER
+      - OPERATOR
+      - VIEWER
+    parameters:
+      - name: termId
+        in: path
+        required: true
+        description: 기준 용어 ID
+        schema:
+          type: string
+          example: T-000001
+      - name: relationshipType
+        in: query
+        required: false
+        description: 관계 유형 필터
+        schema:
+          type: string
+          example: usedWith
+    responses:
+      '200':
+        description: 용어 관계 검색 성공
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/relationship.yaml#/RelationshipSearchResponse'
+            examples:
+              customerNumber:
+                value:
+                  query: T-000001
+                  items:
+                    - termId: T-000004
+                      standardTerm: 주문번호
+                      englishName: Order Number
+                      relationshipType: usedWith
+                      direction: OUTGOING
+                      reason: 고객번호는 주문번호와 함께 주문 조회 조건과 응답에서 사용
+                  paths:
+                    - nodes:
+                        - nodeKey: term:T-000001
+                          nodeType: Term
+                          label: 고객번호
+                        - nodeKey: term:T-000004
+                          nodeType: Term
+                          label: 주문번호
+                      edges:
+                        - edgeKey: TERM_RELATIONSHIP:term:T-000001:usedWith:term:T-000004
+                          relationshipType: usedWith
+                          fromNodeKey: term:T-000001
+                          toNodeKey: term:T-000004
+      '401':
+        $ref: '../openapi.yaml#/components/responses/Unauthorized'
+      '403':
+        $ref: '../openapi.yaml#/components/responses/Forbidden'
+      '404':
+        $ref: '../openapi.yaml#/components/responses/NotFound'
+
+domainTerms:
+  get:
+    tags:
+      - Relationship
+    summary: 도메인별 표준 용어 관계 검색
+    description: Graphify 그래프에서 특정 도메인에 속한 표준 용어를 조회한다.
+    operationId: getDomainTerms
+    x-required-roles:
+      - ADMIN
+      - DATA_STEWARD
+      - DEVELOPMENT_LEAD
+      - ARCHITECT
+      - PLANNER
+      - DEVELOPER
+      - OPERATOR
+      - VIEWER
+    parameters:
+      - name: domainName
+        in: path
+        required: true
+        description: 도메인명
+        schema:
+          type: string
+          example: 고객
+    responses:
+      '200':
+        description: 도메인별 용어 조회 성공
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/relationship.yaml#/RelationshipSearchResponse'
+      '401':
+        $ref: '../openapi.yaml#/components/responses/Unauthorized'
+      '403':
+        $ref: '../openapi.yaml#/components/responses/Forbidden'
+
+columnSystems:
+  get:
+    tags:
+      - Relationship
+    summary: 컬럼 사용 시스템 조회
+    description: Graphify 그래프에서 특정 DB 컬럼을 사용하는 시스템, 테이블, API 필드를 조회한다.
+    operationId: getColumnSystems
+    x-required-roles:
+      - ADMIN
+      - DATA_STEWARD
+      - DEVELOPMENT_LEAD
+      - ARCHITECT
+      - PLANNER
+      - DEVELOPER
+      - OPERATOR
+      - VIEWER
+    parameters:
+      - name: columnName
+        in: path
+        required: true
+        description: DB 컬럼명
+        schema:
+          type: string
+          example: CUST_NO
+    responses:
+      '200':
+        description: 컬럼 사용 시스템 조회 성공
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/relationship.yaml#/ColumnSystemUsageResponse'
+            examples:
+              custNo:
+                value:
+                  columnName: CUST_NO
+                  items:
+                    - systemCode: DICTIONARY
+                      systemName: 데이터 사전
+                      tableName: 고객
+                      columnName: CUST_NO
+                      termId: T-000001
+                      standardTerm: 고객번호
+                      apiFields:
+                        - customerNumber
+      '401':
+        $ref: '../openapi.yaml#/components/responses/Unauthorized'
+      '403':
+        $ref: '../openapi.yaml#/components/responses/Forbidden'
+
+deprecatedUsages:
+  get:
+    tags:
+      - Relationship
+    summary: 폐기어와 금지어 사용 위치 조회
+    description: Graphify 그래프에서 Deprecated 또는 Forbidden alias 사용 위치와 대체 표준 용어를 조회한다.
+    operationId: getDeprecatedUsages
+    x-required-roles:
+      - ADMIN
+      - DATA_STEWARD
+      - DEVELOPMENT_LEAD
+      - ARCHITECT
+      - OPERATOR
+      - VIEWER
+    responses:
+      '200':
+        description: 폐기어와 금지어 사용 위치 조회 성공
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/relationship.yaml#/DeprecatedUsageResponse'
+      '401':
+        $ref: '../openapi.yaml#/components/responses/Unauthorized'
+      '403':
+        $ref: '../openapi.yaml#/components/responses/Forbidden'

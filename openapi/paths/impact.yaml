@@ -1,0 +1,98 @@
+termImpact:
+  get:
+    tags:
+      - Impact
+    summary: 용어 변경 영향도 분석
+    description: Graphify 그래프를 이용해 특정 표준 용어 변경 시 영향받는 시스템, DB, API, DTO, 문서, 테스트를 조회한다.
+    operationId: getTermImpact
+    x-required-roles:
+      - ADMIN
+      - DATA_STEWARD
+      - DEVELOPMENT_LEAD
+      - ARCHITECT
+      - PLANNER
+      - DEVELOPER
+      - OPERATOR
+      - VIEWER
+    parameters:
+      - name: termId
+        in: path
+        required: true
+        description: 영향도 분석 기준 용어 ID
+        schema:
+          type: string
+          example: T-000001
+      - name: changeType
+        in: query
+        required: false
+        description: 변경 유형
+        schema:
+          $ref: '../schemas/impact.yaml#/ImpactChangeType'
+      - name: includeTwoHop
+        in: query
+        required: false
+        description: 2-hop 관계까지 확장 조회할지 여부
+        schema:
+          type: boolean
+          default: false
+    responses:
+      '200':
+        description: 영향도 분석 성공
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/impact.yaml#/ImpactAnalysisResponse'
+            examples:
+              customerIdToCustomerNumber:
+                summary: 고객ID에서 고객번호로 변경 영향도
+                value:
+                  termId: T-000001
+                  standardTerm: 고객번호
+                  changeType: API_FIELD_RENAME
+                  includeTwoHop: true
+                  riskLevel: HIGH
+                  riskScore: 85
+                  impactedTargets:
+                    - targetType: DB_COLUMN
+                      targetName: CUST_NO
+                      systemCode: DICTIONARY
+                      location: column:DICTIONARY.고객.CUST_NO
+                      hop: 1
+                      reason: CUST_NO 컬럼이 고객번호를 표현함
+                    - targetType: API_FIELD
+                      targetName: customerNumber
+                      systemCode: DICTIONARY
+                      location: apiField:DICTIONARY.고객.customerNumber
+                      hop: 1
+                      reason: customerNumber API 필드가 고객번호를 표현함
+                    - targetType: DTO
+                      targetName: customerNumber
+                      systemCode: DICTIONARY
+                      location: dtoField:DICTIONARY.고객.customerNumber
+                      hop: 1
+                      reason: customerNumber DTO 필드가 고객번호를 표현함
+                    - targetType: DOCUMENT
+                      targetName: 고객번호 기획서 표현
+                      systemCode: DOCUMENT
+                      location: document:planning/customer-order.md
+                      hop: 2
+                      reason: 기획서가 고객번호를 언급함
+                    - targetType: TEST_CASE
+                      targetName: 고객번호 필수 검증
+                      systemCode: TEST
+                      location: testCase:CustomerOrderApiTest.customerNumberRequired
+                      hop: 2
+                      reason: 테스트 케이스가 고객번호를 검증함
+                  recommendations:
+                    - priority: 1
+                      action: API v2에서 customerNumber 유지, customerId 입력은 deprecated 처리
+                      reason: API 필드명 변경은 외부 연동 영향이 큼
+                    - priority: 2
+                      action: DDL, DTO, OpenAPI, 테스트를 같은 배포 단위에서 검증
+                      reason: DB/API/코드/테스트 간 명칭 불일치를 방지
+      '401':
+        $ref: '../openapi.yaml#/components/responses/Unauthorized'
+      '403':
+        $ref: '../openapi.yaml#/components/responses/Forbidden'
+      '404':
+        $ref: '../openapi.yaml#/components/responses/NotFound'

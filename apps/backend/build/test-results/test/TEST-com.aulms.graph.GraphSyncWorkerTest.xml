@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.aulms.graph.GraphSyncWorkerTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-05-29T08:16:53.880Z" hostname="NHY9M72K9J" time="0.041">
+  <properties/>
+  <testcase name="incremental sync skips unchanged graph items()" classname="com.aulms.graph.GraphSyncWorkerTest" time="0.033"/>
+  <testcase name="full sync creates customer number graph nodes and edges()" classname="com.aulms.graph.GraphSyncWorkerTest" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

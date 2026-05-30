@@ -5,9 +5,13 @@
 */
 package com.aulms.api
 
+import com.aulms.model.ArtifactValidationRequest
+import com.aulms.model.ArtifactValidationResult
 import com.aulms.model.DocumentReviewRequest
 import com.aulms.model.DocumentReviewResult
 import com.aulms.model.ErrorResponse
+import com.aulms.model.PullRequestArtifactReviewRequest
+import com.aulms.model.PullRequestArtifactReviewResult
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -37,11 +41,66 @@ interface ReviewApi {
 
     @RequestMapping(
             method = [RequestMethod.POST],
+            value = ["/reviews/code"],
+            produces = ["application/json"],
+            consumes = ["application/json"]
+    )
+    fun reviewCodeArtifact( @Valid @RequestBody artifactValidationRequest: ArtifactValidationRequest): ResponseEntity<ArtifactValidationResult> {
+        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+    }
+
+
+    @RequestMapping(
+            method = [RequestMethod.POST],
+            value = ["/reviews/ddl"],
+            produces = ["application/json"],
+            consumes = ["application/json"]
+    )
+    fun reviewDdlArtifact( @Valid @RequestBody artifactValidationRequest: ArtifactValidationRequest): ResponseEntity<ArtifactValidationResult> {
+        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+    }
+
+
+    @RequestMapping(
+            method = [RequestMethod.POST],
             value = ["/reviews/document"],
             produces = ["application/json"],
             consumes = ["application/json"]
     )
     fun reviewDocument( @Valid @RequestBody documentReviewRequest: DocumentReviewRequest): ResponseEntity<DocumentReviewResult> {
+        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+    }
+
+
+    @RequestMapping(
+            method = [RequestMethod.POST],
+            value = ["/reviews/openapi"],
+            produces = ["application/json"],
+            consumes = ["application/json"]
+    )
+    fun reviewOpenApiArtifact( @Valid @RequestBody artifactValidationRequest: ArtifactValidationRequest): ResponseEntity<ArtifactValidationResult> {
+        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+    }
+
+
+    @RequestMapping(
+            method = [RequestMethod.POST],
+            value = ["/reviews/pr"],
+            produces = ["application/json"],
+            consumes = ["application/json"]
+    )
+    fun reviewPullRequestArtifacts( @Valid @RequestBody pullRequestArtifactReviewRequest: PullRequestArtifactReviewRequest): ResponseEntity<PullRequestArtifactReviewResult> {
+        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+    }
+
+
+    @RequestMapping(
+            method = [RequestMethod.POST],
+            value = ["/artifact-validations"],
+            produces = ["application/json"],
+            consumes = ["application/json"]
+    )
+    fun validateArtifact( @Valid @RequestBody artifactValidationRequest: ArtifactValidationRequest): ResponseEntity<ArtifactValidationResult> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }

@@ -22,17 +22,105 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
+import type { ArtifactValidationRequest } from '../model';
+// @ts-ignore
+import type { ArtifactValidationResult } from '../model';
+// @ts-ignore
 import type { DocumentReviewRequest } from '../model';
 // @ts-ignore
 import type { DocumentReviewResult } from '../model';
 // @ts-ignore
 import type { ErrorResponse } from '../model';
+// @ts-ignore
+import type { PullRequestArtifactReviewRequest } from '../model';
+// @ts-ignore
+import type { PullRequestArtifactReviewResult } from '../model';
 /**
  * ReviewApi - axios parameter creator
  * @export
  */
 export const ReviewApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * Kotlin, Java, TypeScript 코드의 DTO, Entity, Request/Response 필드명을 데이터 사전 CODE_VARIABLE 표현 기준으로 검증한다.
+         * @summary 코드 산출물 검증
+         * @param {ArtifactValidationRequest} artifactValidationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        reviewCodeArtifact: async (artifactValidationRequest: ArtifactValidationRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'artifactValidationRequest' is not null or undefined
+            assertParamExists('reviewCodeArtifact', 'artifactValidationRequest', artifactValidationRequest)
+            const localVarPath = `/reviews/code`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(artifactValidationRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * DB DDL 컬럼명과 물리 스펙을 데이터 사전 DB_COLUMN 표현 기준으로 검증한다.
+         * @summary DDL 산출물 검증
+         * @param {ArtifactValidationRequest} artifactValidationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        reviewDdlArtifact: async (artifactValidationRequest: ArtifactValidationRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'artifactValidationRequest' is not null or undefined
+            assertParamExists('reviewDdlArtifact', 'artifactValidationRequest', artifactValidationRequest)
+            const localVarPath = `/reviews/ddl`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(artifactValidationRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * 기획서 본문에서 비표준 용어를 탐지하고 표준 용어, 산출물 표현, 신규 용어 후보를 반환한다.
          * @summary 기획서 용어 검토
@@ -73,6 +161,126 @@ export const ReviewApiAxiosParamCreator = function (configuration?: Configuratio
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * OpenAPI YAML의 API 필드명을 데이터 사전 API_FIELD 표현 기준으로 검증한다.
+         * @summary OpenAPI 산출물 검증
+         * @param {ArtifactValidationRequest} artifactValidationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        reviewOpenApiArtifact: async (artifactValidationRequest: ArtifactValidationRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'artifactValidationRequest' is not null or undefined
+            assertParamExists('reviewOpenApiArtifact', 'artifactValidationRequest', artifactValidationRequest)
+            const localVarPath = `/reviews/openapi`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(artifactValidationRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * PR 또는 CI에서 전달한 여러 변경 파일을 표준 용어 기준으로 검증하고 파일별 결과와 전체 집계를 반환한다.
+         * @summary PR 변경 파일 검증
+         * @param {PullRequestArtifactReviewRequest} pullRequestArtifactReviewRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        reviewPullRequestArtifacts: async (pullRequestArtifactReviewRequest: PullRequestArtifactReviewRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'pullRequestArtifactReviewRequest' is not null or undefined
+            assertParamExists('reviewPullRequestArtifacts', 'pullRequestArtifactReviewRequest', pullRequestArtifactReviewRequest)
+            const localVarPath = `/reviews/pr`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(pullRequestArtifactReviewRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * OpenAPI YAML과 DB DDL에서 필드명, 컬럼명, 물리 스펙을 추출해 데이터 사전 기준으로 검증한다.
+         * @summary 개발 산출물 표준 용어 검증
+         * @param {ArtifactValidationRequest} artifactValidationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        validateArtifact: async (artifactValidationRequest: ArtifactValidationRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'artifactValidationRequest' is not null or undefined
+            assertParamExists('validateArtifact', 'artifactValidationRequest', artifactValidationRequest)
+            const localVarPath = `/artifact-validations`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(artifactValidationRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -83,6 +291,32 @@ export const ReviewApiAxiosParamCreator = function (configuration?: Configuratio
 export const ReviewApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = ReviewApiAxiosParamCreator(configuration)
     return {
+        /**
+         * Kotlin, Java, TypeScript 코드의 DTO, Entity, Request/Response 필드명을 데이터 사전 CODE_VARIABLE 표현 기준으로 검증한다.
+         * @summary 코드 산출물 검증
+         * @param {ArtifactValidationRequest} artifactValidationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async reviewCodeArtifact(artifactValidationRequest: ArtifactValidationRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactValidationResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.reviewCodeArtifact(artifactValidationRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ReviewApi.reviewCodeArtifact']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * DB DDL 컬럼명과 물리 스펙을 데이터 사전 DB_COLUMN 표현 기준으로 검증한다.
+         * @summary DDL 산출물 검증
+         * @param {ArtifactValidationRequest} artifactValidationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async reviewDdlArtifact(artifactValidationRequest: ArtifactValidationRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactValidationResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.reviewDdlArtifact(artifactValidationRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ReviewApi.reviewDdlArtifact']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
         /**
          * 기획서 본문에서 비표준 용어를 탐지하고 표준 용어, 산출물 표현, 신규 용어 후보를 반환한다.
          * @summary 기획서 용어 검토
@@ -96,6 +330,45 @@ export const ReviewApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['ReviewApi.reviewDocument']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * OpenAPI YAML의 API 필드명을 데이터 사전 API_FIELD 표현 기준으로 검증한다.
+         * @summary OpenAPI 산출물 검증
+         * @param {ArtifactValidationRequest} artifactValidationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async reviewOpenApiArtifact(artifactValidationRequest: ArtifactValidationRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactValidationResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.reviewOpenApiArtifact(artifactValidationRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ReviewApi.reviewOpenApiArtifact']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * PR 또는 CI에서 전달한 여러 변경 파일을 표준 용어 기준으로 검증하고 파일별 결과와 전체 집계를 반환한다.
+         * @summary PR 변경 파일 검증
+         * @param {PullRequestArtifactReviewRequest} pullRequestArtifactReviewRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async reviewPullRequestArtifacts(pullRequestArtifactReviewRequest: PullRequestArtifactReviewRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PullRequestArtifactReviewResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.reviewPullRequestArtifacts(pullRequestArtifactReviewRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ReviewApi.reviewPullRequestArtifacts']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * OpenAPI YAML과 DB DDL에서 필드명, 컬럼명, 물리 스펙을 추출해 데이터 사전 기준으로 검증한다.
+         * @summary 개발 산출물 표준 용어 검증
+         * @param {ArtifactValidationRequest} artifactValidationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async validateArtifact(artifactValidationRequest: ArtifactValidationRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtifactValidationResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.validateArtifact(artifactValidationRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ReviewApi.validateArtifact']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -107,6 +380,26 @@ export const ReviewApiFactory = function (configuration?: Configuration, basePat
     const localVarFp = ReviewApiFp(configuration)
     return {
         /**
+         * Kotlin, Java, TypeScript 코드의 DTO, Entity, Request/Response 필드명을 데이터 사전 CODE_VARIABLE 표현 기준으로 검증한다.
+         * @summary 코드 산출물 검증
+         * @param {ArtifactValidationRequest} artifactValidationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        reviewCodeArtifact(artifactValidationRequest: ArtifactValidationRequest, options?: RawAxiosRequestConfig): AxiosPromise<ArtifactValidationResult> {
+            return localVarFp.reviewCodeArtifact(artifactValidationRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * DB DDL 컬럼명과 물리 스펙을 데이터 사전 DB_COLUMN 표현 기준으로 검증한다.
+         * @summary DDL 산출물 검증
+         * @param {ArtifactValidationRequest} artifactValidationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        reviewDdlArtifact(artifactValidationRequest: ArtifactValidationRequest, options?: RawAxiosRequestConfig): AxiosPromise<ArtifactValidationResult> {
+            return localVarFp.reviewDdlArtifact(artifactValidationRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
          * 기획서 본문에서 비표준 용어를 탐지하고 표준 용어, 산출물 표현, 신규 용어 후보를 반환한다.
          * @summary 기획서 용어 검토
          * @param {DocumentReviewRequest} documentReviewRequest 
@@ -115,6 +408,36 @@ export const ReviewApiFactory = function (configuration?: Configuration, basePat
          */
         reviewDocument(documentReviewRequest: DocumentReviewRequest, options?: RawAxiosRequestConfig): AxiosPromise<DocumentReviewResult> {
             return localVarFp.reviewDocument(documentReviewRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * OpenAPI YAML의 API 필드명을 데이터 사전 API_FIELD 표현 기준으로 검증한다.
+         * @summary OpenAPI 산출물 검증
+         * @param {ArtifactValidationRequest} artifactValidationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        reviewOpenApiArtifact(artifactValidationRequest: ArtifactValidationRequest, options?: RawAxiosRequestConfig): AxiosPromise<ArtifactValidationResult> {
+            return localVarFp.reviewOpenApiArtifact(artifactValidationRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * PR 또는 CI에서 전달한 여러 변경 파일을 표준 용어 기준으로 검증하고 파일별 결과와 전체 집계를 반환한다.
+         * @summary PR 변경 파일 검증
+         * @param {PullRequestArtifactReviewRequest} pullRequestArtifactReviewRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        reviewPullRequestArtifacts(pullRequestArtifactReviewRequest: PullRequestArtifactReviewRequest, options?: RawAxiosRequestConfig): AxiosPromise<PullRequestArtifactReviewResult> {
+            return localVarFp.reviewPullRequestArtifacts(pullRequestArtifactReviewRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * OpenAPI YAML과 DB DDL에서 필드명, 컬럼명, 물리 스펙을 추출해 데이터 사전 기준으로 검증한다.
+         * @summary 개발 산출물 표준 용어 검증
+         * @param {ArtifactValidationRequest} artifactValidationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        validateArtifact(artifactValidationRequest: ArtifactValidationRequest, options?: RawAxiosRequestConfig): AxiosPromise<ArtifactValidationResult> {
+            return localVarFp.validateArtifact(artifactValidationRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -127,6 +450,30 @@ export const ReviewApiFactory = function (configuration?: Configuration, basePat
  */
 export class ReviewApi extends BaseAPI {
     /**
+     * Kotlin, Java, TypeScript 코드의 DTO, Entity, Request/Response 필드명을 데이터 사전 CODE_VARIABLE 표현 기준으로 검증한다.
+     * @summary 코드 산출물 검증
+     * @param {ArtifactValidationRequest} artifactValidationRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ReviewApi
+     */
+    public reviewCodeArtifact(artifactValidationRequest: ArtifactValidationRequest, options?: RawAxiosRequestConfig) {
+        return ReviewApiFp(this.configuration).reviewCodeArtifact(artifactValidationRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * DB DDL 컬럼명과 물리 스펙을 데이터 사전 DB_COLUMN 표현 기준으로 검증한다.
+     * @summary DDL 산출물 검증
+     * @param {ArtifactValidationRequest} artifactValidationRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ReviewApi
+     */
+    public reviewDdlArtifact(artifactValidationRequest: ArtifactValidationRequest, options?: RawAxiosRequestConfig) {
+        return ReviewApiFp(this.configuration).reviewDdlArtifact(artifactValidationRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * 기획서 본문에서 비표준 용어를 탐지하고 표준 용어, 산출물 표현, 신규 용어 후보를 반환한다.
      * @summary 기획서 용어 검토
      * @param {DocumentReviewRequest} documentReviewRequest 
@@ -136,6 +483,42 @@ export class ReviewApi extends BaseAPI {
      */
     public reviewDocument(documentReviewRequest: DocumentReviewRequest, options?: RawAxiosRequestConfig) {
         return ReviewApiFp(this.configuration).reviewDocument(documentReviewRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * OpenAPI YAML의 API 필드명을 데이터 사전 API_FIELD 표현 기준으로 검증한다.
+     * @summary OpenAPI 산출물 검증
+     * @param {ArtifactValidationRequest} artifactValidationRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ReviewApi
+     */
+    public reviewOpenApiArtifact(artifactValidationRequest: ArtifactValidationRequest, options?: RawAxiosRequestConfig) {
+        return ReviewApiFp(this.configuration).reviewOpenApiArtifact(artifactValidationRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * PR 또는 CI에서 전달한 여러 변경 파일을 표준 용어 기준으로 검증하고 파일별 결과와 전체 집계를 반환한다.
+     * @summary PR 변경 파일 검증
+     * @param {PullRequestArtifactReviewRequest} pullRequestArtifactReviewRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ReviewApi
+     */
+    public reviewPullRequestArtifacts(pullRequestArtifactReviewRequest: PullRequestArtifactReviewRequest, options?: RawAxiosRequestConfig) {
+        return ReviewApiFp(this.configuration).reviewPullRequestArtifacts(pullRequestArtifactReviewRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * OpenAPI YAML과 DB DDL에서 필드명, 컬럼명, 물리 스펙을 추출해 데이터 사전 기준으로 검증한다.
+     * @summary 개발 산출물 표준 용어 검증
+     * @param {ArtifactValidationRequest} artifactValidationRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ReviewApi
+     */
+    public validateArtifact(artifactValidationRequest: ArtifactValidationRequest, options?: RawAxiosRequestConfig) {
+        return ReviewApiFp(this.configuration).validateArtifact(artifactValidationRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

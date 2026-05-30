@@ -1,0 +1,11 @@
+components:
+  schemas:
+    CustomerOrderResponse:
+      type: object
+      properties:
+        customerId:
+          type: string
+          description: 고객 ID
+        orderNumber:
+          type: string
+          description: 주문번호

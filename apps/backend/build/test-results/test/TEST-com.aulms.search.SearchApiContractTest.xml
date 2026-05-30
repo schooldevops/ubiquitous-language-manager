@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.aulms.search.SearchApiContractTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-05-28T23:28:26.254Z" hostname="NHY9M72K9J" time="0.044">
+<testsuite name="com.aulms.search.SearchApiContractTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-05-29T08:16:54.665Z" hostname="NHY9M72K9J" time="0.068">
   <properties/>
-  <testcase name="domain search returns approved order terms()" classname="com.aulms.search.SearchApiContractTest" time="0.024"/>
-  <testcase name="exact search finds customer number by korean name db column and api field()" classname="com.aulms.search.SearchApiContractTest" time="0.008"/>
-  <testcase name="deprecated search returns forbidden reason and replacement db column()" classname="com.aulms.search.SearchApiContractTest" time="0.007"/>
-  <testcase name="alias search recommends customer number for customer id()" classname="com.aulms.search.SearchApiContractTest" time="0.002"/>
-  <system-out><![CDATA[2026-05-29T08:28:26.238+09:00  INFO 38923 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.aulms.search.SearchApiContractTest]: SearchApiContractTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-05-29T08:28:26.252+09:00  INFO 38923 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.aulms.AulmsBackendApplication for test class com.aulms.search.SearchApiContractTest
+  <testcase name="domain search returns approved order terms()" classname="com.aulms.search.SearchApiContractTest" time="0.041"/>
+  <testcase name="exact search finds customer number by korean name db column and api field()" classname="com.aulms.search.SearchApiContractTest" time="0.01"/>
+  <testcase name="deprecated search returns forbidden reason and replacement db column()" classname="com.aulms.search.SearchApiContractTest" time="0.011"/>
+  <testcase name="alias search recommends customer number for customer id()" classname="com.aulms.search.SearchApiContractTest" time="0.003"/>
+  <system-out><![CDATA[2026-05-29T17:16:54.641+09:00  INFO 34828 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.aulms.search.SearchApiContractTest]: SearchApiContractTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-29T17:16:54.663+09:00  INFO 34828 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.aulms.AulmsBackendApplication for test class com.aulms.search.SearchApiContractTest
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

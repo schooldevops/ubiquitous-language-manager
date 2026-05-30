@@ -1,0 +1,126 @@
+ImpactChangeType:
+  type: string
+  description: 영향도 분석 대상 변경 유형
+  enum:
+    - DESCRIPTION_UPDATE
+    - ALIAS_ADD
+    - API_FIELD_RENAME
+    - DB_COLUMN_RENAME
+    - PHYSICAL_TYPE_CHANGE
+    - DIGITS_CHANGE
+    - DEPRECATE_TERM
+  example: API_FIELD_RENAME
+
+ImpactRiskLevel:
+  type: string
+  description: 영향도 위험도
+  enum:
+    - LOW
+    - MEDIUM
+    - HIGH
+  example: HIGH
+
+ImpactAnalysisResponse:
+  type: object
+  description: 용어 변경 영향도 분석 응답
+  required:
+    - termId
+    - standardTerm
+    - changeType
+    - includeTwoHop
+    - riskLevel
+    - riskScore
+    - impactedTargets
+    - recommendations
+  properties:
+    termId:
+      type: string
+      example: T-000001
+    standardTerm:
+      type: string
+      example: 고객번호
+    changeType:
+      $ref: '#/ImpactChangeType'
+    includeTwoHop:
+      type: boolean
+      example: true
+    riskLevel:
+      $ref: '#/ImpactRiskLevel'
+    riskScore:
+      type: integer
+      format: int32
+      minimum: 0
+      maximum: 100
+      example: 85
+    impactedTargets:
+      type: array
+      description: 영향받는 시스템, DB, API, DTO, 문서, 테스트
+      items:
+        $ref: '#/ImpactTarget'
+    recommendations:
+      type: array
+      description: 권장 조치 목록
+      items:
+        $ref: '#/ImpactRecommendation'
+
+ImpactTarget:
+  type: object
+  description: 영향 대상
+  required:
+    - targetType
+    - targetName
+    - systemCode
+    - location
+    - hop
+    - reason
+  properties:
+    targetType:
+      type: string
+      enum:
+        - SYSTEM
+        - DB_TABLE
+        - DB_COLUMN
+        - API
+        - API_FIELD
+        - DTO
+        - DOCUMENT
+        - TEST_CASE
+      example: API_FIELD
+    targetName:
+      type: string
+      example: customerNumber
+    systemCode:
+      type: string
+      example: DICTIONARY
+    location:
+      type: string
+      example: apiField:DICTIONARY.고객.customerNumber
+    hop:
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 2
+      example: 1
+    reason:
+      type: string
+      example: customerNumber API 필드가 고객번호를 표현함
+
+ImpactRecommendation:
+  type: object
+  description: 영향도 분석 권장 조치
+  required:
+    - priority
+    - action
+    - reason
+  properties:
+    priority:
+      type: integer
+      format: int32
+      minimum: 1
+      example: 1
+    action:
+      type: string
+      example: API v2에서 customerNumber 유지, customerId 입력은 deprecated 처리
+    reason:
+      type: string
+      example: API 필드명 변경은 외부 연동 영향이 큼

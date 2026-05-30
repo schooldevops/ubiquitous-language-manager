@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.aulms.relationship.RelationshipApiContractTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-05-29T08:16:54.404Z" hostname="NHY9M72K9J" time="0.101">
+  <properties/>
+  <testcase name="get customer domain approved terms()" classname="com.aulms.relationship.RelationshipApiContractTest" time="0.032"/>
+  <testcase name="get customer number related terms()" classname="com.aulms.relationship.RelationshipApiContractTest" time="0.034"/>
+  <testcase name="get forbidden and deprecated usages()" classname="com.aulms.relationship.RelationshipApiContractTest" time="0.015"/>
+  <testcase name="get systems using customer number column()" classname="com.aulms.relationship.RelationshipApiContractTest" time="0.015"/>
+  <system-out><![CDATA[2026-05-29T17:16:54.338+09:00  INFO 34828 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.aulms.relationship.RelationshipApiContractTest]: RelationshipApiContractTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-29T17:16:54.402+09:00  INFO 34828 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.aulms.AulmsBackendApplication for test class com.aulms.relationship.RelationshipApiContractTest
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
