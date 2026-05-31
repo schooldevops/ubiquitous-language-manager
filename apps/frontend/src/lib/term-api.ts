@@ -2,16 +2,23 @@
 
 import axios from "axios";
 import {
+  AIApi,
   AliasApi,
   CandidateApi,
   CandidateStatus,
   Configuration,
+  type ErrorResponse,
   ExpressionApi,
+  GovernanceApi,
   ImpactApi,
   ImpactChangeType,
   ImpactRiskLevel,
+  TermRecommendationMode,
   TermApi,
   TermStatus,
+  type GraphRecommendationContext,
+  type RecommendationEvidence,
+  type RecommendedTermDraft,
   type CandidatePromotionResult,
   type ImpactAnalysisResponse,
   type Term,
@@ -24,9 +31,13 @@ import {
   type TermCandidateReviewRequest,
   type TermCandidateSummary,
   type TermCreateRequest,
+  type TermChangeHistory,
+  type TermChangeHistoryListResponse,
   type TermExpression,
   type TermExpressionCreateRequest,
   type TermListResponse,
+  type TermRecommendationRequest,
+  type TermRecommendationResponse,
   type TermSummary,
   type TermUpdateRequest,
 } from "@aulms/api-client";
@@ -44,10 +55,20 @@ const axiosInstance = axios.create({
 });
 
 const termApi = new TermApi(configuration, basePath, axiosInstance);
+const aiApi = new AIApi(configuration, basePath, axiosInstance);
 const expressionApi = new ExpressionApi(configuration, basePath, axiosInstance);
 const aliasApi = new AliasApi(configuration, basePath, axiosInstance);
 const candidateApi = new CandidateApi(configuration, basePath, axiosInstance);
 const impactApi = new ImpactApi(configuration, basePath, axiosInstance);
+const governanceApi = new GovernanceApi(configuration, basePath, axiosInstance);
+
+export type ApiErrorInfo = {
+  status?: number;
+  code?: string;
+  message: string;
+  detail?: string;
+  traceId?: string;
+};
 
 const sampleTerm: Term = {
   termId: "T-000001",
@@ -258,6 +279,20 @@ const sampleImpactMap: Record<string, ImpactAnalysisResponse> = {
   [sampleOrderDateImpact.termId]: sampleOrderDateImpact,
 };
 
+const sampleTermHistories: Record<string, TermChangeHistory[]> = {
+  "T-000001": [
+    { changeHistoryId: 1, termId: "T-000001", changeType: "CREATE", reason: "표준 용어 등록", createdAt: "2026-05-30T09:00:00+09:00", newStatus: TermStatus.Approved },
+    { changeHistoryId: 2, termId: "T-000001", changeType: "UPDATE", reason: "업무 정의와 사용 맥락 보완", createdAt: "2026-05-30T10:00:00+09:00", previousStatus: TermStatus.Approved, newStatus: TermStatus.Approved, approvedBy: "data.steward" },
+  ],
+  "T-000004": [
+    { changeHistoryId: 3, termId: "T-000004", changeType: "CREATE", reason: "표준 용어 등록", createdAt: "2026-05-30T09:10:00+09:00", newStatus: TermStatus.Approved },
+    { changeHistoryId: 4, termId: "T-000004", changeType: "UPDATE", reason: "주문 조회 API 설명 보완", createdAt: "2026-05-30T10:30:00+09:00", previousStatus: TermStatus.Approved, newStatus: TermStatus.Approved, approvedBy: "order.steward" },
+  ],
+  "T-000005": [
+    { changeHistoryId: 5, termId: "T-000005", changeType: "CREATE", reason: "표준 용어 등록", createdAt: "2026-05-30T09:20:00+09:00", newStatus: TermStatus.Approved },
+  ],
+};
+
 const sampleCandidate: TermCandidate = {
   candidateId: "CAND-000001",
   koreanName: "고객선호배송시간대",
@@ -293,13 +328,22 @@ const sampleCandidate: TermCandidate = {
   ],
 };
 
+const localCandidates: Record<string, TermCandidate> = {
+  [sampleCandidate.candidateId]: sampleCandidate,
+};
+
 function fallbackCandidateList(q?: string, status?: CandidateStatus, domainName?: string): TermCandidateListResponse {
   const normalized = q?.trim().toLowerCase();
-  const matches =
-    (!normalized || sampleCandidate.koreanName.toLowerCase().includes(normalized) || sampleCandidate.englishName.toLowerCase().includes(normalized) || sampleCandidate.englishAbbreviation.toLowerCase().includes(normalized)) &&
-    (!status || sampleCandidate.status === status) &&
-    (!domainName || sampleCandidate.domainName === domainName);
-  const items: TermCandidateSummary[] = matches ? [toCandidateSummary(sampleCandidate)] : [];
+  const items = Object.values(localCandidates)
+    .filter((candidate) => {
+      const matchesQuery =
+        !normalized ||
+        candidate.koreanName.toLowerCase().includes(normalized) ||
+        candidate.englishName.toLowerCase().includes(normalized) ||
+        candidate.englishAbbreviation.toLowerCase().includes(normalized);
+      return matchesQuery && (!status || candidate.status === status) && (!domainName || candidate.domainName === domainName);
+    })
+    .map(toCandidateSummary);
   return {
     items,
     page: {
@@ -309,6 +353,298 @@ function fallbackCandidateList(q?: string, status?: CandidateStatus, domainName?
       totalPages: items.length > 0 ? 1 : 0,
     },
   };
+}
+
+function fallbackReviewCandidate(candidateId: string, request: TermCandidateReviewRequest): TermCandidate {
+  const candidate = localCandidates[candidateId] ?? { ...sampleCandidate, candidateId };
+  const nextStatus =
+    request.decision === "Approve" ? CandidateStatus.Approved :
+    request.decision === "Reject" ? CandidateStatus.Rejected :
+    CandidateStatus.Reviewing;
+  const reviewed: TermCandidate = {
+    ...candidate,
+    status: nextStatus,
+    reviewedBy: request.reviewer,
+    updatedAt: new Date().toISOString(),
+    histories: [
+      ...candidate.histories,
+      {
+        historyId: `CAND-HIST-LOCAL-${candidate.histories.length + 1}`,
+        candidateId,
+        status: nextStatus,
+        reason: request.reason,
+        actor: request.reviewer,
+        createdAt: new Date().toISOString(),
+      },
+    ],
+  };
+  localCandidates[candidateId] = reviewed;
+  return reviewed;
+}
+
+function fallbackPromoteCandidate(candidateId: string, request: TermCandidatePromoteRequest): CandidatePromotionResult {
+  const candidate = localCandidates[candidateId] ?? { ...sampleCandidate, candidateId };
+  const termId = `T-${candidateId.replace(/[^A-Z0-9]/gi, "").toUpperCase()}`;
+  const apiFieldName = toCamelCase(candidate.englishName);
+  const term: Term = {
+    termId,
+    termNumber: `TERM-${termId.replace(/^T-/, "")}`,
+    domainName: candidate.domainName,
+    usageType: "표준항목",
+    koreanName: candidate.koreanName,
+    englishName: candidate.englishName,
+    englishAbbreviation: candidate.englishAbbreviation,
+    businessDefinition: candidate.businessDefinition,
+    usageContext: candidate.usageContext,
+    physicalType: candidate.physicalType,
+    digits: candidate.digits,
+    decimalPoint: candidate.decimalPoint,
+    status: TermStatus.Approved,
+    owner: request.owner,
+    version: "1.0",
+    expressions: [
+      { expressionId: Date.now(), termId, expressionType: "Korean", expressionValue: candidate.koreanName, language: "ko", style: "standard", isStandard: true },
+      { expressionId: Date.now() + 1, termId, expressionType: "English", expressionValue: candidate.englishName, language: "en", style: "title", isStandard: true },
+      { expressionId: Date.now() + 2, termId, expressionType: "DB_COLUMN", expressionValue: candidate.englishAbbreviation, language: "en", style: "UPPER_SNAKE", isStandard: true },
+      { expressionId: Date.now() + 3, termId, expressionType: "API_FIELD", expressionValue: apiFieldName, language: "en", style: "camelCase", isStandard: true },
+      { expressionId: Date.now() + 4, termId, expressionType: "CODE_VARIABLE", expressionValue: apiFieldName, language: "en", style: "camelCase", isStandard: true },
+      { expressionId: Date.now() + 5, termId, expressionType: "UI_LABEL", expressionValue: candidate.koreanName, language: "ko", style: "label", isStandard: true },
+    ],
+    aliases: [],
+  };
+  const promoted: TermCandidate = {
+    ...candidate,
+    status: CandidateStatus.Promoted,
+    reviewedBy: request.approver,
+    promotedTermId: termId,
+    updatedAt: new Date().toISOString(),
+    histories: [
+      ...candidate.histories,
+      {
+        historyId: `CAND-HIST-LOCAL-${candidate.histories.length + 1}`,
+        candidateId,
+        status: CandidateStatus.Promoted,
+        reason: request.reason,
+        actor: request.approver,
+        createdAt: new Date().toISOString(),
+      },
+    ],
+  };
+  localCandidates[candidateId] = promoted;
+  sampleTermMap[termId] = term;
+  sampleTerms.push({
+    termId: term.termId,
+    termNumber: term.termNumber,
+    domainName: term.domainName,
+    koreanName: term.koreanName,
+    englishName: term.englishName,
+    englishAbbreviation: term.englishAbbreviation,
+    apiFieldName,
+    status: term.status,
+    relatedSystems: [term.domainName],
+  });
+  return { candidate: promoted, term };
+}
+
+function toCamelCase(value: string): string {
+  const words = value.trim().split(/\s+/);
+  return words
+    .map((word, index) => {
+      const normalized = word.charAt(0).toUpperCase() + word.slice(1);
+      return index === 0 ? normalized.charAt(0).toLowerCase() + normalized.slice(1) : normalized;
+    })
+    .join("");
+}
+
+function fallbackRecommendedDraft(koreanName: string, currentDomainName?: string): RecommendedTermDraft {
+  const normalized = koreanName.trim();
+  const domainName = inferDomainName(normalized, currentDomainName);
+  const baseName = normalized.startsWith(domainName) ? normalized.slice(domainName.length) : normalized;
+  const pattern = inferSuffixPattern(normalized);
+  return {
+    domainName,
+    usageType: "표준항목",
+    englishName: [domainEnglishMap[domainName] ?? "Common", toEnglishPhrase(baseName)].filter(Boolean).join(" ").replace(/\s+/g, " ").trim(),
+    englishAbbreviation: [domainAbbreviationMap[domainName] ?? "CMN", ...toAbbreviationTokens(baseName), pattern.suffixToken].filter(Boolean).join("_").replace(/__+/g, "_"),
+    businessDefinition: `${domainName} 도메인에서 ${normalized}를 업무적으로 관리하기 위해 사용하는 표준 항목`,
+    usageContext: `${domainName} 관련 화면, API, DB, 테스트 시나리오에서 ${normalized} 표현으로 사용`,
+    physicalType: pattern.physicalType,
+    digits: pattern.digits,
+    decimalPoint: pattern.decimalPoint,
+    owner: `${domainName}도메인 데이터스튜어드`,
+  };
+}
+
+function fallbackRecommendTermDraft(request: TermRecommendationRequest): TermRecommendationResponse {
+  const recommendation = fallbackRecommendedDraft(request.koreanName, request.currentDomainName);
+  const ragMatches: RecommendationEvidence[] = sampleTerms
+    .filter((term) => term.domainName === recommendation.domainName)
+    .slice(0, 3)
+    .map((term, index) => ({
+      termId: term.termId,
+      standardTerm: term.koreanName,
+      englishName: term.englishName,
+      dbColumn: term.englishAbbreviation,
+      apiField: term.apiFieldName ?? toCamelCase(term.englishName),
+      domainName: term.domainName,
+      source: index === 0 ? "Semantic" as RecommendationEvidence["source"] : "Alias" as RecommendationEvidence["source"],
+      score: index === 0 ? 0.82 : 0.54,
+      reason: `${term.domainName} 도메인의 기존 표준 용어 패턴을 참고한 fallback 추천`,
+    }));
+  const graphContext: GraphRecommendationContext = {
+    inferredDomainName: recommendation.domainName,
+    relatedTerms: ragMatches.map((item) => item.standardTerm),
+    relationshipHints: [
+      `${recommendation.domainName} 도메인 표준 용어와 함께 검토해야 함`,
+      `대표 식별 용어를 기준으로 신규 속성이 연결되는 패턴을 참고함`,
+    ],
+  };
+  return {
+    inputKoreanName: request.koreanName,
+    normalizedKoreanName: request.koreanName.replace(/\s+/g, ""),
+    recommendation,
+    ragMatches,
+    graphContext,
+    llmReasoning: `fallback 추천. ${recommendation.domainName} 도메인 패턴과 기존 표준 용어를 조합함`,
+    warnings: ["백엔드 추천 API 연결 실패로 로컬 fallback 추천을 사용함"],
+  };
+}
+
+const domainEnglishMap: Record<string, string> = {
+  고객: "Customer",
+  주문: "Order",
+  결제: "Payment",
+  상품: "Product",
+  계약: "Contract",
+  청구: "Billing",
+  상담: "Consultation",
+  공통: "Common",
+};
+
+const domainAbbreviationMap: Record<string, string> = {
+  고객: "CUST",
+  주문: "ORD",
+  결제: "PAY",
+  상품: "PRD",
+  계약: "CTRT",
+  청구: "BILL",
+  상담: "CNSL",
+  공통: "CMN",
+};
+
+const koreanEnglishWordMap: Array<[string, string]> = [
+  ["상태코드", "Status Code"],
+  ["시간대", "Time Slot"],
+  ["선호", "Preferred"],
+  ["배송", "Delivery"],
+  ["고객", "Customer"],
+  ["주문", "Order"],
+  ["결제", "Payment"],
+  ["상품", "Product"],
+  ["계약", "Contract"],
+  ["청구", "Billing"],
+  ["상담", "Consultation"],
+  ["번호", "Number"],
+  ["일자", "Date"],
+  ["일시", "Date Time"],
+  ["금액", "Amount"],
+  ["상태", "Status"],
+  ["코드", "Code"],
+  ["명", "Name"],
+  ["여부", "Yn"],
+  ["목록", "List"],
+  ["이미지", "Image"],
+  ["시간", "Time"],
+];
+
+const abbreviationWordMap: Array<[string, string]> = [
+  ["상태코드", "STS_CD"],
+  ["시간대", "TM_SLOT"],
+  ["선호", "PREF"],
+  ["배송", "DLV"],
+  ["고객", "CUST"],
+  ["주문", "ORD"],
+  ["결제", "PAY"],
+  ["상품", "PRD"],
+  ["계약", "CTRT"],
+  ["청구", "BILL"],
+  ["상담", "CNSL"],
+  ["번호", "NO"],
+  ["일자", "DT"],
+  ["일시", "DTTM"],
+  ["금액", "AMT"],
+  ["상태", "STS"],
+  ["코드", "CD"],
+  ["명", "NM"],
+  ["여부", "YN"],
+  ["목록", "LIST"],
+  ["이미지", "IMG"],
+  ["시간", "TM"],
+];
+
+function inferDomainName(koreanName: string, currentDomainName?: string): string {
+  if (currentDomainName?.trim()) {
+    return currentDomainName;
+  }
+  return Object.keys(domainEnglishMap).find((domain) => domain !== "공통" && koreanName.startsWith(domain)) ?? "공통";
+}
+
+function toEnglishPhrase(koreanText: string): string {
+  let remaining = koreanText;
+  const words: string[] = [];
+  for (const [source, target] of [...koreanEnglishWordMap].sort((left, right) => right[0].length - left[0].length)) {
+    while (remaining.includes(source)) {
+      remaining = remaining.replace(source, " ");
+      words.push(target);
+    }
+  }
+  return words.join(" ").replace(/\s+/g, " ").trim() || "Term";
+}
+
+function toAbbreviationTokens(koreanText: string): string[] {
+  let remaining = koreanText;
+  const words: string[] = [];
+  for (const [source, target] of [...abbreviationWordMap].sort((left, right) => right[0].length - left[0].length)) {
+    while (remaining.includes(source)) {
+      remaining = remaining.replace(source, " ");
+      words.push(target);
+    }
+  }
+  return Array.from(new Set(words));
+}
+
+function inferSuffixPattern(koreanName: string) {
+  if (koreanName.endsWith("상태코드")) return { suffixToken: "STS_CD", physicalType: "VARCHAR", digits: 10, decimalPoint: 0 };
+  if (koreanName.endsWith("코드")) return { suffixToken: "CD", physicalType: "VARCHAR", digits: 10, decimalPoint: 0 };
+  if (koreanName.endsWith("번호")) return { suffixToken: "NO", physicalType: "VARCHAR", digits: 20, decimalPoint: 0 };
+  if (koreanName.endsWith("일시")) return { suffixToken: "DTTM", physicalType: "TIMESTAMP", digits: 14, decimalPoint: 0 };
+  if (koreanName.endsWith("일자")) return { suffixToken: "DT", physicalType: "DATE", digits: 8, decimalPoint: 0 };
+  if (koreanName.endsWith("금액")) return { suffixToken: "AMT", physicalType: "NUMERIC", digits: 15, decimalPoint: 2 };
+  if (koreanName.endsWith("명")) return { suffixToken: "NM", physicalType: "VARCHAR", digits: 100, decimalPoint: 0 };
+  if (koreanName.endsWith("여부")) return { suffixToken: "YN", physicalType: "CHAR", digits: 1, decimalPoint: 0 };
+  if (koreanName.endsWith("시간대")) return { suffixToken: "TM_SLOT", physicalType: "VARCHAR", digits: 40, decimalPoint: 0 };
+  return { suffixToken: "VAL", physicalType: "VARCHAR", digits: 100, decimalPoint: 0 };
+}
+
+function isNetworkFallbackCandidate(error: unknown): boolean {
+  return axios.isAxiosError(error) && !error.response;
+}
+
+export function extractApiError(error: unknown): ApiErrorInfo {
+  if (axios.isAxiosError(error)) {
+    const response = error.response?.data as ErrorResponse | undefined;
+    return {
+      status: error.response?.status,
+      code: response?.code,
+      message: response?.message ?? error.message ?? "요청 처리 중 오류가 발생했습니다.",
+      detail: response?.detail,
+      traceId: response?.traceId,
+    };
+  }
+  if (error instanceof Error) {
+    return { message: error.message };
+  }
+  return { message: "알 수 없는 오류가 발생했습니다." };
 }
 
 function toCandidateSummary(candidate: TermCandidate): TermCandidateSummary {
@@ -351,6 +687,74 @@ function fallbackList(q?: string, domainName?: string, status?: TermStatus): Ter
   };
 }
 
+function toTermSummary(term: Term): TermSummary {
+  const apiFieldName = term.expressions?.find((item) => item.expressionType === "API_FIELD")?.expressionValue;
+  return {
+    termId: term.termId,
+    termNumber: term.termNumber,
+    domainName: term.domainName,
+    koreanName: term.koreanName,
+    englishName: term.englishName,
+    englishAbbreviation: term.englishAbbreviation,
+    apiFieldName,
+    status: term.status,
+    relatedSystems: [term.domainName],
+  };
+}
+
+function fallbackUpdateTerm(termId: string, request: TermUpdateRequest): Term {
+  const current = sampleTermMap[termId] ?? { ...sampleTerm, termId };
+  const apiFieldName = current.expressions?.find((item) => item.expressionType === "API_FIELD")?.expressionValue ?? toCamelCase(request.englishName);
+  const updated: Term = {
+    ...current,
+    domainName: request.domainName,
+    usageType: request.usageType,
+    koreanName: request.koreanName,
+    englishName: request.englishName,
+    englishAbbreviation: request.englishAbbreviation,
+    businessDefinition: request.businessDefinition,
+    usageContext: request.usageContext,
+    physicalType: request.physicalType,
+    digits: request.digits,
+    decimalPoint: request.decimalPoint,
+    owner: request.owner,
+    status: request.status ?? current.status,
+    updatedAt: new Date().toISOString(),
+    expressions: [
+      { expressionId: Date.now(), termId, expressionType: "Korean", expressionValue: request.koreanName, language: "ko", style: "standard", isStandard: true },
+      { expressionId: Date.now() + 1, termId, expressionType: "English", expressionValue: request.englishName, language: "en", style: "title", isStandard: true },
+      { expressionId: Date.now() + 2, termId, expressionType: "DB_COLUMN", expressionValue: request.englishAbbreviation, language: "en", style: "UPPER_SNAKE", isStandard: true },
+      { expressionId: Date.now() + 3, termId, expressionType: "API_FIELD", expressionValue: apiFieldName, language: "en", style: "camelCase", isStandard: true },
+      { expressionId: Date.now() + 4, termId, expressionType: "CODE_VARIABLE", expressionValue: apiFieldName, language: "en", style: "camelCase", isStandard: true },
+      { expressionId: Date.now() + 5, termId, expressionType: "UI_LABEL", expressionValue: request.koreanName, language: "ko", style: "label", isStandard: true },
+      { expressionId: Date.now() + 6, termId, expressionType: "TEST_WORD", expressionValue: request.koreanName, language: "ko", style: "gherkin", isStandard: true },
+    ],
+  };
+  sampleTermMap[termId] = updated;
+  const index = sampleTerms.findIndex((term) => term.termId === termId);
+  const summary = toTermSummary(updated);
+  if (index >= 0) {
+    sampleTerms[index] = summary;
+  } else {
+    sampleTerms.push(summary);
+  }
+  const currentHistories = sampleTermHistories[termId] ?? [];
+  sampleTermHistories[termId] = [
+    ...currentHistories,
+    {
+      changeHistoryId: currentHistories.length > 0 ? Math.max(...currentHistories.map((item) => item.changeHistoryId)) + 1 : 1,
+      termId,
+      changeType: "UPDATE",
+      previousStatus: current.status,
+      newStatus: updated.status,
+      reason: request.changeReason,
+      approvedBy: request.owner,
+      createdAt: updated.updatedAt ?? new Date().toISOString(),
+    },
+  ];
+  return updated;
+}
+
 export async function listTerms(q?: string, domainName?: string, status?: TermStatus): Promise<TermListResponse> {
   try {
     const response = await termApi.listTerms(q || undefined, domainName || undefined, status || undefined, 0, 20);
@@ -378,8 +782,15 @@ export async function createTerm(request: TermCreateRequest): Promise<Term> {
 }
 
 export async function updateTerm(termId: string, request: TermUpdateRequest): Promise<Term> {
-  const response = await termApi.updateTerm(termId, request);
-  return response.data;
+  try {
+    const response = await termApi.updateTerm(termId, request);
+    return response.data;
+  } catch (error) {
+    if (!isNetworkFallbackCandidate(error)) {
+      throw error;
+    }
+    return fallbackUpdateTerm(termId, request);
+  }
 }
 
 export async function listExpressions(termId: string): Promise<TermExpression[]> {
@@ -388,6 +799,24 @@ export async function listExpressions(termId: string): Promise<TermExpression[]>
     return response.data;
   } catch {
     return sampleTermMap[termId]?.expressions ?? sampleTerm.expressions;
+  }
+}
+
+export async function listTermHistory(termId: string): Promise<TermChangeHistoryListResponse> {
+  try {
+    const response = await governanceApi.listTermHistory(termId, 0, 20);
+    return response.data;
+  } catch {
+    const items = sampleTermHistories[termId] ?? [];
+    return {
+      items,
+      page: {
+        page: 0,
+        size: 20,
+        totalElements: items.length,
+        totalPages: items.length > 0 ? 1 : 0,
+      },
+    };
   }
 }
 
@@ -424,7 +853,7 @@ export async function getCandidate(candidateId: string): Promise<TermCandidate> 
     const response = await candidateApi.getCandidate(candidateId);
     return response.data;
   } catch {
-    return { ...sampleCandidate, candidateId };
+    return localCandidates[candidateId] ?? { ...sampleCandidate, candidateId };
   }
 }
 
@@ -433,18 +862,34 @@ export async function createCandidate(request: TermCandidateCreateRequest): Prom
     const response = await candidateApi.createCandidate(request);
     return response.data;
   } catch {
-    return { ...sampleCandidate, ...request, candidateId: "CAND-LOCAL" };
+    const candidate = { ...sampleCandidate, ...request, candidateId: "CAND-LOCAL", status: CandidateStatus.Draft };
+    localCandidates[candidate.candidateId] = candidate;
+    return candidate;
   }
 }
 
 export async function reviewCandidate(candidateId: string, request: TermCandidateReviewRequest): Promise<TermCandidate> {
-  const response = await candidateApi.reviewCandidate(candidateId, request);
-  return response.data;
+  try {
+    const response = await candidateApi.reviewCandidate(candidateId, request);
+    return response.data;
+  } catch (error) {
+    if (!isNetworkFallbackCandidate(error)) {
+      throw error;
+    }
+    return fallbackReviewCandidate(candidateId, request);
+  }
 }
 
 export async function promoteCandidate(candidateId: string, request: TermCandidatePromoteRequest): Promise<CandidatePromotionResult> {
-  const response = await candidateApi.promoteCandidate(candidateId, request);
-  return response.data;
+  try {
+    const response = await candidateApi.promoteCandidate(candidateId, request);
+    return response.data;
+  } catch (error) {
+    if (!isNetworkFallbackCandidate(error)) {
+      throw error;
+    }
+    return fallbackPromoteCandidate(candidateId, request);
+  }
 }
 
 export async function getTermImpact(termId: string, changeType: ImpactChangeType = ImpactChangeType.ApiFieldRename, includeTwoHop = true): Promise<ImpactAnalysisResponse> {
@@ -457,20 +902,39 @@ export async function getTermImpact(termId: string, changeType: ImpactChangeType
   }
 }
 
-export { CandidateStatus, ImpactChangeType, ImpactRiskLevel, TermStatus };
+export async function recommendTermDraft(request: TermRecommendationRequest): Promise<TermRecommendationResponse> {
+  try {
+    const response = await aiApi.recommendTermDraft(request);
+    return response.data;
+  } catch (error) {
+    if (!isNetworkFallbackCandidate(error)) {
+      throw error;
+    }
+    return fallbackRecommendTermDraft(request);
+  }
+}
+
+export { CandidateStatus, ImpactChangeType, ImpactRiskLevel, TermRecommendationMode, TermStatus };
 export type {
   CandidatePromotionResult,
+  GraphRecommendationContext,
   ImpactAnalysisResponse,
+  RecommendationEvidence,
+  RecommendedTermDraft,
   Term,
   TermAlias,
   TermCandidate,
+  TermChangeHistory,
   TermCandidateCreateRequest,
+  TermChangeHistoryListResponse,
   TermCandidateListResponse,
   TermCandidatePromoteRequest,
   TermCandidateReviewRequest,
   TermCandidateSummary,
   TermCreateRequest,
   TermExpression,
+  TermRecommendationRequest,
+  TermRecommendationResponse,
   TermSummary,
   TermUpdateRequest,
 };

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.aulms.ai.DevelopmentAssistApiContractTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-05-30T08:13:01.187Z" hostname="NHY9M72K9J" time="0.75">
+<testsuite name="com.aulms.ai.DevelopmentAssistApiContractTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-05-31T13:58:19.290Z" hostname="NHY9M72K9J" time="1.001">
   <properties/>
-  <testcase name="development assist separates unknown term as candidate and warns non standard alias()" classname="com.aulms.ai.DevelopmentAssistApiContractTest" time="0.735"/>
+  <testcase name="term recommendation gathers rag and graph context before inferring new candidate()" classname="com.aulms.ai.DevelopmentAssistApiContractTest" time="0.89"/>
+  <testcase name="term recommendation reuses existing approved term when exact standard term exists()" classname="com.aulms.ai.DevelopmentAssistApiContractTest" time="0.029"/>
+  <testcase name="development assist separates unknown term as candidate and warns non standard alias()" classname="com.aulms.ai.DevelopmentAssistApiContractTest" time="0.065"/>
   <testcase name="development assist maps customer order requirement to approved terms and artifacts()" classname="com.aulms.ai.DevelopmentAssistApiContractTest" time="0.014"/>
-  <system-out><![CDATA[17:12:59.713 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.aulms.ai.DevelopmentAssistApiContractTest]: DevelopmentAssistApiContractTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-17:12:59.788 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.aulms.AulmsBackendApplication for test class com.aulms.ai.DevelopmentAssistApiContractTest
+  <system-out><![CDATA[22:58:17.565 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.aulms.ai.DevelopmentAssistApiContractTest]: DevelopmentAssistApiContractTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+22:58:17.662 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.aulms.AulmsBackendApplication for test class com.aulms.ai.DevelopmentAssistApiContractTest
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -15,12 +17,12 @@
 
  :: Spring Boot ::                (v3.3.5)
 
-2026-05-30T17:12:59.964+09:00  INFO 85462 --- [    Test worker] c.a.ai.DevelopmentAssistApiContractTest  : Starting DevelopmentAssistApiContractTest using Java 21.0.10 with PID 85462 (started by 1111489 in /Users/1111489/Documents/AULMS/apps/backend)
-2026-05-30T17:12:59.965+09:00  INFO 85462 --- [    Test worker] c.a.ai.DevelopmentAssistApiContractTest  : No active profile set, falling back to 1 default profile: "default"
-2026-05-30T17:13:01.153+09:00  INFO 85462 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-05-30T17:13:01.154+09:00  INFO 85462 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-05-30T17:13:01.154+09:00  INFO 85462 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
-2026-05-30T17:13:01.170+09:00  INFO 85462 --- [    Test worker] c.a.ai.DevelopmentAssistApiContractTest  : Started DevelopmentAssistApiContractTest in 1.313 seconds (process running for 1.975)
+2026-05-31T22:58:17.859+09:00  INFO 5410 --- [    Test worker] c.a.ai.DevelopmentAssistApiContractTest  : Starting DevelopmentAssistApiContractTest using Java 21.0.10 with PID 5410 (started by 1111489 in /Users/1111489/Documents/AULMS/apps/backend)
+2026-05-31T22:58:17.859+09:00  INFO 5410 --- [    Test worker] c.a.ai.DevelopmentAssistApiContractTest  : No active profile set, falling back to 1 default profile: "default"
+2026-05-31T22:58:19.255+09:00  INFO 5410 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-05-31T22:58:19.255+09:00  INFO 5410 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-05-31T22:58:19.256+09:00  INFO 5410 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-05-31T22:58:19.281+09:00  INFO 5410 --- [    Test worker] c.a.ai.DevelopmentAssistApiContractTest  : Started DevelopmentAssistApiContractTest in 1.545 seconds (process running for 2.33)
 ]]></system-out>
   <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (/Users/1111489/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.14.19/154da3a65b4f4a909d3e5bdec55d1b2b4cbb6ce1/byte-buddy-agent-1.14.19.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning

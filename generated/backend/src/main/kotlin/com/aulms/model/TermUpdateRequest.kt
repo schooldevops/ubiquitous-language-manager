@@ -17,7 +17,7 @@ import jakarta.validation.Valid
 import io.swagger.v3.oas.annotations.media.Schema
 
 /**
- * 
+ * 표준 용어 수정 요청
  * @param domainName 
  * @param usageType 
  * @param koreanName 

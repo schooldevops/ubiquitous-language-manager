@@ -86,6 +86,8 @@ paths:
     $ref: './paths/prompt-templates.yaml#/previewPromptTemplate'
   /ai/development-assist:
     $ref: './paths/ai.yaml#/developmentAssist'
+  /ai/term-recommendation:
+    $ref: './paths/ai.yaml#/termRecommendation'
   /relationships/terms/{termId}:
     $ref: './paths/relationships.yaml#/termRelationships'
   /relationships/domains/{domainName}/terms:
@@ -238,6 +240,18 @@ components:
       $ref: './schemas/ai.yaml#/DevelopmentAssistRequest'
     DevelopmentAssistResponse:
       $ref: './schemas/ai.yaml#/DevelopmentAssistResponse'
+    TermRecommendationMode:
+      $ref: './schemas/ai.yaml#/TermRecommendationMode'
+    TermRecommendationRequest:
+      $ref: './schemas/ai.yaml#/TermRecommendationRequest'
+    TermRecommendationResponse:
+      $ref: './schemas/ai.yaml#/TermRecommendationResponse'
+    RecommendedTermDraft:
+      $ref: './schemas/ai.yaml#/RecommendedTermDraft'
+    RecommendationEvidence:
+      $ref: './schemas/ai.yaml#/RecommendationEvidence'
+    GraphRecommendationContext:
+      $ref: './schemas/ai.yaml#/GraphRecommendationContext'
     AssistTargetArtifact:
       $ref: './schemas/ai.yaml#/AssistTargetArtifact'
     ExtractedBusinessConcept:

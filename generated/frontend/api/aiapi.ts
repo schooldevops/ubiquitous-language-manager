@@ -27,6 +27,10 @@ import type { DevelopmentAssistRequest } from '../model';
 import type { DevelopmentAssistResponse } from '../model';
 // @ts-ignore
 import type { ErrorResponse } from '../model';
+// @ts-ignore
+import type { TermRecommendationRequest } from '../model';
+// @ts-ignore
+import type { TermRecommendationResponse } from '../model';
 /**
  * AIApi - axios parameter creator
  * @export
@@ -73,6 +77,46 @@ export const AIApiAxiosParamCreator = function (configuration?: Configuration) {
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 한글 용어명을 입력받아 먼저 정확 검색, 유사어 검색, 의미 기반 검색으로 관련 용어를 수집하고, Graph 관계를 확장한 뒤, 최종 추론 단계에서 영문명, 약어, 타입, 자릿수, 소유자 등을 추천한다.
+         * @summary RAG/Graph/LLM 기반 용어 초안 추천
+         * @param {TermRecommendationRequest} termRecommendationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        recommendTermDraft: async (termRecommendationRequest: TermRecommendationRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'termRecommendationRequest' is not null or undefined
+            assertParamExists('recommendTermDraft', 'termRecommendationRequest', termRecommendationRequest)
+            const localVarPath = `/ai/term-recommendation`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(termRecommendationRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -96,6 +140,19 @@ export const AIApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['AIApi.developmentAssist']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 한글 용어명을 입력받아 먼저 정확 검색, 유사어 검색, 의미 기반 검색으로 관련 용어를 수집하고, Graph 관계를 확장한 뒤, 최종 추론 단계에서 영문명, 약어, 타입, 자릿수, 소유자 등을 추천한다.
+         * @summary RAG/Graph/LLM 기반 용어 초안 추천
+         * @param {TermRecommendationRequest} termRecommendationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async recommendTermDraft(termRecommendationRequest: TermRecommendationRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TermRecommendationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.recommendTermDraft(termRecommendationRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AIApi.recommendTermDraft']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -115,6 +172,16 @@ export const AIApiFactory = function (configuration?: Configuration, basePath?: 
          */
         developmentAssist(developmentAssistRequest: DevelopmentAssistRequest, options?: RawAxiosRequestConfig): AxiosPromise<DevelopmentAssistResponse> {
             return localVarFp.developmentAssist(developmentAssistRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 한글 용어명을 입력받아 먼저 정확 검색, 유사어 검색, 의미 기반 검색으로 관련 용어를 수집하고, Graph 관계를 확장한 뒤, 최종 추론 단계에서 영문명, 약어, 타입, 자릿수, 소유자 등을 추천한다.
+         * @summary RAG/Graph/LLM 기반 용어 초안 추천
+         * @param {TermRecommendationRequest} termRecommendationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        recommendTermDraft(termRecommendationRequest: TermRecommendationRequest, options?: RawAxiosRequestConfig): AxiosPromise<TermRecommendationResponse> {
+            return localVarFp.recommendTermDraft(termRecommendationRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -136,6 +203,18 @@ export class AIApi extends BaseAPI {
      */
     public developmentAssist(developmentAssistRequest: DevelopmentAssistRequest, options?: RawAxiosRequestConfig) {
         return AIApiFp(this.configuration).developmentAssist(developmentAssistRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 한글 용어명을 입력받아 먼저 정확 검색, 유사어 검색, 의미 기반 검색으로 관련 용어를 수집하고, Graph 관계를 확장한 뒤, 최종 추론 단계에서 영문명, 약어, 타입, 자릿수, 소유자 등을 추천한다.
+     * @summary RAG/Graph/LLM 기반 용어 초안 추천
+     * @param {TermRecommendationRequest} termRecommendationRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AIApi
+     */
+    public recommendTermDraft(termRecommendationRequest: TermRecommendationRequest, options?: RawAxiosRequestConfig) {
+        return AIApiFp(this.configuration).recommendTermDraft(termRecommendationRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

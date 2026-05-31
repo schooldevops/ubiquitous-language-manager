@@ -8,6 +8,8 @@ package com.aulms.api
 import com.aulms.model.DevelopmentAssistRequest
 import com.aulms.model.DevelopmentAssistResponse
 import com.aulms.model.ErrorResponse
+import com.aulms.model.TermRecommendationRequest
+import com.aulms.model.TermRecommendationResponse
 import io.swagger.v3.oas.annotations.*
 import io.swagger.v3.oas.annotations.enums.*
 import io.swagger.v3.oas.annotations.media.*
@@ -75,6 +77,45 @@ interface AIApi {
             consumes = ["application/json"]
     )
     fun developmentAssist(@Parameter(description = "", required = true) @Valid @RequestBody developmentAssistRequest: DevelopmentAssistRequest): ResponseEntity<DevelopmentAssistResponse> {
+        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+    }
+
+    @Operation(
+        tags = ["AI",],
+        summary = "RAG/Graph/LLM 기반 용어 초안 추천",
+        operationId = "recommendTermDraft",
+        description = """한글 용어명을 입력받아 먼저 정확 검색, 유사어 검색, 의미 기반 검색으로 관련 용어를 수집하고, Graph 관계를 확장한 뒤, 최종 추론 단계에서 영문명, 약어, 타입, 자릿수, 소유자 등을 추천한다.""",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [Content(
+                mediaType = "application/json",
+                examples = [
+                    ExampleObject(name = "preferredDeliverySlot", value = "{\n  \"koreanName\": \"\uACE0\uAC1D\uC120\uD638\uBC30\uC1A1\uC2DC\uAC04\uB300\",\n  \"mode\": \"CANDIDATE_CREATE\",\n  \"currentDomainName\": \"\uACE0\uAC1D\",\n  \"currentBusinessDefinition\": \"\uACE0\uAC1D\uC774 \uC120\uD638\uD558\uB294 \uBC30\uC1A1 \uC2DC\uAC04\uB300\uB97C \uC800\uC7A5\uD558\uAE30 \uC704\uD55C \uD56D\uBAA9\",\n  \"currentUsageContext\": \"\uBC30\uC1A1 \uC694\uCCAD \uD654\uBA74\uACFC \uBC30\uC1A1 \uC635\uC158 \uCD94\uCC9C API\uC5D0\uC11C \uC0AC\uC6A9\"\n}")
+                ]
+            )]
+        ),
+        responses = [
+            ApiResponse(responseCode = "200", description = "용어 초안 추천 성공", content = [Content(schema = Schema(implementation = TermRecommendationResponse::class), examples = [
+                ExampleObject(name = "preferredDeliverySlot", value = "{\n  \"inputKoreanName\": \"\uACE0\uAC1D\uC120\uD638\uBC30\uC1A1\uC2DC\uAC04\uB300\",\n  \"normalizedKoreanName\": \"\uACE0\uAC1D\uC120\uD638\uBC30\uC1A1\uC2DC\uAC04\uB300\",\n  \"recommendation\": {\n    \"domainName\": \"\uACE0\uAC1D\",\n    \"usageType\": \"\uD45C\uC900\uD56D\uBAA9\",\n    \"englishName\": \"Customer Preferred Delivery Time Slot\",\n    \"englishAbbreviation\": \"CUST_PREF_DLV_TM_SLOT\",\n    \"businessDefinition\": \"\uACE0\uAC1D \uB3C4\uBA54\uC778\uC5D0\uC11C \uACE0\uAC1D\uC774 \uC120\uD638\uD558\uB294 \uBC30\uC1A1 \uC2DC\uAC04\uB300\uB97C \uAD00\uB9AC\uD558\uAE30 \uC704\uD574 \uC0AC\uC6A9\uD558\uB294 \uD45C\uC900 \uD56D\uBAA9\",\n    \"usageContext\": \"\uBC30\uC1A1 \uC635\uC158 \uCD94\uCC9C, \uBC30\uC1A1 \uC694\uCCAD \uD654\uBA74, \uBC30\uC1A1 \uC815\uCC45 API\uC5D0\uC11C \uACE0\uAC1D\uBCC4 \uC120\uD638 \uC2DC\uAC04\uB300 \uAE30\uC900\uC73C\uB85C \uC0AC\uC6A9\",\n    \"physicalType\": \"VARCHAR\",\n    \"digits\": 40,\n    \"decimalPoint\": 0,\n    \"owner\": \"\uACE0\uAC1D\uB3C4\uBA54\uC778 \uB370\uC774\uD130\uC2A4\uD29C\uC5B4\uB4DC\"\n  },\n  \"ragMatches\": [\n    {\n      \"termId\": \"T-000001\",\n      \"standardTerm\": \"\uACE0\uAC1D\uBC88\uD638\",\n      \"englishName\": \"Customer Number\",\n      \"dbColumn\": \"CUST_NO\",\n      \"apiField\": \"customerNumber\",\n      \"domainName\": \"\uACE0\uAC1D\",\n      \"source\": \"Semantic\",\n      \"score\": 0.84,\n      \"reason\": \"\uACE0\uAC1D \uB3C4\uBA54\uC778\uC758 \uB300\uD45C \uC2DD\uBCC4 \uC6A9\uC5B4\uB85C \uBC30\uC1A1 \uC120\uD638 \uC815\uBCF4\uB3C4 \uAC19\uC740 \uACE0\uAC1D \uCEE8\uD14D\uC2A4\uD2B8\uC5D0\uC11C \uAD00\uB9AC\uB420 \uAC00\uB2A5\uC131\uC774 \uB192\uC74C\"\n    },\n    {\n      \"termId\": \"T-000004\",\n      \"standardTerm\": \"\uC8FC\uBB38\uBC88\uD638\",\n      \"englishName\": \"Order Number\",\n      \"dbColumn\": \"ORD_NO\",\n      \"apiField\": \"orderNumber\",\n      \"domainName\": \"\uC8FC\uBB38\",\n      \"source\": \"Semantic\",\n      \"score\": 0.41,\n      \"reason\": \"\uBC30\uC1A1 \uB9E5\uB77D\uACFC \uC5F0\uACC4\uB420 \uC218 \uC788\uC73C\uB098 \uACE0\uAC1D \uB3C4\uBA54\uC778\uBCF4\uB2E4 \uC6B0\uC120\uB3C4\uB294 \uB0AE\uC74C\"\n    }\n  ],\n  \"graphContext\": {\n    \"inferredDomainName\": \"\uACE0\uAC1D\",\n    \"relatedTerms\": [\n      \"\uACE0\uAC1D\uBC88\uD638\",\n      \"\uACE0\uAC1D\uBA85\",\n      \"\uACE0\uAC1D\uC0C1\uD0DC\uCF54\uB4DC\"\n    ],\n    \"relationshipHints\": [\n      \"\uACE0\uAC1D\uBC88\uD638\uB294 \uACE0\uAC1D\uBA85, \uACE0\uAC1D\uC0C1\uD0DC\uCF54\uB4DC\uC640 \uD568\uAED8 \uACE0\uAC1D \uC870\uD68C \uD654\uBA74\uC5D0\uC11C \uC0AC\uC6A9\uB428\",\n      \"\uACE0\uAC1D \uB3C4\uBA54\uC778 \uC2E0\uADDC \uC18D\uC131\uC740 \uACE0\uAC1D\uBC88\uD638\uB97C \uAE30\uC900\uC73C\uB85C \uC800\uC7A5\uB418\uB294 \uACBD\uC6B0\uAC00 \uB9CE\uC74C\"\n    ]\n  },\n  \"llmReasoning\": \"\uACE0\uAC1D \uB3C4\uBA54\uC778 \uADFC\uAC70 \uC6A9\uC5B4\uC640 \uBC30\uC1A1 \uC2DC\uAC04\uB300 \uC758\uBBF8\uB97C \uACB0\uD569\uD574 Customer Preferred Delivery Time Slot \uBC0F CUST_PREF_DLV_TM_SLOT \uD6C4\uBCF4\uB97C \uCD94\uCC9C\uD568\",\n  \"warnings\": [\n    \"\uB370\uC774\uD130 \uC0AC\uC804\uC5D0 \uB3D9\uC77C\uD55C Approved \uC6A9\uC5B4\uB294 \uC5C6\uC5B4 \uC2E0\uADDC \uD6C4\uBCF4\uB85C \uC720\uC9C0\uD574\uC57C \uD568\",\n    \"\uBC30\uC1A1 \uC2DC\uAC04\uB300\uAC00 \uCF54\uB4DC \uCCB4\uACC4\uB85C \uAD00\uB9AC\uB41C\uB2E4\uBA74 \uCF54\uB4DC/\uAD6C\uAC04/\uC2DC\uAC04 \uD45C\uD604\uC744 \uBCC4\uB3C4 \uC6A9\uC5B4\uB85C \uBD84\uB9AC\uD560\uC9C0 \uAC80\uD1A0\uD574\uC57C \uD568\"\n  ]\n}")
+            ])]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
+    @RequestMapping(
+            method = [RequestMethod.POST],
+            value = ["/ai/term-recommendation"],
+            produces = ["application/json"],
+            consumes = ["application/json"]
+    )
+    fun recommendTermDraft(@Parameter(description = "", required = true) @Valid @RequestBody termRecommendationRequest: TermRecommendationRequest): ResponseEntity<TermRecommendationResponse> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }

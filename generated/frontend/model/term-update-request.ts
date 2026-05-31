@@ -15,15 +15,99 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { TermCreateRequest } from './term-create-request';
-// May contain unused imports in some cases
-// @ts-ignore
 import type { TermStatus } from './term-status';
 
 /**
- * @type TermUpdateRequest
+ * 표준 용어 수정 요청
  * @export
+ * @interface TermUpdateRequest
  */
-export type TermUpdateRequest = TermCreateRequest;
+export interface TermUpdateRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof TermUpdateRequest
+     */
+    'domainName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TermUpdateRequest
+     */
+    'usageType': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TermUpdateRequest
+     */
+    'koreanName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TermUpdateRequest
+     */
+    'englishName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TermUpdateRequest
+     */
+    'englishAbbreviation': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TermUpdateRequest
+     */
+    'businessDefinition': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TermUpdateRequest
+     */
+    'usageContext'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TermUpdateRequest
+     */
+    'physicalType': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof TermUpdateRequest
+     */
+    'digits': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TermUpdateRequest
+     */
+    'decimalPoint': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof TermUpdateRequest
+     */
+    'owner': string;
+    /**
+     * 
+     * @type {TermStatus}
+     * @memberof TermUpdateRequest
+     */
+    'status'?: TermStatus;
+    /**
+     * 
+     * @type {string}
+     * @memberof TermUpdateRequest
+     */
+    'version': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TermUpdateRequest
+     */
+    'changeReason': string;
+}
+
 
 

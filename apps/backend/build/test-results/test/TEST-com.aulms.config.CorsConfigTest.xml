@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.aulms.config.CorsConfigTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-05-31T13:58:20.593Z" hostname="NHY9M72K9J" time="0.007">
+  <properties/>
+  <testcase name="allows localhost frontend preflight for candidate review()" classname="com.aulms.config.CorsConfigTest" time="0.007"/>
+  <system-out><![CDATA[2026-05-31T22:58:20.576+09:00  INFO 5410 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.aulms.config.CorsConfigTest]: CorsConfigTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-31T22:58:20.591+09:00  INFO 5410 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.aulms.AulmsBackendApplication for test class com.aulms.config.CorsConfigTest
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -80,3 +80,93 @@ developmentAssist:
         $ref: '../openapi.yaml#/components/responses/Unauthorized'
       '403':
         $ref: '../openapi.yaml#/components/responses/Forbidden'
+
+termRecommendation:
+  post:
+    tags:
+      - AI
+    summary: RAG/Graph/LLM 기반 용어 초안 추천
+    description: 한글 용어명을 입력받아 먼저 정확 검색, 유사어 검색, 의미 기반 검색으로 관련 용어를 수집하고, Graph 관계를 확장한 뒤, 최종 추론 단계에서 영문명, 약어, 타입, 자릿수, 소유자 등을 추천한다.
+    operationId: recommendTermDraft
+    x-required-roles:
+      - ADMIN
+      - DATA_STEWARD
+      - DEVELOPMENT_LEAD
+      - ARCHITECT
+      - PLANNER
+      - DEVELOPER
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ai.yaml#/TermRecommendationRequest'
+          examples:
+            preferredDeliverySlot:
+              value:
+                koreanName: 고객선호배송시간대
+                mode: CANDIDATE_CREATE
+                currentDomainName: 고객
+                currentBusinessDefinition: 고객이 선호하는 배송 시간대를 저장하기 위한 항목
+                currentUsageContext: 배송 요청 화면과 배송 옵션 추천 API에서 사용
+    responses:
+      '200':
+        description: 용어 초안 추천 성공
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/ai.yaml#/TermRecommendationResponse'
+            examples:
+              preferredDeliverySlot:
+                value:
+                  inputKoreanName: 고객선호배송시간대
+                  normalizedKoreanName: 고객선호배송시간대
+                  recommendation:
+                    domainName: 고객
+                    usageType: 표준항목
+                    englishName: Customer Preferred Delivery Time Slot
+                    englishAbbreviation: CUST_PREF_DLV_TM_SLOT
+                    businessDefinition: 고객 도메인에서 고객이 선호하는 배송 시간대를 관리하기 위해 사용하는 표준 항목
+                    usageContext: 배송 옵션 추천, 배송 요청 화면, 배송 정책 API에서 고객별 선호 시간대 기준으로 사용
+                    physicalType: VARCHAR
+                    digits: 40
+                    decimalPoint: 0
+                    owner: 고객도메인 데이터스튜어드
+                  ragMatches:
+                    - termId: T-000001
+                      standardTerm: 고객번호
+                      englishName: Customer Number
+                      dbColumn: CUST_NO
+                      apiField: customerNumber
+                      domainName: 고객
+                      source: Semantic
+                      score: 0.84
+                      reason: 고객 도메인의 대표 식별 용어로 배송 선호 정보도 같은 고객 컨텍스트에서 관리될 가능성이 높음
+                    - termId: T-000004
+                      standardTerm: 주문번호
+                      englishName: Order Number
+                      dbColumn: ORD_NO
+                      apiField: orderNumber
+                      domainName: 주문
+                      source: Semantic
+                      score: 0.41
+                      reason: 배송 맥락과 연계될 수 있으나 고객 도메인보다 우선도는 낮음
+                  graphContext:
+                    inferredDomainName: 고객
+                    relatedTerms:
+                      - 고객번호
+                      - 고객명
+                      - 고객상태코드
+                    relationshipHints:
+                      - 고객번호는 고객명, 고객상태코드와 함께 고객 조회 화면에서 사용됨
+                      - 고객 도메인 신규 속성은 고객번호를 기준으로 저장되는 경우가 많음
+                  llmReasoning: 고객 도메인 근거 용어와 배송 시간대 의미를 결합해 Customer Preferred Delivery Time Slot 및 CUST_PREF_DLV_TM_SLOT 후보를 추천함
+                  warnings:
+                    - 데이터 사전에 동일한 Approved 용어는 없어 신규 후보로 유지해야 함
+                    - 배송 시간대가 코드 체계로 관리된다면 코드/구간/시간 표현을 별도 용어로 분리할지 검토해야 함
+      '400':
+        $ref: '../openapi.yaml#/components/responses/BadRequest'
+      '401':
+        $ref: '../openapi.yaml#/components/responses/Unauthorized'
+      '403':
+        $ref: '../openapi.yaml#/components/responses/Forbidden'

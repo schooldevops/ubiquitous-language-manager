@@ -51,6 +51,7 @@ docs/GeneratedArtifact.md
 docs/GovernanceApi.md
 docs/GraphPathEdge.md
 docs/GraphPathNode.md
+docs/GraphRecommendationContext.md
 docs/ImpactAnalysisResponse.md
 docs/ImpactApi.md
 docs/ImpactChangeType.md
@@ -77,6 +78,8 @@ docs/PullRequestArtifactFile.md
 docs/PullRequestArtifactReviewRequest.md
 docs/PullRequestArtifactReviewResult.md
 docs/Recommendation.md
+docs/RecommendationEvidence.md
+docs/RecommendedTermDraft.md
 docs/RelationshipApi.md
 docs/RelationshipPath.md
 docs/RelationshipSearchResponse.md
@@ -110,6 +113,9 @@ docs/TermDeprecationRequest.md
 docs/TermExpression.md
 docs/TermExpressionCreateRequest.md
 docs/TermListResponse.md
+docs/TermRecommendationMode.md
+docs/TermRecommendationRequest.md
+docs/TermRecommendationResponse.md
 docs/TermStatus.md
 docs/TermSummary.md
 docs/TermUpdateRequest.md
@@ -148,6 +154,7 @@ model/extracted-business-concept.ts
 model/generated-artifact.ts
 model/graph-path-edge.ts
 model/graph-path-node.ts
+model/graph-recommendation-context.ts
 model/impact-analysis-response.ts
 model/impact-change-type.ts
 model/impact-recommendation.ts
@@ -172,7 +179,9 @@ model/prompt-term-mapping.ts
 model/pull-request-artifact-file.ts
 model/pull-request-artifact-review-request.ts
 model/pull-request-artifact-review-result.ts
+model/recommendation-evidence.ts
 model/recommendation.ts
+model/recommended-term-draft.ts
 model/relationship-path.ts
 model/relationship-search-response.ts
 model/relationship-search-result.ts
@@ -201,6 +210,9 @@ model/term-deprecation-request.ts
 model/term-expression-create-request.ts
 model/term-expression.ts
 model/term-list-response.ts
+model/term-recommendation-mode.ts
+model/term-recommendation-request.ts
+model/term-recommendation-response.ts
 model/term-status.ts
 model/term-summary.ts
 model/term-update-request.ts

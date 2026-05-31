@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.aulms.search.SemanticSearchApiContractTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-05-30T08:13:02.660Z" hostname="NHY9M72K9J" time="0.019">
+<testsuite name="com.aulms.search.SemanticSearchApiContractTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-05-31T13:58:21.087Z" hostname="NHY9M72K9J" time="0.015">
   <properties/>
-  <testcase name="semantic search recommends order date and order date time()" classname="com.aulms.search.SemanticSearchApiContractTest" time="0.019"/>
-  <system-out><![CDATA[2026-05-30T17:13:02.655+09:00  INFO 85462 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.aulms.search.SemanticSearchApiContractTest]: SemanticSearchApiContractTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-05-30T17:13:02.658+09:00  INFO 85462 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.aulms.AulmsBackendApplication for test class com.aulms.search.SemanticSearchApiContractTest
+  <testcase name="semantic search recommends order date and order date time()" classname="com.aulms.search.SemanticSearchApiContractTest" time="0.015"/>
+  <system-out><![CDATA[2026-05-31T22:58:21.084+09:00  INFO 5410 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.aulms.search.SemanticSearchApiContractTest]: SemanticSearchApiContractTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-31T22:58:21.086+09:00  INFO 5410 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.aulms.AulmsBackendApplication for test class com.aulms.search.SemanticSearchApiContractTest
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

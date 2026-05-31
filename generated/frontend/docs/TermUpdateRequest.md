@@ -1,5 +1,6 @@
 # TermUpdateRequest
 
+표준 용어 수정 요청
 
 ## Properties
 

@@ -2,6 +2,7 @@ package com.aulms.ai
 
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.hasItem
+import org.hamcrest.Matchers.hasItems
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -64,5 +65,44 @@ class DevelopmentAssistApiContractTest(@Autowired private val mockMvc: MockMvc) 
             .andExpect(jsonPath("$.candidateTerms[0].approvalRequired").value(true))
             .andExpect(jsonPath("$.warnings[*].inputExpression", hasItem("고객ID")))
             .andExpect(jsonPath("$.warnings[*].standardTerm", hasItem("고객번호")))
+    }
+
+    @Test
+    fun `term recommendation reuses existing approved term when exact standard term exists`() {
+        val request = """
+            {
+              "koreanName": "주문번호",
+              "mode": "TERM_CREATE"
+            }
+        """.trimIndent()
+
+        mockMvc.perform(post("/ai/term-recommendation").contentType(MediaType.APPLICATION_JSON).content(request))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.normalizedKoreanName").value("주문번호"))
+            .andExpect(jsonPath("$.recommendation.domainName").value("주문"))
+            .andExpect(jsonPath("$.recommendation.englishName").value("Order Number"))
+            .andExpect(jsonPath("$.recommendation.englishAbbreviation").value("ORD_NO"))
+            .andExpect(jsonPath("$.ragMatches[*].source", hasItem("Exact")))
+            .andExpect(jsonPath("$.warnings[0]", containsString("동일한 표준 용어")))
+    }
+
+    @Test
+    fun `term recommendation gathers rag and graph context before inferring new candidate`() {
+        val request = """
+            {
+              "koreanName": "고객선호배송시간대",
+              "mode": "CANDIDATE_CREATE",
+              "currentDomainName": "고객"
+            }
+        """.trimIndent()
+
+        mockMvc.perform(post("/ai/term-recommendation").contentType(MediaType.APPLICATION_JSON).content(request))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.recommendation.domainName").value("고객"))
+            .andExpect(jsonPath("$.recommendation.englishName").value("Customer Preferred Delivery Time Slot"))
+            .andExpect(jsonPath("$.recommendation.englishAbbreviation").value("CUST_PREF_DLV_TM_SLOT"))
+            .andExpect(jsonPath("$.graphContext.inferredDomainName").value("고객"))
+            .andExpect(jsonPath("$.graphContext.relatedTerms[*]", hasItems("고객번호", "고객명")))
+            .andExpect(jsonPath("$.llmReasoning", containsString("RAG 근거")))
     }
 }

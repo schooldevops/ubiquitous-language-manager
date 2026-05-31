@@ -52,6 +52,7 @@ All URIs are relative to *http://localhost:8080*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *AIApi* | [**developmentAssist**](docs/AIApi.md#developmentassist) | **POST** /ai/development-assist | AI 산출물 생성 지원
+*AIApi* | [**recommendTermDraft**](docs/AIApi.md#recommendtermdraft) | **POST** /ai/term-recommendation | RAG/Graph/LLM 기반 용어 초안 추천
 *AliasApi* | [**createTermAlias**](docs/AliasApi.md#createtermalias) | **POST** /terms/{termId}/aliases | 용어 별칭 등록
 *AliasApi* | [**listTermAliases**](docs/AliasApi.md#listtermaliases) | **GET** /terms/{termId}/aliases | 용어 별칭 목록 조회
 *CandidateApi* | [**createCandidate**](docs/CandidateApi.md#createcandidate) | **POST** /candidates | 신규 용어 후보 등록
@@ -122,6 +123,7 @@ Class | Method | HTTP request | Description
  - [GeneratedArtifact](docs/GeneratedArtifact.md)
  - [GraphPathEdge](docs/GraphPathEdge.md)
  - [GraphPathNode](docs/GraphPathNode.md)
+ - [GraphRecommendationContext](docs/GraphRecommendationContext.md)
  - [ImpactAnalysisResponse](docs/ImpactAnalysisResponse.md)
  - [ImpactChangeType](docs/ImpactChangeType.md)
  - [ImpactRecommendation](docs/ImpactRecommendation.md)
@@ -146,6 +148,8 @@ Class | Method | HTTP request | Description
  - [PullRequestArtifactReviewRequest](docs/PullRequestArtifactReviewRequest.md)
  - [PullRequestArtifactReviewResult](docs/PullRequestArtifactReviewResult.md)
  - [Recommendation](docs/Recommendation.md)
+ - [RecommendationEvidence](docs/RecommendationEvidence.md)
+ - [RecommendedTermDraft](docs/RecommendedTermDraft.md)
  - [RelationshipPath](docs/RelationshipPath.md)
  - [RelationshipSearchResponse](docs/RelationshipSearchResponse.md)
  - [RelationshipSearchResult](docs/RelationshipSearchResult.md)
@@ -175,6 +179,9 @@ Class | Method | HTTP request | Description
  - [TermExpression](docs/TermExpression.md)
  - [TermExpressionCreateRequest](docs/TermExpressionCreateRequest.md)
  - [TermListResponse](docs/TermListResponse.md)
+ - [TermRecommendationMode](docs/TermRecommendationMode.md)
+ - [TermRecommendationRequest](docs/TermRecommendationRequest.md)
+ - [TermRecommendationResponse](docs/TermRecommendationResponse.md)
  - [TermStatus](docs/TermStatus.md)
  - [TermSummary](docs/TermSummary.md)
  - [TermUpdateRequest](docs/TermUpdateRequest.md)

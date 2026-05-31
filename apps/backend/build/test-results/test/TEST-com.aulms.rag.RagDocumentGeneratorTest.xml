@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.aulms.rag.RagDocumentGeneratorTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-05-30T08:13:02.390Z" hostname="NHY9M72K9J" time="0.057">
+<testsuite name="com.aulms.rag.RagDocumentGeneratorTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-05-31T13:58:20.769Z" hostname="NHY9M72K9J" time="0.061">
   <properties/>
-  <testcase name="batch writes term markdown files(Path)" classname="com.aulms.rag.RagDocumentGeneratorTest" time="0.055"/>
+  <testcase name="batch writes term markdown files(Path)" classname="com.aulms.rag.RagDocumentGeneratorTest" time="0.06"/>
   <testcase name="customer number document contains standard fields aliases and relationships()" classname="com.aulms.rag.RagDocumentGeneratorTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

@@ -43,6 +43,7 @@ src/main/kotlin/com/aulms/model/ExtractedBusinessConcept.kt
 src/main/kotlin/com/aulms/model/GeneratedArtifact.kt
 src/main/kotlin/com/aulms/model/GraphPathEdge.kt
 src/main/kotlin/com/aulms/model/GraphPathNode.kt
+src/main/kotlin/com/aulms/model/GraphRecommendationContext.kt
 src/main/kotlin/com/aulms/model/ImpactAnalysisResponse.kt
 src/main/kotlin/com/aulms/model/ImpactChangeType.kt
 src/main/kotlin/com/aulms/model/ImpactRecommendation.kt
@@ -67,6 +68,8 @@ src/main/kotlin/com/aulms/model/PullRequestArtifactFile.kt
 src/main/kotlin/com/aulms/model/PullRequestArtifactReviewRequest.kt
 src/main/kotlin/com/aulms/model/PullRequestArtifactReviewResult.kt
 src/main/kotlin/com/aulms/model/Recommendation.kt
+src/main/kotlin/com/aulms/model/RecommendationEvidence.kt
+src/main/kotlin/com/aulms/model/RecommendedTermDraft.kt
 src/main/kotlin/com/aulms/model/RelationshipPath.kt
 src/main/kotlin/com/aulms/model/RelationshipSearchResponse.kt
 src/main/kotlin/com/aulms/model/RelationshipSearchResult.kt
@@ -96,6 +99,9 @@ src/main/kotlin/com/aulms/model/TermDeprecationRequest.kt
 src/main/kotlin/com/aulms/model/TermExpression.kt
 src/main/kotlin/com/aulms/model/TermExpressionCreateRequest.kt
 src/main/kotlin/com/aulms/model/TermListResponse.kt
+src/main/kotlin/com/aulms/model/TermRecommendationMode.kt
+src/main/kotlin/com/aulms/model/TermRecommendationRequest.kt
+src/main/kotlin/com/aulms/model/TermRecommendationResponse.kt
 src/main/kotlin/com/aulms/model/TermStatus.kt
 src/main/kotlin/com/aulms/model/TermSummary.kt
 src/main/kotlin/com/aulms/model/TermUpdateRequest.kt

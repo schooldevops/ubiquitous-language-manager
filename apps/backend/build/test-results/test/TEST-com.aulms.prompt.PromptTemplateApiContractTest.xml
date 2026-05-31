@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.aulms.prompt.PromptTemplateApiContractTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-05-30T08:13:02.342Z" hostname="NHY9M72K9J" time="0.045">
+<testsuite name="com.aulms.prompt.PromptTemplateApiContractTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-05-31T13:58:20.708Z" hostname="NHY9M72K9J" time="0.057">
   <properties/>
-  <testcase name="list get versions and preview vibe coding prompt template()" classname="com.aulms.prompt.PromptTemplateApiContractTest" time="0.039"/>
-  <testcase name="return not found for unknown prompt template()" classname="com.aulms.prompt.PromptTemplateApiContractTest" time="0.006"/>
-  <system-out><![CDATA[2026-05-30T17:13:02.323+09:00  INFO 85462 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.aulms.prompt.PromptTemplateApiContractTest]: PromptTemplateApiContractTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-05-30T17:13:02.341+09:00  INFO 85462 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.aulms.AulmsBackendApplication for test class com.aulms.prompt.PromptTemplateApiContractTest
+  <testcase name="list get versions and preview vibe coding prompt template()" classname="com.aulms.prompt.PromptTemplateApiContractTest" time="0.048"/>
+  <testcase name="return not found for unknown prompt template()" classname="com.aulms.prompt.PromptTemplateApiContractTest" time="0.008"/>
+  <system-out><![CDATA[2026-05-31T22:58:20.689+09:00  INFO 5410 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.aulms.prompt.PromptTemplateApiContractTest]: PromptTemplateApiContractTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-31T22:58:20.706+09:00  INFO 5410 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.aulms.AulmsBackendApplication for test class com.aulms.prompt.PromptTemplateApiContractTest
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
