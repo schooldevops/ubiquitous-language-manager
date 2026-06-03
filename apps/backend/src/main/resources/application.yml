@@ -22,6 +22,11 @@ spring:
       chat:
         options:
           model: gpt-4o
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      chat:
+        options:
+          model: ${OLLAMA_MODEL:llama3.1}
     embedding:
       transformer:
         onnx:

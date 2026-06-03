@@ -27,6 +27,7 @@ class LlmTermDraftGenerator(
             "anthropic"         -> "anthropicChatModel" to anthropicKey
             "openai", "chatgpt" -> "openAiChatModel"    to openaiKey
             "gemini", "google"  -> "googleGenAiChatModel" to geminiKey
+            "ollama"            -> "ollamaChatModel"    to "local" // 로컬 서버, api key 불필요
             else -> throw LlmUnavailableException("알 수 없는 LLM provider: $provider")
         }
         if (apiKey.isBlank()) throw LlmUnavailableException("$provider api key 미설정")
