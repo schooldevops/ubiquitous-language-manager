@@ -6,27 +6,33 @@ import com.aulms.model.TermRecommendationRequest
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.ai.chat.model.ChatModel
 import org.springframework.ai.chat.prompt.Prompt
-import org.springframework.beans.factory.ObjectProvider
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
 class LlmTermDraftGenerator(
-    @Qualifier("googleGenAiChatModel") private val chatModelProvider: ObjectProvider<ChatModel>,
+    private val chatModels: Map<String, ChatModel>,
     private val objectMapper: ObjectMapper,
-    @Value("\${spring.ai.google.genai.api-key:}") private val apiKey: String,
+    @Value("\${aulms.llm.provider:gemini}") private val provider: String,
+    @Value("\${spring.ai.anthropic.api-key:}") private val anthropicKey: String,
+    @Value("\${spring.ai.google.genai.api-key:}") private val geminiKey: String,
+    @Value("\${spring.ai.openai.api-key:}") private val openaiKey: String,
 ) {
     fun generate(
         request: TermRecommendationRequest,
         inferredDomainName: String,
         graphContext: GraphRecommendationContext,
     ): RecommendedTermDraft {
-        if (apiKey.isBlank()) {
-            throw LlmUnavailableException("Gemini api key 미설정")
+        val (beanName, apiKey) = when (provider.lowercase()) {
+            "anthropic"         -> "anthropicChatModel" to anthropicKey
+            "openai", "chatgpt" -> "openAiChatModel"    to openaiKey
+            "gemini", "google"  -> "googleGenAiChatModel" to geminiKey
+            else -> throw LlmUnavailableException("알 수 없는 LLM provider: $provider")
         }
-        val chatModel = chatModelProvider.getIfAvailable()
-            ?: throw LlmUnavailableException("Gemini ChatModel 빈 없음")
+        if (apiKey.isBlank()) throw LlmUnavailableException("$provider api key 미설정")
+        val chatModel = chatModels[beanName]
+            ?: throw LlmUnavailableException("$provider ChatModel 빈 없음")
+
         val content = try {
             val response = chatModel.call(Prompt(buildPrompt(request, inferredDomainName, graphContext)))
             response.result?.output?.text ?: throw LlmUnavailableException("LLM 응답 본문 없음")

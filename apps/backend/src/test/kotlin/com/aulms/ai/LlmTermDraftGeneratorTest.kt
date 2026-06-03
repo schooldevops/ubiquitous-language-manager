@@ -16,7 +16,6 @@ import org.springframework.ai.chat.model.ChatResponse
 import org.springframework.ai.chat.model.Generation
 import org.springframework.ai.chat.messages.AssistantMessage
 import org.springframework.ai.chat.prompt.Prompt
-import org.springframework.beans.factory.ObjectProvider
 import kotlin.test.assertEquals
 
 class LlmTermDraftGeneratorTest {
@@ -35,13 +34,16 @@ class LlmTermDraftGeneratorTest {
         on { call(any<Prompt>()) } doReturn ChatResponse(listOf(Generation(AssistantMessage(text))))
     }
 
-    /** Wraps a ChatModel in a simple ObjectProvider for direct construction in tests. */
-    private fun providerOf(model: ChatModel): ObjectProvider<ChatModel> = mock {
-        on { getIfAvailable() } doReturn model
-    }
-
-    private fun generator(model: ChatModel, key: String = "test-key") =
-        LlmTermDraftGenerator(providerOf(model), jacksonObjectMapper(), key)
+    /** Build a generator that uses Gemini (default provider) with a given mock model and key. */
+    private fun geminiGenerator(model: ChatModel, geminiKey: String = "test-key") =
+        LlmTermDraftGenerator(
+            chatModels = mapOf("googleGenAiChatModel" to model),
+            objectMapper = jacksonObjectMapper(),
+            provider = "gemini",
+            anthropicKey = "",
+            geminiKey = geminiKey,
+            openaiKey = "",
+        )
 
     @Test
     fun `parses valid json into RecommendedTermDraft`() {
@@ -51,7 +53,7 @@ class LlmTermDraftGeneratorTest {
              "usageContext":"주문 취소 화면/API","physicalType":"VARCHAR","digits":10,"decimalPoint":0,
              "owner":"주문도메인 데이터스튜어드"}
         """.trimIndent()
-        val draft: RecommendedTermDraft = generator(modelReturning(json)).generate(request, "주문", graphContext)
+        val draft: RecommendedTermDraft = geminiGenerator(modelReturning(json)).generate(request, "주문", graphContext)
         assertEquals("Order Cancel Reason Code", draft.englishName)
         assertEquals("ORD_CNCL_RSN_CD", draft.englishAbbreviation)
         assertEquals(10, draft.digits)
@@ -62,14 +64,14 @@ class LlmTermDraftGeneratorTest {
     @Test
     fun `throws when api key blank`() {
         assertThrows<LlmUnavailableException> {
-            generator(modelReturning("{}"), key = "").generate(request, "주문", graphContext)
+            geminiGenerator(modelReturning("{}"), geminiKey = "").generate(request, "주문", graphContext)
         }
     }
 
     @Test
     fun `throws when model returns non-json`() {
         assertThrows<LlmUnavailableException> {
-            generator(modelReturning("죄송합니다 모르겠어요")).generate(request, "주문", graphContext)
+            geminiGenerator(modelReturning("죄송합니다 모르겠어요")).generate(request, "주문", graphContext)
         }
     }
 
@@ -79,7 +81,43 @@ class LlmTermDraftGeneratorTest {
             on { call(any<Prompt>()) } doThrow RuntimeException("upstream 500")
         }
         assertThrows<LlmUnavailableException> {
-            generator(failing).generate(request, "주문", graphContext)
+            geminiGenerator(failing).generate(request, "주문", graphContext)
+        }
+    }
+
+    @Test
+    fun `selects openai bean when provider is openai`() {
+        val json = """
+            {"domainName":"주문","usageType":"표준항목","englishName":"Order Cancel Reason Code",
+             "englishAbbreviation":"ORD_CNCL_RSN_CD","businessDefinition":"주문 취소 사유를 코드로 관리",
+             "usageContext":"주문 취소 화면/API","physicalType":"VARCHAR","digits":10,"decimalPoint":0,
+             "owner":"주문도메인 데이터스튜어드"}
+        """.trimIndent()
+        val openAiMock = modelReturning(json)
+        val generator = LlmTermDraftGenerator(
+            chatModels = mapOf("openAiChatModel" to openAiMock),
+            objectMapper = jacksonObjectMapper(),
+            provider = "openai",
+            anthropicKey = "",
+            geminiKey = "",
+            openaiKey = "sk-test-key",
+        )
+        val draft = generator.generate(request, "주문", graphContext)
+        assertEquals("Order Cancel Reason Code", draft.englishName)
+    }
+
+    @Test
+    fun `throws LlmUnavailableException for unknown provider`() {
+        val generator = LlmTermDraftGenerator(
+            chatModels = emptyMap(),
+            objectMapper = jacksonObjectMapper(),
+            provider = "unknown-provider",
+            anthropicKey = "",
+            geminiKey = "",
+            openaiKey = "",
+        )
+        assertThrows<LlmUnavailableException> {
+            generator.generate(request, "주문", graphContext)
         }
     }
 }
