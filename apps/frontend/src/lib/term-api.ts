@@ -904,7 +904,8 @@ export async function getTermImpact(termId: string, changeType: ImpactChangeType
 
 export async function recommendTermDraft(request: TermRecommendationRequest): Promise<TermRecommendationResponse> {
   try {
-    const response = await aiApi.recommendTermDraft(request);
+    // LLM(특히 로컬 Ollama) 추론은 수십 초~수 분 걸릴 수 있어 기본 3s timeout 을 넘긴다. 이 호출만 길게.
+    const response = await aiApi.recommendTermDraft(request, { timeout: 300000 });
     return response.data;
   } catch (error) {
     if (!isNetworkFallbackCandidate(error)) {
