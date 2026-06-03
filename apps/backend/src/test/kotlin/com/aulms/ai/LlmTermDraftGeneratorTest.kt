@@ -16,6 +16,7 @@ import org.springframework.ai.chat.model.ChatResponse
 import org.springframework.ai.chat.model.Generation
 import org.springframework.ai.chat.messages.AssistantMessage
 import org.springframework.ai.chat.prompt.Prompt
+import org.springframework.beans.factory.ObjectProvider
 import kotlin.test.assertEquals
 
 class LlmTermDraftGeneratorTest {
@@ -34,8 +35,13 @@ class LlmTermDraftGeneratorTest {
         on { call(any<Prompt>()) } doReturn ChatResponse(listOf(Generation(AssistantMessage(text))))
     }
 
+    /** Wraps a ChatModel in a simple ObjectProvider for direct construction in tests. */
+    private fun providerOf(model: ChatModel): ObjectProvider<ChatModel> = mock {
+        on { getIfAvailable() } doReturn model
+    }
+
     private fun generator(model: ChatModel, key: String = "test-key") =
-        LlmTermDraftGenerator(model, jacksonObjectMapper(), key)
+        LlmTermDraftGenerator(providerOf(model), jacksonObjectMapper(), key)
 
     @Test
     fun `parses valid json into RecommendedTermDraft`() {

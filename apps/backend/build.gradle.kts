@@ -30,7 +30,7 @@ sourceSets {
 }
 
 dependencies {
-    implementation(platform("org.springframework.ai:spring-ai-bom:1.0.0"))
+    implementation(platform("org.springframework.ai:spring-ai-bom:1.1.7"))
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -39,6 +39,7 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
     implementation("org.springframework.ai:spring-ai-starter-model-anthropic")
     implementation("org.springframework.ai:spring-ai-starter-model-transformers")
+    implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")

@@ -6,14 +6,16 @@ import com.aulms.model.TermRecommendationRequest
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.ai.chat.model.ChatModel
 import org.springframework.ai.chat.prompt.Prompt
+import org.springframework.beans.factory.ObjectProvider
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
 class LlmTermDraftGenerator(
-    private val chatModel: ChatModel,
+    @Qualifier("googleGenAiChatModel") private val chatModelProvider: ObjectProvider<ChatModel>,
     private val objectMapper: ObjectMapper,
-    @Value("\${spring.ai.anthropic.api-key:}") private val apiKey: String,
+    @Value("\${spring.ai.google.genai.api-key:}") private val apiKey: String,
 ) {
     fun generate(
         request: TermRecommendationRequest,
@@ -21,8 +23,10 @@ class LlmTermDraftGenerator(
         graphContext: GraphRecommendationContext,
     ): RecommendedTermDraft {
         if (apiKey.isBlank()) {
-            throw LlmUnavailableException("Anthropic api key 미설정")
+            throw LlmUnavailableException("Gemini api key 미설정")
         }
+        val chatModel = chatModelProvider.getIfAvailable()
+            ?: throw LlmUnavailableException("Gemini ChatModel 빈 없음")
         val content = try {
             val response = chatModel.call(Prompt(buildPrompt(request, inferredDomainName, graphContext)))
             response.result?.output?.text ?: throw LlmUnavailableException("LLM 응답 본문 없음")
