@@ -1,14 +1,16 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { Fragment, FormEvent, useEffect, useMemo, useState } from "react";
 import { AlertTriangle, CheckCircle2, ClipboardCheck, Database, FilePenLine, GitBranch, History, Plus, Search, Tags, Upload, WandSparkles } from "lucide-react";
 import {
   CandidateStatus,
   ImpactChangeType,
   TermRecommendationMode,
   TermStatus,
+  approveTerm,
   createCandidate,
   createTerm,
+  deprecateTerm,
   extractApiError,
   getCandidate,
   getTerm,
@@ -78,6 +80,26 @@ type ErrorModalState = {
   detail?: string;
 };
 
+type PendingCandidateRow = {
+  kind: "candidate";
+  id: string;
+  koreanName: string;
+  englishAbbreviation: string;
+  domainName: string;
+  status: CandidateStatus;
+};
+
+type PendingTermRow = {
+  kind: "term";
+  id: string;
+  koreanName: string;
+  englishAbbreviation: string;
+  domainName: string;
+  status: TermStatus;
+};
+
+type PendingRow = PendingCandidateRow | PendingTermRow;
+
 type DuplicateModalState = {
   title: string;
   message: string;
@@ -107,10 +129,14 @@ export default function Home() {
   const [candidateMessage, setCandidateMessage] = useState("미등록 표현을 후보로 등록하고 검토 후 표준 용어로 승격합니다.");
   const [errorModal, setErrorModal] = useState<ErrorModalState | null>(null);
   const [duplicateModal, setDuplicateModal] = useState<DuplicateModalState | null>(null);
+  const [pendingItems, setPendingItems] = useState<PendingRow[]>([]);
+  const [expandedDetailId, setExpandedDetailId] = useState<string | null>(null);
+  const [detailCache, setDetailCache] = useState<Record<string, TermCandidate | Term>>({});
 
   useEffect(() => {
     void loadTerms();
     void loadCandidates();
+    void loadPendingApprovals();
   }, []);
 
   async function loadTerms(nextQuery = query) {
@@ -161,6 +187,35 @@ export default function Home() {
     } else {
       setSelectedCandidate(null);
     }
+  }
+
+  async function loadPendingApprovals() {
+    const [candidateResponse, draftResponse, reviewingResponse] = await Promise.all([
+      listCandidates(),
+      listTerms(undefined, undefined, TermStatus.Draft),
+      listTerms(undefined, undefined, TermStatus.Reviewing),
+    ]);
+    const candidateRows: PendingCandidateRow[] = candidateResponse.items
+      .filter((c) => c.status !== CandidateStatus.Promoted)
+      .map((c) => ({
+        kind: "candidate" as const,
+        id: c.candidateId,
+        koreanName: c.koreanName,
+        englishAbbreviation: c.englishAbbreviation,
+        domainName: c.domainName,
+        status: c.status,
+      }));
+    const termRows: PendingTermRow[] = [...draftResponse.items, ...reviewingResponse.items]
+      .filter((t, index, self) => self.findIndex((s) => s.termId === t.termId) === index)
+      .map((t) => ({
+        kind: "term" as const,
+        id: t.termId,
+        koreanName: t.koreanName,
+        englishAbbreviation: t.englishAbbreviation,
+        domainName: t.domainName,
+        status: t.status,
+      }));
+    setPendingItems([...candidateRows, ...termRows]);
   }
 
   async function selectCandidate(candidateId: string) {
@@ -408,6 +463,73 @@ export default function Home() {
       setActiveTab("dictionary");
     } catch (error) {
       openApiErrorModal("표준 승격 실패", error);
+    }
+  }
+
+  async function commitPendingStatus(row: PendingRow, nextStatus: string) {
+    if (row.kind === "candidate") {
+      const currentStatus = row.status as string;
+      if (nextStatus === currentStatus) return;
+      try {
+        if (nextStatus === CandidateStatus.Promoted) {
+          await promoteCandidate(row.id, {
+            approver: "data.steward",
+            owner: `${row.domainName}도메인 데이터스튜어드`,
+            reason: "표준 용어로 승격",
+          });
+        } else {
+          const decisionMap: Record<string, "Approve" | "Reject" | "RequestChanges"> = {
+            [CandidateStatus.Approved]: "Approve",
+            [CandidateStatus.Rejected]: "Reject",
+            [CandidateStatus.Reviewing]: "RequestChanges",
+          };
+          const decision = decisionMap[nextStatus];
+          if (!decision) return;
+          const reasonMap: Record<string, string> = {
+            Approve: "검토 승인",
+            Reject: "반려",
+            RequestChanges: "검토 필요",
+          };
+          await reviewCandidate(row.id, {
+            reviewer: "data.steward",
+            decision,
+            reason: reasonMap[decision] ?? "검토",
+          });
+        }
+        await Promise.all([loadCandidates(), loadPendingApprovals()]);
+      } catch (error) {
+        openApiErrorModal("상태 변경 실패", error);
+      }
+    } else {
+      const currentStatus = row.status as string;
+      if (nextStatus === currentStatus) return;
+      try {
+        if (nextStatus === TermStatus.Approved) {
+          await approveTerm(row.id, { approver: "data.steward", reason: "표준 승인" });
+        } else if (nextStatus === TermStatus.Deprecated) {
+          await deprecateTerm(row.id, { approver: "data.steward", replacementTermId: "", reason: "사용 중단" });
+        } else {
+          return;
+        }
+        await loadPendingApprovals();
+      } catch (error) {
+        openApiErrorModal("상태 변경 실패", error);
+      }
+    }
+  }
+
+  async function fetchDetailForRow(row: PendingRow) {
+    if (detailCache[row.id]) return;
+    try {
+      if (row.kind === "candidate") {
+        const detail = await getCandidate(row.id);
+        setDetailCache((prev) => ({ ...prev, [row.id]: detail }));
+      } else {
+        const detail = await getTerm(row.id);
+        setDetailCache((prev) => ({ ...prev, [row.id]: detail }));
+      }
+    } catch {
+      // silently ignore — row summary data still shown
     }
   }
 
@@ -856,6 +978,94 @@ export default function Home() {
               </div>
             </div>
           </section>
+
+          <section className="mt-5 rounded-md border border-[var(--line)] bg-white">
+            <div className="border-b border-[var(--line)] px-4 py-3">
+              <div className="flex items-center gap-2 font-semibold">
+                <ClipboardCheck size={17} />
+                미승인 항목 목록
+              </div>
+              <p className="mt-1 text-xs text-[var(--muted)]">승격(Promoted) 되지 않은 후보와 Draft/Reviewing 상태 용어를 합산하여 표시합니다. 상태 콤보박스 변경 시 즉시 반영됩니다.</p>
+            </div>
+            {pendingItems.length === 0 ? (
+              <div className="px-4 py-8 text-sm text-[var(--muted)]">미승인 항목이 없습니다.</div>
+            ) : (
+              <div className="overflow-hidden">
+                <table className="w-full table-fixed text-left text-sm">
+                  <thead className="bg-[#eef2f5] text-xs text-[var(--muted)]">
+                    <tr>
+                      <th className="w-[8%] px-4 py-2">유형</th>
+                      <th className="w-[24%] px-3 py-2">용어 이름(한글명)</th>
+                      <th className="w-[20%] px-3 py-2">약어</th>
+                      <th className="w-[22%] px-3 py-2">상태</th>
+                      <th className="px-3 py-2">상세</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pendingItems.map((row) => (
+                      <Fragment key={row.id}>
+                        <tr className="border-t border-[var(--line)]">
+                          <td className="px-4 py-3">
+                            <span className={`inline-flex rounded-sm px-2 py-1 text-xs font-medium ${row.kind === "candidate" ? "bg-[#fff4e5] text-[var(--warning)]" : "bg-[#eef2f5] text-[var(--muted)]"}`}>
+                              {row.kind === "candidate" ? "후보" : "용어"}
+                            </span>
+                          </td>
+                          <td className="px-3 py-3 font-medium">{row.koreanName}</td>
+                          <td className="truncate px-3 py-3 text-[var(--muted)]">{row.englishAbbreviation}</td>
+                          <td className="px-3 py-3">
+                            {row.kind === "candidate" ? (
+                              <select
+                                className="h-8 rounded-md border border-[var(--line)] px-2 text-xs"
+                                value={row.status}
+                                onChange={(e) => void commitPendingStatus(row, e.target.value)}
+                              >
+                                <option value={CandidateStatus.Draft}>{CandidateStatus.Draft}</option>
+                                <option value={CandidateStatus.Reviewing}>{CandidateStatus.Reviewing}</option>
+                                <option value={CandidateStatus.Approved}>{CandidateStatus.Approved}</option>
+                                <option value={CandidateStatus.Rejected}>{CandidateStatus.Rejected}</option>
+                                <option value={CandidateStatus.Promoted}>{CandidateStatus.Promoted}</option>
+                              </select>
+                            ) : (
+                              <select
+                                className="h-8 rounded-md border border-[var(--line)] px-2 text-xs"
+                                value={row.status}
+                                onChange={(e) => void commitPendingStatus(row, e.target.value)}
+                              >
+                                <option value={TermStatus.Draft}>{TermStatus.Draft}</option>
+                                <option value={TermStatus.Reviewing}>{TermStatus.Reviewing}</option>
+                                <option value={TermStatus.Approved}>{TermStatus.Approved}</option>
+                                <option value={TermStatus.Deprecated}>{TermStatus.Deprecated}</option>
+                              </select>
+                            )}
+                          </td>
+                          <td className="px-3 py-3">
+                            <button
+                              type="button"
+                              className="inline-flex h-7 items-center gap-1 rounded-md border border-[var(--line)] px-2 text-xs font-medium hover:bg-[#f8fafb]"
+                              onClick={() => {
+                                const next = expandedDetailId === row.id ? null : row.id;
+                                setExpandedDetailId(next);
+                                if (next) void fetchDetailForRow(row);
+                              }}
+                            >
+                              {expandedDetailId === row.id ? "닫기" : "상세"}
+                            </button>
+                          </td>
+                        </tr>
+                        {expandedDetailId === row.id ? (
+                          <tr key={`${row.id}-detail`} className="border-t border-[var(--line)] bg-[#fbfcfd]">
+                            <td colSpan={5} className="px-4 py-3">
+                              <PendingDetailBlock detail={detailCache[row.id] ?? null} kind={row.kind} />
+                            </td>
+                          </tr>
+                        ) : null}
+                      </Fragment>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
         </div>
       ) : null}
 
@@ -957,6 +1167,48 @@ function ErrorModal({ title, message, detail, onClose }: { title: string; messag
           </button>
         </div>
       </div>
+    </div>
+  );
+}
+
+function PendingDetailBlock({ detail, kind }: { detail: TermCandidate | Term | null; kind: "candidate" | "term" }) {
+  if (!detail) {
+    return <span className="text-xs text-[var(--muted)]">로딩 중...</span>;
+  }
+  const rows: Array<{ label: string; value: string | number | undefined | null }> =
+    kind === "candidate"
+      ? [
+          { label: "영문명", value: (detail as TermCandidate).englishName },
+          { label: "영문 약어", value: (detail as TermCandidate).englishAbbreviation },
+          { label: "도메인", value: (detail as TermCandidate).domainName },
+          { label: "업무 정의", value: (detail as TermCandidate).businessDefinition },
+          { label: "사용 맥락", value: (detail as TermCandidate).usageContext },
+          { label: "물리 타입", value: (detail as TermCandidate).physicalType },
+          { label: "자릿수", value: (detail as TermCandidate).digits },
+          { label: "소수점", value: (detail as TermCandidate).decimalPoint },
+          { label: "요청자", value: (detail as TermCandidate).requestedBy },
+          { label: "상태", value: (detail as TermCandidate).status },
+        ]
+      : [
+          { label: "영문명", value: (detail as Term).englishName },
+          { label: "영문 약어", value: (detail as Term).englishAbbreviation },
+          { label: "도메인", value: (detail as Term).domainName },
+          { label: "업무 정의", value: (detail as Term).businessDefinition },
+          { label: "사용 맥락", value: (detail as Term).usageContext },
+          { label: "물리 타입", value: (detail as Term).physicalType },
+          { label: "자릿수", value: (detail as Term).digits },
+          { label: "소수점", value: (detail as Term).decimalPoint },
+          { label: "소유자", value: (detail as Term).owner },
+          { label: "상태", value: (detail as Term).status },
+        ];
+  return (
+    <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-xs lg:grid-cols-4">
+      {rows.map(({ label, value }) => (
+        <div key={label}>
+          <span className="font-medium text-[var(--muted)]">{label}: </span>
+          <span>{value ?? "-"}</span>
+        </div>
+      ))}
     </div>
   );
 }

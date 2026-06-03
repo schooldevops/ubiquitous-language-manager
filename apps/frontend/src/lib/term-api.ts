@@ -39,6 +39,8 @@ import {
   type TermRecommendationRequest,
   type TermRecommendationResponse,
   type TermSummary,
+  type TermApprovalRequest,
+  type TermDeprecationRequest,
   type TermUpdateRequest,
 } from "@aulms/api-client";
 
@@ -51,7 +53,7 @@ const configuration = new Configuration({
 
 const axiosInstance = axios.create({
   baseURL: basePath,
-  timeout: 3000,
+  timeout: 30000,
 });
 
 const termApi = new TermApi(configuration, basePath, axiosInstance);
@@ -902,6 +904,16 @@ export async function getTermImpact(termId: string, changeType: ImpactChangeType
   }
 }
 
+export async function approveTerm(termId: string, request: TermApprovalRequest): Promise<Term> {
+  const response = await governanceApi.approveTerm(termId, request);
+  return response.data;
+}
+
+export async function deprecateTerm(termId: string, request: TermDeprecationRequest): Promise<Term> {
+  const response = await governanceApi.deprecateTerm(termId, request);
+  return response.data;
+}
+
 export async function recommendTermDraft(request: TermRecommendationRequest): Promise<TermRecommendationResponse> {
   try {
     // LLM(특히 로컬 Ollama) 추론은 수십 초~수 분 걸릴 수 있어 기본 3s timeout 을 넘긴다. 이 호출만 길게.
@@ -924,6 +936,7 @@ export type {
   RecommendedTermDraft,
   Term,
   TermAlias,
+  TermApprovalRequest,
   TermCandidate,
   TermChangeHistory,
   TermCandidateCreateRequest,
@@ -933,6 +946,7 @@ export type {
   TermCandidateReviewRequest,
   TermCandidateSummary,
   TermCreateRequest,
+  TermDeprecationRequest,
   TermExpression,
   TermRecommendationRequest,
   TermRecommendationResponse,
