@@ -4,7 +4,7 @@ import com.aulms.term.TermSearchDocument
 import org.springframework.stereotype.Component
 
 @Component
-class SemanticVectorIndex(private val embeddingService: LocalEmbeddingService) {
+class SemanticVectorIndex(private val embeddingService: DenseEmbeddingService) {
     fun build(documents: List<TermSearchDocument>): List<SemanticVectorDocument> =
         documents.map { document ->
             val content = listOf(
@@ -27,5 +27,5 @@ class SemanticVectorIndex(private val embeddingService: LocalEmbeddingService) {
 data class SemanticVectorDocument(
     val document: TermSearchDocument,
     val content: String,
-    val embedding: Map<String, Double>,
+    val embedding: FloatArray,
 )

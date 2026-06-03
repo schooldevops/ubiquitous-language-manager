@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
 @Service
 class SemanticSearchService(
     private val termRepository: TermRepository,
-    private val embeddingService: LocalEmbeddingService,
+    private val embeddingService: DenseEmbeddingService,
     private val vectorIndex: SemanticVectorIndex,
     private val ruleEngine: RuleEngine,
 ) {
