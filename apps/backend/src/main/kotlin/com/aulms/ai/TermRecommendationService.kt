@@ -14,6 +14,7 @@ import com.aulms.term.TermRepository
 import com.aulms.search.SearchNormalizer
 import com.aulms.search.SearchService
 import com.aulms.search.SemanticSearchService
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -22,7 +23,10 @@ class TermRecommendationService(
     private val searchService: SearchService,
     private val semanticSearchService: SemanticSearchService,
     private val graphSyncWorker: GraphSyncWorker,
+    private val llmTermDraftGenerator: LlmTermDraftGenerator,
 ) {
+    private val logger = LoggerFactory.getLogger(TermRecommendationService::class.java)
+
     fun recommend(request: TermRecommendationRequest): TermRecommendationResponse {
         val normalizedKoreanName = request.koreanName.trim().replace("\\s+".toRegex(), "")
         val exactMatches = searchService.exactSearch(request.koreanName, null).items.map { it.toEvidence(RecommendationEvidence.Source.Exact) }
@@ -46,14 +50,40 @@ class TermRecommendationService(
         val existingExact = exactMatches.firstOrNull {
             SearchNormalizer.normalize(it.standardTerm) == SearchNormalizer.normalize(normalizedKoreanName)
         }
-        val recommendation = llmInferRecommendation(
-            request = request,
-            normalizedKoreanName = normalizedKoreanName,
-            inferredDomainName = inferredDomainName,
-            ragMatches = ragMatches,
-            graphContext = graphContext,
-            existingExact = existingExact,
-        )
+        val recommendation: RecommendedTermDraft
+        val usedLlm: Boolean
+        if (existingExact != null) {
+            recommendation = heuristicInferRecommendation(
+                request = request,
+                normalizedKoreanName = normalizedKoreanName,
+                inferredDomainName = inferredDomainName,
+                ragMatches = ragMatches,
+                graphContext = graphContext,
+                existingExact = existingExact,
+            )
+            usedLlm = false
+        } else {
+            val llmResult = try {
+                llmTermDraftGenerator.generate(request, inferredDomainName, graphContext)
+            } catch (ex: LlmUnavailableException) {
+                logger.warn("LLM term draft unavailable, falling back to heuristic: {}", ex.message)
+                null
+            }
+            if (llmResult != null) {
+                recommendation = llmResult
+                usedLlm = true
+            } else {
+                recommendation = heuristicInferRecommendation(
+                    request = request,
+                    normalizedKoreanName = normalizedKoreanName,
+                    inferredDomainName = inferredDomainName,
+                    ragMatches = ragMatches,
+                    graphContext = graphContext,
+                    existingExact = existingExact,
+                )
+                usedLlm = false
+            }
+        }
 
         return TermRecommendationResponse(
             inputKoreanName = request.koreanName,
@@ -62,7 +92,7 @@ class TermRecommendationService(
             ragMatches = ragMatches,
             graphContext = graphContext,
             llmReasoning = llmReasoning(ragMatches, graphContext, recommendation, existingExact != null),
-            warnings = warnings(normalizedKoreanName, ragMatches, existingExact != null),
+            warnings = warnings(normalizedKoreanName, ragMatches, existingExact != null, usedLlm),
         )
     }
 
@@ -123,7 +153,7 @@ class TermRecommendationService(
         )
     }
 
-    private fun llmInferRecommendation(
+    private fun heuristicInferRecommendation(
         request: TermRecommendationRequest,
         normalizedKoreanName: String,
         inferredDomainName: String,
@@ -247,8 +277,12 @@ class TermRecommendationService(
         normalizedKoreanName: String,
         ragMatches: List<RecommendationEvidence>,
         exactExisting: Boolean,
+        usedLlm: Boolean,
     ): List<String> {
         val items = mutableListOf<String>()
+        if (!usedLlm && !exactExisting) {
+            items += "LLM 미사용(키 미설정 또는 호출 실패) 규칙기반 추천값이므로 검토가 필요함"
+        }
         if (exactExisting) {
             items += "데이터 사전에 동일한 표준 용어가 이미 존재하므로 신규 등록보다 기존 용어 재사용이 우선임"
         } else {
