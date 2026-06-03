@@ -1,0 +1,13 @@
+spring:
+  ai:
+    anthropic:
+      api-key: ${ANTHROPIC_API_KEY:}
+      chat:
+        options:
+          model: claude-sonnet-4-6
+          temperature: 0.2
+          max-tokens: 1024
+    embedding:
+      transformer:
+        onnx:
+          model-output-name: last_hidden_state
