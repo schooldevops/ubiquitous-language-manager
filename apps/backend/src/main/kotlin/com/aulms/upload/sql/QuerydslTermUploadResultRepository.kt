@@ -46,6 +46,16 @@ class QuerydslTermUploadResultRepository(
             .execute()
     }
 
+    fun appendError(batchId: String, lineNo: Int, message: String) {
+        val existing = queryFactory.select(u.errorMessage).from(u)
+            .where(u.uploadBatchId.eq(batchId).and(u.lineNo.eq(lineNo))).fetchFirst()
+        val merged = if (existing.isNullOrBlank()) message else "$existing | $message"
+        queryFactory.update(u)
+            .where(u.uploadBatchId.eq(batchId).and(u.lineNo.eq(lineNo)))
+            .set(u.errorMessage, merged)
+            .execute()
+    }
+
     fun result(batchId: String): TermUploadResult {
         val tuples = queryFactory.select(*u.all()).from(u)
             .where(u.uploadBatchId.eq(batchId)).orderBy(u.lineNo.asc()).fetch()

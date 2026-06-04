@@ -21,6 +21,7 @@ class TermUploadService(
     private val upsertRepo: QuerydslTermUpsertRepository,
 ) {
     private val dateFmt = DateTimeFormatter.ofPattern("yyyyMMdd")
+    private val log = org.slf4j.LoggerFactory.getLogger(TermUploadService::class.java)
 
     /** 컨트롤러용: 처리 후 결과 DTO 반환. */
     fun upload(content: String): TermUploadResult {
@@ -45,7 +46,7 @@ class TermUploadService(
         var inserted = 0
         var updated = 0
         var failed = 0
-        val succeeded = mutableListOf<ParsedTerm>()
+        val succeeded = mutableListOf<Pair<Int, ParsedTerm>>()
 
         // pass1: term 본문
         rows.forEach { row ->
@@ -57,7 +58,7 @@ class TermUploadService(
             try {
                 val isInsert = processor.upsertTermBody(row.term)
                 if (isInsert) inserted += 1 else updated += 1
-                succeeded.add(row.term)
+                succeeded.add(row.lineNo to row.term)
                 resultRepo.saveRow(
                     batchId, row.lineNo, row.term.termId,
                     if (isInsert) TermUploadStatus.INSERTED else TermUploadStatus.UPDATED,
@@ -69,10 +70,15 @@ class TermUploadService(
             }
         }
 
-        // pass2: 관계 (term 적재 후). 관계 실패는 개발 단계 단순화로 무시(로그성).
-        succeeded.forEach { term ->
+        // pass2: 관계 (term 적재 후). 관계 실패는 해당 행의 error_message에 기록 + 로그.
+        succeeded.forEach { (lineNo, term) ->
             if (term.relationships.isNotEmpty()) {
-                runCatching { processor.upsertRelationships(term.termId, term.relationships) }
+                try {
+                    processor.upsertRelationships(term.termId, term.relationships)
+                } catch (ex: Exception) {
+                    log.warn("관계 등록 실패 term={} line={}: {}", term.termId, lineNo, ex.message)
+                    resultRepo.appendError(batchId, lineNo, "관계 등록 실패: ${ex.message}")
+                }
             }
         }
         return UploadCounts(inserted, updated, failed)
