@@ -1,8 +1,22 @@
 aulms:
   llm:
-    provider: ${LLM_PROVIDER:gemini}
+    provider: ${LLM_PROVIDER:ollama}
+  # 영속화 모드. memory(기본) | postgres. postgres 전환은 spring profile 'postgres' 활성으로 수행.
+  persistence: ${AULMS_PERSISTENCE:memory}
 
 spring:
+  # 기본(memory) 모드: DB 관련 autoconfig 비활성화 → DB 없이 부팅.
+  # postgres 프로파일(application-postgres.yml)에서 이 목록을 비워 재활성화한다.
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+      - org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
+      - org.springframework.boot.autoconfigure.neo4j.Neo4jAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.neo4j.Neo4jDataAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.neo4j.Neo4jRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
   ai:
     anthropic:
       api-key: ${ANTHROPIC_API_KEY:}
@@ -26,7 +40,7 @@ spring:
       base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
       chat:
         options:
-          model: ${OLLAMA_MODEL:llama3.1}
+          model: ${OLLAMA_MODEL:gemma2:9b}
     embedding:
       transformer:
         onnx:

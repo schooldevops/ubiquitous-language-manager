@@ -12,7 +12,7 @@ import java.security.MessageDigest
 @Component
 class GraphSyncWorker(
     private val termRepository: TermRepository,
-    private val graphStore: InMemoryGraphStore,
+    private val graphStore: GraphStore,
 ) {
     fun syncIncremental(maxRetries: Int = 3): GraphSyncResult =
         executeWithRetry(GraphSyncMode.INCREMENTAL, maxRetries) { sync(GraphSyncMode.INCREMENTAL) }

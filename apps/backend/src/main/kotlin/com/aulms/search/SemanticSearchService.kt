@@ -7,27 +7,23 @@ import com.aulms.model.SemanticSearchResult
 import com.aulms.model.TermStatus
 import com.aulms.rule.RuleEngine
 import com.aulms.rule.RuleValidationRequest
-import com.aulms.term.TermRepository
 import com.aulms.term.TermSearchDocument
 import org.springframework.stereotype.Service
 
 @Service
 class SemanticSearchService(
-    private val termRepository: TermRepository,
-    private val embeddingService: DenseEmbeddingService,
-    private val vectorIndex: SemanticVectorIndex,
+    private val vectorIndex: TermVectorIndex,
     private val ruleEngine: RuleEngine,
 ) {
     fun semanticSearch(request: SemanticSearchRequest): SemanticSearchResponse {
-        val queryEmbedding = embeddingService.embed(request.query)
         val statuses = request.statuses ?: listOf(TermStatus.Approved)
         val domainNames = request.domainNames.orEmpty()
         val limit = request.limit ?: 5
 
-        val items = vectorIndex.build(termRepository.searchDocuments())
+        val items = vectorIndex.similarities(request.query)
             .filter { it.document.term.status in statuses }
             .filter { domainNames.isEmpty() || it.document.term.domainName in domainNames }
-            .map { it.document to adjustedScore(request.query, embeddingService.cosine(queryEmbedding, it.embedding), it.document) }
+            .map { it.document to adjustedScore(request.query, it.cosine, it.document) }
             .filter { (_, score) -> score > 0.0 }
             .sortedWith(compareByDescending<Pair<TermSearchDocument, Double>> { it.second }.thenBy { it.first.term.koreanName })
             .take(limit)

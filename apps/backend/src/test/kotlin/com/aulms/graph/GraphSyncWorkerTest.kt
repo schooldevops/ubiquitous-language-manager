@@ -1,6 +1,6 @@
 package com.aulms.graph
 
-import com.aulms.term.TermRepository
+import com.aulms.term.InMemoryTermRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -10,7 +10,7 @@ class GraphSyncWorkerTest {
     @Test
     fun `full sync creates customer number graph nodes and edges`() {
         val store = InMemoryGraphStore()
-        val worker = GraphSyncWorker(TermRepository(), store)
+        val worker = GraphSyncWorker(InMemoryTermRepository(), store)
 
         val result = worker.syncFull()
 
@@ -31,7 +31,7 @@ class GraphSyncWorkerTest {
     @Test
     fun `incremental sync skips unchanged graph items`() {
         val store = InMemoryGraphStore()
-        val worker = GraphSyncWorker(TermRepository(), store)
+        val worker = GraphSyncWorker(InMemoryTermRepository(), store)
 
         val first = worker.syncIncremental()
         val second = worker.syncIncremental()
