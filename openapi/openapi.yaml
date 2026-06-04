@@ -31,7 +31,11 @@ tags:
     description: 용어 관계와 Graphify 관계 검색 API
   - name: Impact
     description: 용어 변경 영향도 분석 API
+  - name: Dashboard
+    description: 메인 대시보드 요약 API
 paths:
+  /dashboard:
+    $ref: './paths/dashboard.yaml#/dashboard'
   /terms:
     $ref: './paths/terms.yaml#/terms'
   /terms/{termId}:
@@ -46,6 +50,10 @@ paths:
     $ref: './paths/terms.yaml#/termExpressions'
   /terms/{termId}/aliases:
     $ref: './paths/terms.yaml#/termAliases'
+  /terms/uploads:
+    $ref: './paths/term-uploads.yaml#/termUploads'
+  /terms/uploads/{uploadBatchId}:
+    $ref: './paths/term-uploads.yaml#/termUploadById'
   /search/exact:
     $ref: './paths/search.yaml#/exactSearch'
   /search/alias:
@@ -292,6 +300,12 @@ components:
       $ref: './schemas/impact.yaml#/ImpactTarget'
     ImpactRecommendation:
       $ref: './schemas/impact.yaml#/ImpactRecommendation'
+    DashboardSummary:
+      $ref: './schemas/dashboard.yaml#/DashboardSummary'
+    RecentTermItem:
+      $ref: './schemas/dashboard.yaml#/RecentTermItem'
+    DomainTermStat:
+      $ref: './schemas/dashboard.yaml#/DomainTermStat'
   responses:
     BadRequest:
       description: 요청 형식 또는 validation 오류
