@@ -4,11 +4,17 @@ import axios from "axios";
 import {
   AIApi,
   AliasApi,
+  AliasType,
   CandidateApi,
   CandidateStatus,
   Configuration,
+  DashboardApi,
+  type DashboardSummary,
+  type DomainTermStat,
   type ErrorResponse,
   ExpressionApi,
+  ExpressionType,
+  type RecentTermItem,
   GovernanceApi,
   ImpactApi,
   ImpactChangeType,
@@ -16,8 +22,13 @@ import {
   TermRecommendationMode,
   TermApi,
   TermStatus,
+  TermUploadApi,
+  type TermUploadResult,
+  type TermUploadRow,
   type GraphRecommendationContext,
   type RecommendationEvidence,
+  type RecommendedAlias,
+  type RecommendedExpression,
   type RecommendedTermDraft,
   type CandidatePromotionResult,
   type ImpactAnalysisResponse,
@@ -63,6 +74,18 @@ const aliasApi = new AliasApi(configuration, basePath, axiosInstance);
 const candidateApi = new CandidateApi(configuration, basePath, axiosInstance);
 const impactApi = new ImpactApi(configuration, basePath, axiosInstance);
 const governanceApi = new GovernanceApi(configuration, basePath, axiosInstance);
+const dashboardApi = new DashboardApi(configuration, basePath, axiosInstance);
+const termUploadApi = new TermUploadApi(configuration, basePath, axiosInstance);
+
+export async function uploadTermsFile(file: File): Promise<TermUploadResult> {
+  const res = await termUploadApi.uploadTerms(file);
+  return res.data;
+}
+
+export async function listTermUploadBatches() {
+  const res = await termUploadApi.listTermUploadBatches();
+  return res.data.items;
+}
 
 export type ApiErrorInfo = {
   status?: number;
@@ -463,17 +486,28 @@ function fallbackRecommendedDraft(koreanName: string, currentDomainName?: string
   const domainName = inferDomainName(normalized, currentDomainName);
   const baseName = normalized.startsWith(domainName) ? normalized.slice(domainName.length) : normalized;
   const pattern = inferSuffixPattern(normalized);
+  const englishName = [domainEnglishMap[domainName] ?? "Common", toEnglishPhrase(baseName)].filter(Boolean).join(" ").replace(/\s+/g, " ").trim();
+  const englishAbbreviation = [domainAbbreviationMap[domainName] ?? "CMN", ...toAbbreviationTokens(baseName), pattern.suffixToken].filter(Boolean).join("_").replace(/__+/g, "_");
+  const camel = toCamelCase(englishName);
+  const expressions: RecommendedExpression[] = [
+    { expressionType: ExpressionType.DbColumn, expressionValue: englishAbbreviation, isStandard: true },
+    { expressionType: ExpressionType.ApiField, expressionValue: camel, isStandard: true },
+    { expressionType: ExpressionType.CodeVariable, expressionValue: camel, isStandard: true },
+    { expressionType: ExpressionType.UiLabel, expressionValue: normalized, isStandard: true },
+  ].filter((expression) => expression.expressionValue);
   return {
     domainName,
     usageType: "표준항목",
-    englishName: [domainEnglishMap[domainName] ?? "Common", toEnglishPhrase(baseName)].filter(Boolean).join(" ").replace(/\s+/g, " ").trim(),
-    englishAbbreviation: [domainAbbreviationMap[domainName] ?? "CMN", ...toAbbreviationTokens(baseName), pattern.suffixToken].filter(Boolean).join("_").replace(/__+/g, "_"),
+    englishName,
+    englishAbbreviation,
     businessDefinition: `${domainName} 도메인에서 ${normalized}를 업무적으로 관리하기 위해 사용하는 표준 항목`,
     usageContext: `${domainName} 관련 화면, API, DB, 테스트 시나리오에서 ${normalized} 표현으로 사용`,
     physicalType: pattern.physicalType,
     digits: pattern.digits,
     decimalPoint: pattern.decimalPoint,
     owner: `${domainName}도메인 데이터스튜어드`,
+    expressions,
+    aliases: [],
   };
 }
 
@@ -927,16 +961,66 @@ export async function recommendTermDraft(request: TermRecommendationRequest): Pr
   }
 }
 
-export { CandidateStatus, ImpactChangeType, ImpactRiskLevel, TermRecommendationMode, TermStatus };
+export async function getDashboard(recentLimit = 10): Promise<DashboardSummary> {
+  try {
+    const response = await dashboardApi.getDashboard(recentLimit);
+    return response.data;
+  } catch (error) {
+    if (!isNetworkFallbackCandidate(error)) {
+      throw error;
+    }
+    return fallbackDashboard(recentLimit);
+  }
+}
+
+function fallbackDashboard(recentLimit: number): DashboardSummary {
+  const now = "2026-06-03T09:00:00Z";
+  const recentTerms: RecentTermItem[] = sampleTerms.slice(0, recentLimit).map((term) => ({
+    termId: term.termId,
+    koreanName: term.koreanName,
+    englishName: term.englishName,
+    domainName: term.domainName,
+    status: term.status,
+    createdAt: now,
+    updatedAt: now,
+  }));
+  const byDomain = new Map<string, TermSummary[]>();
+  for (const term of sampleTerms) {
+    const list = byDomain.get(term.domainName) ?? [];
+    list.push(term);
+    byDomain.set(term.domainName, list);
+  }
+  const domainStats: DomainTermStat[] = Array.from(byDomain.entries())
+    .map(([domainName, list]) => ({
+      domainName,
+      totalCount: list.length,
+      approvedCount: list.filter((item) => item.status === TermStatus.Approved).length,
+      draftCount: list.filter((item) => item.status === TermStatus.Draft).length,
+      reviewingCount: list.filter((item) => item.status === TermStatus.Reviewing).length,
+      deprecatedCount: list.filter((item) => item.status === TermStatus.Deprecated).length,
+      rejectedCount: list.filter((item) => item.status === TermStatus.Rejected).length,
+    }))
+    .sort((a, b) => b.totalCount - a.totalCount || a.domainName.localeCompare(b.domainName));
+  return { totalTerms: sampleTerms.length, recentTerms, domainStats };
+}
+
+export { AliasType, CandidateStatus, ExpressionType, ImpactChangeType, ImpactRiskLevel, TermRecommendationMode, TermStatus };
 export type {
   CandidatePromotionResult,
+  DashboardSummary,
+  DomainTermStat,
   GraphRecommendationContext,
   ImpactAnalysisResponse,
+  RecentTermItem,
   RecommendationEvidence,
+  RecommendedAlias,
+  RecommendedExpression,
   RecommendedTermDraft,
   Term,
   TermAlias,
+  TermAliasCreateRequest,
   TermApprovalRequest,
+  TermExpressionCreateRequest,
   TermCandidate,
   TermChangeHistory,
   TermCandidateCreateRequest,
@@ -952,4 +1036,6 @@ export type {
   TermRecommendationResponse,
   TermSummary,
   TermUpdateRequest,
+  TermUploadResult,
+  TermUploadRow,
 };
