@@ -5,6 +5,7 @@ src/main/kotlin/com/aulms/api/AIApi.kt
 src/main/kotlin/com/aulms/api/AliasApi.kt
 src/main/kotlin/com/aulms/api/ApiUtil.kt
 src/main/kotlin/com/aulms/api/CandidateApi.kt
+src/main/kotlin/com/aulms/api/DashboardApi.kt
 src/main/kotlin/com/aulms/api/ExpressionApi.kt
 src/main/kotlin/com/aulms/api/GovernanceApi.kt
 src/main/kotlin/com/aulms/api/ImpactApi.kt
@@ -13,6 +14,7 @@ src/main/kotlin/com/aulms/api/RelationshipApi.kt
 src/main/kotlin/com/aulms/api/ReviewApi.kt
 src/main/kotlin/com/aulms/api/SearchApi.kt
 src/main/kotlin/com/aulms/api/TermApi.kt
+src/main/kotlin/com/aulms/api/TermUploadApi.kt
 src/main/kotlin/com/aulms/model/AliasType.kt
 src/main/kotlin/com/aulms/model/ArtifactSourceType.kt
 src/main/kotlin/com/aulms/model/ArtifactValidationRequest.kt
@@ -27,6 +29,7 @@ src/main/kotlin/com/aulms/model/CandidateStatus.kt
 src/main/kotlin/com/aulms/model/CandidateTerm.kt
 src/main/kotlin/com/aulms/model/ColumnSystemUsage.kt
 src/main/kotlin/com/aulms/model/ColumnSystemUsageResponse.kt
+src/main/kotlin/com/aulms/model/DashboardSummary.kt
 src/main/kotlin/com/aulms/model/DeprecatedSearchResponse.kt
 src/main/kotlin/com/aulms/model/DeprecatedSearchResult.kt
 src/main/kotlin/com/aulms/model/DeprecatedUsage.kt
@@ -37,6 +40,7 @@ src/main/kotlin/com/aulms/model/DevelopmentAssistResponse.kt
 src/main/kotlin/com/aulms/model/DocumentReviewOptions.kt
 src/main/kotlin/com/aulms/model/DocumentReviewRequest.kt
 src/main/kotlin/com/aulms/model/DocumentReviewResult.kt
+src/main/kotlin/com/aulms/model/DomainTermStat.kt
 src/main/kotlin/com/aulms/model/ErrorResponse.kt
 src/main/kotlin/com/aulms/model/ExpressionType.kt
 src/main/kotlin/com/aulms/model/ExtractedBusinessConcept.kt
@@ -67,8 +71,11 @@ src/main/kotlin/com/aulms/model/PromptTermMapping.kt
 src/main/kotlin/com/aulms/model/PullRequestArtifactFile.kt
 src/main/kotlin/com/aulms/model/PullRequestArtifactReviewRequest.kt
 src/main/kotlin/com/aulms/model/PullRequestArtifactReviewResult.kt
+src/main/kotlin/com/aulms/model/RecentTermItem.kt
 src/main/kotlin/com/aulms/model/Recommendation.kt
 src/main/kotlin/com/aulms/model/RecommendationEvidence.kt
+src/main/kotlin/com/aulms/model/RecommendedAlias.kt
+src/main/kotlin/com/aulms/model/RecommendedExpression.kt
 src/main/kotlin/com/aulms/model/RecommendedTermDraft.kt
 src/main/kotlin/com/aulms/model/RelationshipPath.kt
 src/main/kotlin/com/aulms/model/RelationshipSearchResponse.kt
@@ -105,6 +112,11 @@ src/main/kotlin/com/aulms/model/TermRecommendationResponse.kt
 src/main/kotlin/com/aulms/model/TermStatus.kt
 src/main/kotlin/com/aulms/model/TermSummary.kt
 src/main/kotlin/com/aulms/model/TermUpdateRequest.kt
+src/main/kotlin/com/aulms/model/TermUploadBatchListResponse.kt
+src/main/kotlin/com/aulms/model/TermUploadBatchSummary.kt
+src/main/kotlin/com/aulms/model/TermUploadResult.kt
+src/main/kotlin/com/aulms/model/TermUploadRow.kt
+src/main/kotlin/com/aulms/model/TermUploadStatus.kt
 src/main/kotlin/com/aulms/model/UserRole.kt
 src/main/kotlin/com/aulms/model/ValidationIssue.kt
 src/main/kotlin/com/aulms/model/ValidationSeverity.kt

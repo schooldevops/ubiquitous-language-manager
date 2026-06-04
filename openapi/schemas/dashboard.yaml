@@ -1,0 +1,100 @@
+DashboardSummary:
+  type: object
+  description: 메인 대시보드 요약 데이터
+  required:
+    - totalTerms
+    - recentTerms
+    - domainStats
+  properties:
+    totalTerms:
+      type: integer
+      format: int32
+      description: 전체 등록 용어 수
+      example: 9
+    recentTerms:
+      type: array
+      description: 최근 등록 또는 수정된 용어 목록 (수정일 내림차순)
+      items:
+        $ref: '#/RecentTermItem'
+    domainStats:
+      type: array
+      description: 도메인별 용어 통계
+      items:
+        $ref: '#/DomainTermStat'
+
+RecentTermItem:
+  type: object
+  description: 최근 등록/수정 용어 항목
+  required:
+    - termId
+    - koreanName
+    - englishName
+    - domainName
+    - status
+    - createdAt
+    - updatedAt
+  properties:
+    termId:
+      type: string
+      example: T-000001
+    koreanName:
+      type: string
+      example: 고객번호
+    englishName:
+      type: string
+      example: Customer Number
+    domainName:
+      type: string
+      example: 고객
+    status:
+      $ref: './enums.yaml#/TermStatus'
+    createdAt:
+      type: string
+      format: date-time
+      description: 등록 일시
+    updatedAt:
+      type: string
+      format: date-time
+      description: 최종 수정 일시
+
+DomainTermStat:
+  type: object
+  description: 도메인별 용어 수와 상태별 분포
+  required:
+    - domainName
+    - totalCount
+    - approvedCount
+    - draftCount
+    - reviewingCount
+    - deprecatedCount
+    - rejectedCount
+  properties:
+    domainName:
+      type: string
+      example: 고객
+    totalCount:
+      type: integer
+      format: int32
+      description: 도메인 전체 용어 수
+      example: 3
+    approvedCount:
+      type: integer
+      format: int32
+      description: 확정(Approved) 용어 수
+      example: 3
+    draftCount:
+      type: integer
+      format: int32
+      example: 0
+    reviewingCount:
+      type: integer
+      format: int32
+      example: 0
+    deprecatedCount:
+      type: integer
+      format: int32
+      example: 0
+    rejectedCount:
+      type: integer
+      format: int32
+      example: 0

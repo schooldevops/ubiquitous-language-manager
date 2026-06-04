@@ -1,6 +1,6 @@
 termUploads:
   post:
-    tags: [Term]
+    tags: [TermUpload]
     operationId: uploadTerms
     summary: 용어 JSONL 파일 업로드(upsert)
     requestBody:
@@ -23,7 +23,7 @@ termUploads:
             schema:
               $ref: '../schemas/term-upload.yaml#/TermUploadResult'
   get:
-    tags: [Term]
+    tags: [TermUpload]
     operationId: listTermUploadBatches
     summary: 업로드 배치 목록(최근순)
     responses:
@@ -36,7 +36,7 @@ termUploads:
 
 termUploadById:
   get:
-    tags: [Term]
+    tags: [TermUpload]
     operationId: getTermUploadBatch
     summary: 업로드 배치 결과 단건 조회
     parameters:

@@ -1,6 +1,8 @@
 package com.aulms.model
 
 import java.util.Objects
+import com.aulms.model.RecommendedAlias
+import com.aulms.model.RecommendedExpression
 import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.validation.constraints.DecimalMax
 import jakarta.validation.constraints.DecimalMin
@@ -25,6 +27,8 @@ import io.swagger.v3.oas.annotations.media.Schema
  * @param digits 
  * @param decimalPoint 
  * @param owner 
+ * @param expressions 산출물별 표현 추천 (DB 컬럼, API 필드, 코드 변수, UI 라벨 등)
+ * @param aliases 별칭/유사어/금지어 추천 목록
  */
 data class RecommendedTermDraft(
 
@@ -56,7 +60,15 @@ data class RecommendedTermDraft(
     @get:JsonProperty("decimalPoint", required = true) val decimalPoint: kotlin.Int,
 
     @Schema(example = "고객도메인 데이터스튜어드", required = true, description = "")
-    @get:JsonProperty("owner", required = true) val owner: kotlin.String
+    @get:JsonProperty("owner", required = true) val owner: kotlin.String,
+
+    @field:Valid
+    @Schema(example = "[{\"expressionType\":\"DB_COLUMN\",\"expressionValue\":\"CUST_NO\",\"isStandard\":true},{\"expressionType\":\"API_FIELD\",\"expressionValue\":\"customerNumber\",\"isStandard\":true}]", required = true, description = "산출물별 표현 추천 (DB 컬럼, API 필드, 코드 변수, UI 라벨 등)")
+    @get:JsonProperty("expressions", required = true) val expressions: kotlin.collections.List<RecommendedExpression>,
+
+    @field:Valid
+    @Schema(example = "[{\"aliasName\":\"고객ID\",\"aliasType\":\"Forbidden\",\"recommendationAction\":\"고객번호로 변환 권장\",\"reason\":\"기술 ID와 혼동되어 금지어로 분류\"}]", required = true, description = "별칭/유사어/금지어 추천 목록")
+    @get:JsonProperty("aliases", required = true) val aliases: kotlin.collections.List<RecommendedAlias>
     ) {
 
 }

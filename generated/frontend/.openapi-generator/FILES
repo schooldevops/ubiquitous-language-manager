@@ -5,6 +5,7 @@ api.ts
 api/aiapi.ts
 api/alias-api.ts
 api/candidate-api.ts
+api/dashboard-api.ts
 api/expression-api.ts
 api/governance-api.ts
 api/impact-api.ts
@@ -13,6 +14,7 @@ api/relationship-api.ts
 api/review-api.ts
 api/search-api.ts
 api/term-api.ts
+api/term-upload-api.ts
 base.ts
 common.ts
 configuration.ts
@@ -33,6 +35,8 @@ docs/CandidateStatus.md
 docs/CandidateTerm.md
 docs/ColumnSystemUsage.md
 docs/ColumnSystemUsageResponse.md
+docs/DashboardApi.md
+docs/DashboardSummary.md
 docs/DeprecatedSearchResponse.md
 docs/DeprecatedSearchResult.md
 docs/DeprecatedUsage.md
@@ -43,6 +47,7 @@ docs/DevelopmentAssistResponse.md
 docs/DocumentReviewOptions.md
 docs/DocumentReviewRequest.md
 docs/DocumentReviewResult.md
+docs/DomainTermStat.md
 docs/ErrorResponse.md
 docs/ExpressionApi.md
 docs/ExpressionType.md
@@ -77,8 +82,11 @@ docs/PromptTermMapping.md
 docs/PullRequestArtifactFile.md
 docs/PullRequestArtifactReviewRequest.md
 docs/PullRequestArtifactReviewResult.md
+docs/RecentTermItem.md
 docs/Recommendation.md
 docs/RecommendationEvidence.md
+docs/RecommendedAlias.md
+docs/RecommendedExpression.md
 docs/RecommendedTermDraft.md
 docs/RelationshipApi.md
 docs/RelationshipPath.md
@@ -119,6 +127,12 @@ docs/TermRecommendationResponse.md
 docs/TermStatus.md
 docs/TermSummary.md
 docs/TermUpdateRequest.md
+docs/TermUploadApi.md
+docs/TermUploadBatchListResponse.md
+docs/TermUploadBatchSummary.md
+docs/TermUploadResult.md
+docs/TermUploadRow.md
+docs/TermUploadStatus.md
 docs/UserRole.md
 docs/ValidationIssue.md
 docs/ValidationSeverity.md
@@ -138,6 +152,7 @@ model/candidate-status.ts
 model/candidate-term.ts
 model/column-system-usage-response.ts
 model/column-system-usage.ts
+model/dashboard-summary.ts
 model/deprecated-search-response.ts
 model/deprecated-search-result.ts
 model/deprecated-usage-response.ts
@@ -148,6 +163,7 @@ model/development-assist-response.ts
 model/document-review-options.ts
 model/document-review-request.ts
 model/document-review-result.ts
+model/domain-term-stat.ts
 model/error-response.ts
 model/expression-type.ts
 model/extracted-business-concept.ts
@@ -179,8 +195,11 @@ model/prompt-term-mapping.ts
 model/pull-request-artifact-file.ts
 model/pull-request-artifact-review-request.ts
 model/pull-request-artifact-review-result.ts
+model/recent-term-item.ts
 model/recommendation-evidence.ts
 model/recommendation.ts
+model/recommended-alias.ts
+model/recommended-expression.ts
 model/recommended-term-draft.ts
 model/relationship-path.ts
 model/relationship-search-response.ts
@@ -216,6 +235,11 @@ model/term-recommendation-response.ts
 model/term-status.ts
 model/term-summary.ts
 model/term-update-request.ts
+model/term-upload-batch-list-response.ts
+model/term-upload-batch-summary.ts
+model/term-upload-result.ts
+model/term-upload-row.ts
+model/term-upload-status.ts
 model/term.ts
 model/user-role.ts
 model/validation-issue.ts

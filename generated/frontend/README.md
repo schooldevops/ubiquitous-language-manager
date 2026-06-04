@@ -60,6 +60,7 @@ Class | Method | HTTP request | Description
 *CandidateApi* | [**listCandidates**](docs/CandidateApi.md#listcandidates) | **GET** /candidates | 신규 용어 후보 목록 조회
 *CandidateApi* | [**promoteCandidate**](docs/CandidateApi.md#promotecandidate) | **POST** /candidates/{candidateId}/promote | 신규 용어 후보 표준 용어 승격
 *CandidateApi* | [**reviewCandidate**](docs/CandidateApi.md#reviewcandidate) | **POST** /candidates/{candidateId}/review | 신규 용어 후보 검토
+*DashboardApi* | [**getDashboard**](docs/DashboardApi.md#getdashboard) | **GET** /dashboard | 메인 대시보드 요약 조회
 *ExpressionApi* | [**createTermExpression**](docs/ExpressionApi.md#createtermexpression) | **POST** /terms/{termId}/expressions | 용어 표현 매핑 등록
 *ExpressionApi* | [**listTermExpressions**](docs/ExpressionApi.md#listtermexpressions) | **GET** /terms/{termId}/expressions | 용어 표현 매핑 목록 조회
 *GovernanceApi* | [**approveTerm**](docs/GovernanceApi.md#approveterm) | **POST** /terms/{termId}/approve | 표준 용어 승인
@@ -89,6 +90,9 @@ Class | Method | HTTP request | Description
 *TermApi* | [**getTerm**](docs/TermApi.md#getterm) | **GET** /terms/{termId} | 표준 용어 상세 조회
 *TermApi* | [**listTerms**](docs/TermApi.md#listterms) | **GET** /terms | 표준 용어 목록 조회
 *TermApi* | [**updateTerm**](docs/TermApi.md#updateterm) | **PUT** /terms/{termId} | 표준 용어 수정
+*TermUploadApi* | [**getTermUploadBatch**](docs/TermUploadApi.md#gettermuploadbatch) | **GET** /terms/uploads/{uploadBatchId} | 업로드 배치 결과 단건 조회
+*TermUploadApi* | [**listTermUploadBatches**](docs/TermUploadApi.md#listtermuploadbatches) | **GET** /terms/uploads | 업로드 배치 목록(최근순)
+*TermUploadApi* | [**uploadTerms**](docs/TermUploadApi.md#uploadterms) | **POST** /terms/uploads | 용어 JSONL 파일 업로드(upsert)
 
 
 ### Documentation For Models
@@ -107,6 +111,7 @@ Class | Method | HTTP request | Description
  - [CandidateTerm](docs/CandidateTerm.md)
  - [ColumnSystemUsage](docs/ColumnSystemUsage.md)
  - [ColumnSystemUsageResponse](docs/ColumnSystemUsageResponse.md)
+ - [DashboardSummary](docs/DashboardSummary.md)
  - [DeprecatedSearchResponse](docs/DeprecatedSearchResponse.md)
  - [DeprecatedSearchResult](docs/DeprecatedSearchResult.md)
  - [DeprecatedUsage](docs/DeprecatedUsage.md)
@@ -117,6 +122,7 @@ Class | Method | HTTP request | Description
  - [DocumentReviewOptions](docs/DocumentReviewOptions.md)
  - [DocumentReviewRequest](docs/DocumentReviewRequest.md)
  - [DocumentReviewResult](docs/DocumentReviewResult.md)
+ - [DomainTermStat](docs/DomainTermStat.md)
  - [ErrorResponse](docs/ErrorResponse.md)
  - [ExpressionType](docs/ExpressionType.md)
  - [ExtractedBusinessConcept](docs/ExtractedBusinessConcept.md)
@@ -147,8 +153,11 @@ Class | Method | HTTP request | Description
  - [PullRequestArtifactFile](docs/PullRequestArtifactFile.md)
  - [PullRequestArtifactReviewRequest](docs/PullRequestArtifactReviewRequest.md)
  - [PullRequestArtifactReviewResult](docs/PullRequestArtifactReviewResult.md)
+ - [RecentTermItem](docs/RecentTermItem.md)
  - [Recommendation](docs/Recommendation.md)
  - [RecommendationEvidence](docs/RecommendationEvidence.md)
+ - [RecommendedAlias](docs/RecommendedAlias.md)
+ - [RecommendedExpression](docs/RecommendedExpression.md)
  - [RecommendedTermDraft](docs/RecommendedTermDraft.md)
  - [RelationshipPath](docs/RelationshipPath.md)
  - [RelationshipSearchResponse](docs/RelationshipSearchResponse.md)
@@ -185,6 +194,11 @@ Class | Method | HTTP request | Description
  - [TermStatus](docs/TermStatus.md)
  - [TermSummary](docs/TermSummary.md)
  - [TermUpdateRequest](docs/TermUpdateRequest.md)
+ - [TermUploadBatchListResponse](docs/TermUploadBatchListResponse.md)
+ - [TermUploadBatchSummary](docs/TermUploadBatchSummary.md)
+ - [TermUploadResult](docs/TermUploadResult.md)
+ - [TermUploadRow](docs/TermUploadRow.md)
+ - [TermUploadStatus](docs/TermUploadStatus.md)
  - [UserRole](docs/UserRole.md)
  - [ValidationIssue](docs/ValidationIssue.md)
  - [ValidationSeverity](docs/ValidationSeverity.md)

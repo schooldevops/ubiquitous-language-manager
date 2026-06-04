@@ -13,6 +13,12 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { RecommendedAlias } from './recommended-alias';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { RecommendedExpression } from './recommended-expression';
 
 /**
  * 추천으로 채워줄 용어 초안
@@ -80,5 +86,17 @@ export interface RecommendedTermDraft {
      * @memberof RecommendedTermDraft
      */
     'owner': string;
+    /**
+     * 산출물별 표현 추천 (DB 컬럼, API 필드, 코드 변수, UI 라벨 등)
+     * @type {Array<RecommendedExpression>}
+     * @memberof RecommendedTermDraft
+     */
+    'expressions': Array<RecommendedExpression>;
+    /**
+     * 별칭/유사어/금지어 추천 목록
+     * @type {Array<RecommendedAlias>}
+     * @memberof RecommendedTermDraft
+     */
+    'aliases': Array<RecommendedAlias>;
 }
 

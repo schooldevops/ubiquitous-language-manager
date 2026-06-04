@@ -1,0 +1,36 @@
+dashboard:
+  get:
+    tags:
+      - Dashboard
+    summary: 메인 대시보드 요약 조회
+    description: 최근 등록/수정된 용어 목록과 도메인별 용어 통계를 반환한다.
+    operationId: getDashboard
+    x-required-roles:
+      - ADMIN
+      - DATA_STEWARD
+      - DEVELOPMENT_LEAD
+      - ARCHITECT
+      - PLANNER
+      - DEVELOPER
+      - OPERATOR
+      - VIEWER
+    parameters:
+      - name: recentLimit
+        in: query
+        required: false
+        description: 최근 용어 목록 최대 개수
+        schema:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 50
+          default: 10
+    responses:
+      '200':
+        description: 대시보드 요약
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/dashboard.yaml#/DashboardSummary'
+      '401':
+        $ref: '../openapi.yaml#/components/responses/Unauthorized'
