@@ -13,11 +13,13 @@ import com.querydsl.sql.dml.SQLUpdateClause
 import org.springframework.context.annotation.Profile
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 import java.time.OffsetDateTime
 
 /** 업로드용 term/표현/별칭/관계 upsert. postgres 전용. */
 @Repository
 @Profile("postgres")
+@Transactional
 class QuerydslTermUpsertRepository(
     private val queryFactory: SQLQueryFactory,
     private val jdbc: JdbcTemplate,

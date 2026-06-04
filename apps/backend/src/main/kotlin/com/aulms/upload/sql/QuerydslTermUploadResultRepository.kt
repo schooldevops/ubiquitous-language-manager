@@ -8,10 +8,12 @@ import com.aulms.persistence.PostgresSequences
 import com.querydsl.sql.SQLQueryFactory
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 import java.time.OffsetDateTime
 
 @Repository
 @Profile("postgres")
+@Transactional
 class QuerydslTermUploadResultRepository(
     private val queryFactory: SQLQueryFactory,
     private val sequences: PostgresSequences,
