@@ -1,5 +1,7 @@
 package com.aulms.ai
 
+import com.aulms.model.AliasType
+import com.aulms.model.ExpressionType
 import com.aulms.model.GraphRecommendationContext
 import com.aulms.model.RecommendedTermDraft
 import com.aulms.model.TermRecommendationRequest
@@ -17,6 +19,7 @@ import org.springframework.ai.chat.model.Generation
 import org.springframework.ai.chat.messages.AssistantMessage
 import org.springframework.ai.chat.prompt.Prompt
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class LlmTermDraftGeneratorTest {
     private val request = TermRecommendationRequest(
@@ -59,6 +62,59 @@ class LlmTermDraftGeneratorTest {
         assertEquals(10, draft.digits)
         assertEquals("주문", draft.domainName)
         assertEquals(0, draft.decimalPoint)
+    }
+
+    @Test
+    fun `parses expressions and aliases from json`() {
+        val json = """
+            {"domainName":"고객","usageType":"표준항목","englishName":"Customer Number",
+             "englishAbbreviation":"CUST_NO","businessDefinition":"고객 식별 번호",
+             "usageContext":"주문/청구","physicalType":"VARCHAR","digits":20,"decimalPoint":0,
+             "owner":"고객도메인 데이터스튜어드",
+             "expressions":[
+               {"expressionType":"DB_COLUMN","expressionValue":"CUST_NO","isStandard":true},
+               {"expressionType":"API_FIELD","expressionValue":"customerNumber","isStandard":true}
+             ],
+             "aliases":[
+               {"aliasName":"고객ID","aliasType":"Forbidden","recommendationAction":"고객번호로 변환 권장","reason":"기술 ID 혼동"}
+             ]}
+        """.trimIndent()
+        val draft = geminiGenerator(modelReturning(json)).generate(request, "고객", graphContext)
+        assertEquals(2, draft.expressions.size)
+        assertEquals(ExpressionType.DB_COLUMN, draft.expressions[0].expressionType)
+        assertEquals("CUST_NO", draft.expressions[0].expressionValue)
+        assertEquals(1, draft.aliases.size)
+        assertEquals(AliasType.Forbidden, draft.aliases[0].aliasType)
+        assertEquals("고객ID", draft.aliases[0].aliasName)
+    }
+
+    @Test
+    fun `defaults expressions and aliases to empty when json omits them`() {
+        val json = """
+            {"domainName":"주문","usageType":"표준항목","englishName":"Order Cancel Reason Code",
+             "englishAbbreviation":"ORD_CNCL_RSN_CD","businessDefinition":"주문 취소 사유",
+             "usageContext":"주문 취소","physicalType":"VARCHAR","digits":10,"decimalPoint":0,
+             "owner":"주문도메인 데이터스튜어드"}
+        """.trimIndent()
+        val draft = geminiGenerator(modelReturning(json)).generate(request, "주문", graphContext)
+        assertTrue(draft.expressions.isEmpty())
+        assertTrue(draft.aliases.isEmpty())
+    }
+
+    @Test
+    fun `drops expression rows with unknown enum value`() {
+        val json = """
+            {"domainName":"주문","usageType":"표준항목","englishName":"Order","englishAbbreviation":"ORD",
+             "businessDefinition":"d","usageContext":"u","physicalType":"VARCHAR","digits":10,"decimalPoint":0,
+             "owner":"o",
+             "expressions":[
+               {"expressionType":"NONSENSE","expressionValue":"x","isStandard":true},
+               {"expressionType":"DB_COLUMN","expressionValue":"ORD","isStandard":true}
+             ]}
+        """.trimIndent()
+        val draft = geminiGenerator(modelReturning(json)).generate(request, "주문", graphContext)
+        assertEquals(1, draft.expressions.size)
+        assertEquals(ExpressionType.DB_COLUMN, draft.expressions[0].expressionType)
     }
 
     @Test

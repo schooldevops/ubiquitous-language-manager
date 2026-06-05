@@ -1,6 +1,10 @@
 package com.aulms.ai
 
+import com.aulms.model.AliasType
+import com.aulms.model.ExpressionType
 import com.aulms.model.GraphRecommendationContext
+import com.aulms.model.RecommendedAlias
+import com.aulms.model.RecommendedExpression
 import com.aulms.model.RecommendedTermDraft
 import com.aulms.model.TermRecommendationRequest
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -76,8 +80,12 @@ class LlmTermDraftGenerator(
           "englishName": string, "englishAbbreviation": string(대문자_언더스코어),
           "businessDefinition": string, "usageContext": string,
           "physicalType": string(VARCHAR|CHAR|NUMERIC|DATE|TIMESTAMP 등),
-          "digits": number, "decimalPoint": number, "owner": string
+          "digits": number, "decimalPoint": number, "owner": string,
+          "expressions": [ { "expressionType": "DB_COLUMN"|"API_FIELD"|"CODE_VARIABLE"|"UI_LABEL", "expressionValue": string, "isStandard": boolean } ],
+          "aliases": [ { "aliasName": string, "aliasType": "Synonym"|"Forbidden"|"Deprecated"|"NeedsContext", "recommendationAction": string, "reason": string } ]
         }
+        expressions 에는 DB 컬럼, API 필드, 코드 변수, UI 라벨 산출물 표현을 가능한 한 모두 채운다.
+        aliases 에는 유사어(Synonym)와 사용하면 안 되는 비표준 표현(Forbidden)을 추천한다. 없으면 빈 배열.
     """.trimIndent()
 
     private fun LlmDraftPayload.toDraft(): RecommendedTermDraft = RecommendedTermDraft(
@@ -91,5 +99,24 @@ class LlmTermDraftGenerator(
         digits = digits,
         decimalPoint = decimalPoint,
         owner = owner,
+        expressions = expressions.orEmpty().mapNotNull { it.toRecommended() },
+        aliases = aliases.orEmpty().mapNotNull { it.toRecommended() },
     )
+
+    private fun LlmExpressionPayload.toRecommended(): RecommendedExpression? {
+        val type = expressionType?.let { raw -> ExpressionType.entries.firstOrNull { it.value == raw } } ?: return null
+        val value = expressionValue?.takeIf { it.isNotBlank() } ?: return null
+        return RecommendedExpression(expressionType = type, expressionValue = value, isStandard = isStandard ?: true)
+    }
+
+    private fun LlmAliasPayload.toRecommended(): RecommendedAlias? {
+        val name = aliasName?.takeIf { it.isNotBlank() } ?: return null
+        val type = aliasType?.let { raw -> AliasType.entries.firstOrNull { it.value == raw } } ?: return null
+        return RecommendedAlias(
+            aliasName = name,
+            aliasType = type,
+            recommendationAction = recommendationAction?.takeIf { it.isNotBlank() } ?: "표준 용어 검토 권장",
+            reason = reason?.takeIf { it.isNotBlank() } ?: "LLM 추천 별칭",
+        )
+    }
 }

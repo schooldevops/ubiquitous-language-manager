@@ -1,8 +1,11 @@
 package com.aulms.ai
 
 import com.aulms.graph.GraphSyncWorker
+import com.aulms.model.ExpressionType
 import com.aulms.model.GraphRecommendationContext
 import com.aulms.model.RecommendationEvidence
+import com.aulms.model.RecommendedAlias
+import com.aulms.model.RecommendedExpression
 import com.aulms.model.RecommendedTermDraft
 import com.aulms.model.SearchResult
 import com.aulms.model.SemanticSearchRequest
@@ -175,6 +178,12 @@ class TermRecommendationService(
                     digits = document.term.digits,
                     decimalPoint = document.term.decimalPoint,
                     owner = document.term.owner,
+                    expressions = document.term.expressions.map {
+                        RecommendedExpression(it.expressionType, it.expressionValue, it.isStandard)
+                    },
+                    aliases = document.term.aliases.map {
+                        RecommendedAlias(it.aliasName, it.aliasType, it.recommendationAction, it.reason)
+                    },
                 )
             }
         }
@@ -198,7 +207,33 @@ class TermRecommendationService(
             digits = inferredPattern.digits,
             decimalPoint = inferredPattern.decimalPoint,
             owner = "${inferredDomainName}도메인 데이터스튜어드",
+            expressions = heuristicExpressions(englishName, englishAbbreviation, normalizedKoreanName),
+            aliases = emptyList(),
         )
+    }
+
+    /** 산출물 표현 4종(DB 컬럼, API 필드, 코드 변수, UI 라벨) 규칙 기반 추론. */
+    private fun heuristicExpressions(
+        englishName: String,
+        englishAbbreviation: String,
+        koreanName: String,
+    ): List<RecommendedExpression> {
+        val camel = toCamelCase(englishName)
+        return listOf(
+            RecommendedExpression(ExpressionType.DB_COLUMN, englishAbbreviation, true),
+            RecommendedExpression(ExpressionType.API_FIELD, camel, true),
+            RecommendedExpression(ExpressionType.CODE_VARIABLE, camel, true),
+            RecommendedExpression(ExpressionType.UI_LABEL, koreanName, true),
+        ).filter { it.expressionValue.isNotBlank() }
+    }
+
+    private fun toCamelCase(englishName: String): String {
+        val words = englishName.trim().split("\\s+".toRegex()).filter { it.isNotBlank() }
+        if (words.isEmpty()) return ""
+        return words.mapIndexed { index, word ->
+            val lower = word.lowercase()
+            if (index == 0) lower else lower.replaceFirstChar { it.uppercaseChar() }
+        }.joinToString("")
     }
 
     private fun buildEnglishName(

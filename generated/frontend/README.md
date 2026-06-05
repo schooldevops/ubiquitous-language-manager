@@ -55,6 +55,7 @@ Class | Method | HTTP request | Description
 *AIApi* | [**recommendTermDraft**](docs/AIApi.md#recommendtermdraft) | **POST** /ai/term-recommendation | RAG/Graph/LLM 기반 용어 초안 추천
 *AliasApi* | [**createTermAlias**](docs/AliasApi.md#createtermalias) | **POST** /terms/{termId}/aliases | 용어 별칭 등록
 *AliasApi* | [**listTermAliases**](docs/AliasApi.md#listtermaliases) | **GET** /terms/{termId}/aliases | 용어 별칭 목록 조회
+*AliasApi* | [**replaceTermAliases**](docs/AliasApi.md#replacetermaliases) | **PUT** /terms/{termId}/aliases | 용어 별칭 전체 교체
 *CandidateApi* | [**createCandidate**](docs/CandidateApi.md#createcandidate) | **POST** /candidates | 신규 용어 후보 등록
 *CandidateApi* | [**getCandidate**](docs/CandidateApi.md#getcandidate) | **GET** /candidates/{candidateId} | 신규 용어 후보 상세 조회
 *CandidateApi* | [**listCandidates**](docs/CandidateApi.md#listcandidates) | **GET** /candidates | 신규 용어 후보 목록 조회
@@ -63,6 +64,7 @@ Class | Method | HTTP request | Description
 *DashboardApi* | [**getDashboard**](docs/DashboardApi.md#getdashboard) | **GET** /dashboard | 메인 대시보드 요약 조회
 *ExpressionApi* | [**createTermExpression**](docs/ExpressionApi.md#createtermexpression) | **POST** /terms/{termId}/expressions | 용어 표현 매핑 등록
 *ExpressionApi* | [**listTermExpressions**](docs/ExpressionApi.md#listtermexpressions) | **GET** /terms/{termId}/expressions | 용어 표현 매핑 목록 조회
+*ExpressionApi* | [**replaceTermExpressions**](docs/ExpressionApi.md#replacetermexpressions) | **PUT** /terms/{termId}/expressions | 용어 표현 매핑 전체 교체
 *GovernanceApi* | [**approveTerm**](docs/GovernanceApi.md#approveterm) | **POST** /terms/{termId}/approve | 표준 용어 승인
 *GovernanceApi* | [**deprecateTerm**](docs/GovernanceApi.md#deprecateterm) | **POST** /terms/{termId}/deprecate | 표준 용어 폐기
 *GovernanceApi* | [**listTermHistory**](docs/GovernanceApi.md#listtermhistory) | **GET** /terms/{termId}/history | 용어 변경 이력 조회

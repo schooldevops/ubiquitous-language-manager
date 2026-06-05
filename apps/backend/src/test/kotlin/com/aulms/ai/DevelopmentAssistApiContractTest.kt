@@ -12,9 +12,13 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.context.TestPropertySource
 
 @SpringBootTest
 @AutoConfigureMockMvc
+// 계약 테스트는 결정적 규칙기반(heuristic) 결과를 검증한다. 로컬 Ollama 등 LLM 가용 여부에
+// 영향받지 않도록 알 수 없는 provider 로 강제해 LLM 경로를 비활성화한다.
+@TestPropertySource(properties = ["aulms.llm.provider=disabled"])
 class DevelopmentAssistApiContractTest(@Autowired private val mockMvc: MockMvc) {
     @Test
     fun `development assist maps customer order requirement to approved terms and artifacts`() {

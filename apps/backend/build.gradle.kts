@@ -35,6 +35,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    // 용어 엑셀(.xlsx) 내보내기
+    implementation("org.apache.poi:poi-ooxml:5.3.0")
     implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.25")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
     implementation("org.springframework.ai:spring-ai-starter-model-anthropic")

@@ -87,6 +87,27 @@ export async function listTermUploadBatches() {
   return res.data.items;
 }
 
+/** 전체 표준 용어를 지정 형식으로 내려받아 브라우저에서 파일 저장한다. */
+async function downloadExport(path: string, filename: string) {
+  const res = await axiosInstance.get(path, { responseType: "blob" });
+  const url = URL.createObjectURL(res.data as Blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+export function downloadTermsExcel(): Promise<void> {
+  return downloadExport("/api/terms/export/xlsx", "terms.xlsx");
+}
+
+export function downloadTermsJsonl(): Promise<void> {
+  return downloadExport("/api/terms/export/jsonl", "terms.jsonl");
+}
+
 export type ApiErrorInfo = {
   status?: number;
   code?: string;
@@ -861,6 +882,11 @@ export async function createExpression(termId: string, request: TermExpressionCr
   return response.data;
 }
 
+export async function replaceExpressions(termId: string, requests: TermExpressionCreateRequest[]): Promise<TermExpression[]> {
+  const response = await expressionApi.replaceTermExpressions(termId, requests);
+  return response.data;
+}
+
 export async function listAliases(termId: string): Promise<TermAlias[]> {
   try {
     const response = await aliasApi.listTermAliases(termId);
@@ -872,6 +898,11 @@ export async function listAliases(termId: string): Promise<TermAlias[]> {
 
 export async function createAlias(termId: string, request: TermAliasCreateRequest): Promise<TermAlias> {
   const response = await aliasApi.createTermAlias(termId, request);
+  return response.data;
+}
+
+export async function replaceAliases(termId: string, requests: TermAliasCreateRequest[]): Promise<TermAlias[]> {
+  const response = await aliasApi.replaceTermAliases(termId, requests);
   return response.data;
 }
 

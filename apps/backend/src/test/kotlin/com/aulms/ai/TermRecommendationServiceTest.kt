@@ -1,5 +1,6 @@
 package com.aulms.ai
 
+import com.aulms.model.ExpressionType
 import com.aulms.model.RecommendedTermDraft
 import com.aulms.model.TermRecommendationMode
 import com.aulms.model.TermRecommendationRequest
@@ -30,10 +31,23 @@ class TermRecommendationServiceTest {
             englishName = "Order Magic Field", englishAbbreviation = "ORD_MAGIC",
             businessDefinition = "정의", usageContext = "맥락",
             physicalType = "VARCHAR", digits = 10, decimalPoint = 0, owner = "owner",
+            expressions = emptyList(), aliases = emptyList(),
         )
         whenever(generator.generate(any(), any(), any())).thenReturn(llmDraft)
         val response = service.recommend(req("주문임의신규항목"))
         assertEquals("Order Magic Field", response.recommendation.englishName)
+    }
+
+    @Test
+    fun `heuristic recommendation derives expressions from english name and abbreviation`() {
+        whenever(generator.generate(any(), any(), any())).thenThrow(LlmUnavailableException("no key"))
+        val response = service.recommend(req("주문임의신규항목"))
+        val draft = response.recommendation
+        val dbColumn = draft.expressions.firstOrNull { it.expressionType == ExpressionType.DB_COLUMN }
+        val apiField = draft.expressions.firstOrNull { it.expressionType == ExpressionType.API_FIELD }
+        assertEquals(draft.englishAbbreviation, dbColumn?.expressionValue)
+        assertTrue(apiField != null && apiField.expressionValue.isNotBlank())
+        assertTrue(draft.expressions.any { it.expressionType == ExpressionType.UI_LABEL })
     }
 
     @Test

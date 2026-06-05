@@ -105,6 +105,10 @@ class InMemoryTermRepository : TermRepository {
         return expression
     }
 
+    override fun deleteExpressions(termId: String) {
+        record(termId).expressions.clear()
+    }
+
     override fun listAliases(termId: String): List<TermAlias> = record(termId).aliases.toList()
 
     override fun addAlias(termId: String, aliasName: String, aliasType: AliasType, recommendationAction: String, reason: String): TermAlias {
@@ -120,6 +124,10 @@ class InMemoryTermRepository : TermRepository {
         record.aliases.add(alias)
         addHistory(termId, "ADD_ALIAS", record.term.status, record.term.status, "별칭 등록: $aliasName", null, null)
         return alias
+    }
+
+    override fun deleteAliases(termId: String) {
+        record(termId).aliases.clear()
     }
 
     override fun searchDocuments(): List<TermSearchDocument> = terms.values.map { it.toSearchDocument() }

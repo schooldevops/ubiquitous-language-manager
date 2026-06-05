@@ -115,6 +115,50 @@ export const AliasApiAxiosParamCreator = function (configuration?: Configuration
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 해당 용어의 모든 별칭/금지어를 요청 본문 목록으로 교체한다(기존 항목 삭제 후 재등록).
+         * @summary 용어 별칭 전체 교체
+         * @param {string} termId 용어 식별자
+         * @param {Array<TermAliasCreateRequest>} termAliasCreateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        replaceTermAliases: async (termId: string, termAliasCreateRequest: Array<TermAliasCreateRequest>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'termId' is not null or undefined
+            assertParamExists('replaceTermAliases', 'termId', termId)
+            // verify required parameter 'termAliasCreateRequest' is not null or undefined
+            assertParamExists('replaceTermAliases', 'termAliasCreateRequest', termAliasCreateRequest)
+            const localVarPath = `/terms/{termId}/aliases`
+                .replace(`{${"termId"}}`, encodeURIComponent(String(termId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(termAliasCreateRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -152,6 +196,20 @@ export const AliasApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['AliasApi.listTermAliases']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 해당 용어의 모든 별칭/금지어를 요청 본문 목록으로 교체한다(기존 항목 삭제 후 재등록).
+         * @summary 용어 별칭 전체 교체
+         * @param {string} termId 용어 식별자
+         * @param {Array<TermAliasCreateRequest>} termAliasCreateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async replaceTermAliases(termId: string, termAliasCreateRequest: Array<TermAliasCreateRequest>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TermAlias>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.replaceTermAliases(termId, termAliasCreateRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AliasApi.replaceTermAliases']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -182,6 +240,17 @@ export const AliasApiFactory = function (configuration?: Configuration, basePath
          */
         listTermAliases(termId: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<TermAlias>> {
             return localVarFp.listTermAliases(termId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 해당 용어의 모든 별칭/금지어를 요청 본문 목록으로 교체한다(기존 항목 삭제 후 재등록).
+         * @summary 용어 별칭 전체 교체
+         * @param {string} termId 용어 식별자
+         * @param {Array<TermAliasCreateRequest>} termAliasCreateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        replaceTermAliases(termId: string, termAliasCreateRequest: Array<TermAliasCreateRequest>, options?: RawAxiosRequestConfig): AxiosPromise<Array<TermAlias>> {
+            return localVarFp.replaceTermAliases(termId, termAliasCreateRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -216,6 +285,19 @@ export class AliasApi extends BaseAPI {
      */
     public listTermAliases(termId: string, options?: RawAxiosRequestConfig) {
         return AliasApiFp(this.configuration).listTermAliases(termId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 해당 용어의 모든 별칭/금지어를 요청 본문 목록으로 교체한다(기존 항목 삭제 후 재등록).
+     * @summary 용어 별칭 전체 교체
+     * @param {string} termId 용어 식별자
+     * @param {Array<TermAliasCreateRequest>} termAliasCreateRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AliasApi
+     */
+    public replaceTermAliases(termId: string, termAliasCreateRequest: Array<TermAliasCreateRequest>, options?: RawAxiosRequestConfig) {
+        return AliasApiFp(this.configuration).replaceTermAliases(termId, termAliasCreateRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

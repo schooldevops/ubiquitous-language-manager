@@ -156,6 +156,12 @@ class QuerydslTermRepository(
         return TermExpression(expressionId, termId, expressionType, expressionValue, standard, language, style)
     }
 
+    @Transactional
+    override fun deleteExpressions(termId: String) {
+        termOrThrow(termId)
+        queryFactory.delete(e).where(e.termId.eq(termId)).execute()
+    }
+
     @Transactional(readOnly = true)
     override fun listAliases(termId: String): List<TermAlias> {
         termOrThrow(termId)
@@ -175,6 +181,12 @@ class QuerydslTermRepository(
             .execute()
         addHistory(termId, "ADD_ALIAS", term.status, term.status, "별칭 등록: $aliasName", null, null)
         return TermAlias(aliasId, termId, aliasName, aliasType, recommendationAction, reason)
+    }
+
+    @Transactional
+    override fun deleteAliases(termId: String) {
+        termOrThrow(termId)
+        queryFactory.delete(a).where(a.termId.eq(termId)).execute()
     }
 
     @Transactional(readOnly = true)

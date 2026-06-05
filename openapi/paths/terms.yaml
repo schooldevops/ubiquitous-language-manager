@@ -652,6 +652,43 @@ termExpressions:
         $ref: '../openapi.yaml#/components/responses/NotFound'
       '409':
         $ref: '../openapi.yaml#/components/responses/Conflict'
+  put:
+    tags:
+      - Expression
+    summary: 용어 표현 매핑 전체 교체
+    description: 해당 용어의 모든 표현 매핑을 요청 본문 목록으로 교체한다(기존 항목 삭제 후 재등록).
+    operationId: replaceTermExpressions
+    x-required-roles:
+      - ADMIN
+      - DATA_STEWARD
+      - DEVELOPMENT_LEAD
+      - ARCHITECT
+      - DEVELOPER
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../schemas/term.yaml#/TermExpressionCreateRequest'
+    responses:
+      '200':
+        description: 표현 매핑 전체 교체 성공
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../schemas/term.yaml#/TermExpression'
+      '400':
+        $ref: '../openapi.yaml#/components/responses/BadRequest'
+      '401':
+        $ref: '../openapi.yaml#/components/responses/Unauthorized'
+      '403':
+        $ref: '../openapi.yaml#/components/responses/Forbidden'
+      '404':
+        $ref: '../openapi.yaml#/components/responses/NotFound'
 
 termAliases:
   parameters:
@@ -757,3 +794,40 @@ termAliases:
         $ref: '../openapi.yaml#/components/responses/NotFound'
       '409':
         $ref: '../openapi.yaml#/components/responses/Conflict'
+  put:
+    tags:
+      - Alias
+    summary: 용어 별칭 전체 교체
+    description: 해당 용어의 모든 별칭/금지어를 요청 본문 목록으로 교체한다(기존 항목 삭제 후 재등록).
+    operationId: replaceTermAliases
+    x-required-roles:
+      - ADMIN
+      - DATA_STEWARD
+      - DEVELOPMENT_LEAD
+      - ARCHITECT
+      - DEVELOPER
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../schemas/term.yaml#/TermAliasCreateRequest'
+    responses:
+      '200':
+        description: 별칭 전체 교체 성공
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../schemas/term.yaml#/TermAlias'
+      '400':
+        $ref: '../openapi.yaml#/components/responses/BadRequest'
+      '401':
+        $ref: '../openapi.yaml#/components/responses/Unauthorized'
+      '403':
+        $ref: '../openapi.yaml#/components/responses/Forbidden'
+      '404':
+        $ref: '../openapi.yaml#/components/responses/NotFound'

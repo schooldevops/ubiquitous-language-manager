@@ -113,4 +113,36 @@ interface ExpressionApi {
     fun listTermExpressions(@Parameter(description = "용어 식별자", required = true) @PathVariable("termId") termId: kotlin.String): ResponseEntity<List<TermExpression>> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
+
+    @Operation(
+        tags = ["Expression",],
+        summary = "용어 표현 매핑 전체 교체",
+        operationId = "replaceTermExpressions",
+        description = """해당 용어의 모든 표현 매핑을 요청 본문 목록으로 교체한다(기존 항목 삭제 후 재등록).""",
+        responses = [
+            ApiResponse(responseCode = "200", description = "표현 매핑 전체 교체 성공", content = [Content(array = ArraySchema(schema = Schema(implementation = TermExpression::class)))]),
+            ApiResponse(responseCode = "400", description = "요청 형식 또는 validation 오류", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "invalidRequest", value = "{\n  \"code\": \"INVALID_REQUEST\",\n  \"message\": \"\uC694\uCCAD \uAC12\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"koreanName\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "401", description = "인증 필요", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "missingToken", value = "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"\uC778\uC99D \uD1A0\uD070\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"detail\": \"Authorization Bearer \uD1A0\uD070\uC744 \uC804\uB2EC\uD574\uC57C \uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "forbidden", value = "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"\uC694\uCCAD\uD55C \uC791\uC5C5\uC744 \uC218\uD589\uD560 \uAD8C\uD55C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"DATA_STEWARD \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])]),
+            ApiResponse(responseCode = "404", description = "리소스 없음", content = [Content(schema = Schema(implementation = ErrorResponse::class), examples = [
+                ExampleObject(name = "termNotFound", value = "{\n  \"code\": \"TERM_NOT_FOUND\",\n  \"message\": \"\uD45C\uC900 \uC6A9\uC5B4\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.\",\n  \"detail\": \"termId=T-000123\",\n  \"traceId\": \"01HX8R7P9Q6RZC6Q9VQ0X7Z3WB\"\n}")
+            ])])
+        ],
+        security = [ SecurityRequirement(name = "bearerAuth") ]
+    )
+    @RequestMapping(
+            method = [RequestMethod.PUT],
+            value = ["/terms/{termId}/expressions"],
+            produces = ["application/json"],
+            consumes = ["application/json"]
+    )
+    fun replaceTermExpressions(@Parameter(description = "용어 식별자", required = true) @PathVariable("termId") termId: kotlin.String,@Parameter(description = "", required = true) @Valid @RequestBody termExpressionCreateRequest: kotlin.collections.List<TermExpressionCreateRequest>): ResponseEntity<List<TermExpression>> {
+        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+    }
 }

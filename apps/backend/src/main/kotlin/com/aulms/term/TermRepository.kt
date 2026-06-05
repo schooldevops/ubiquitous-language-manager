@@ -25,8 +25,10 @@ interface TermRepository {
     fun deprecate(termId: String, approver: String, replacementTermId: String, reason: String, impactAnalysisId: String?): Term
     fun listExpressions(termId: String): List<TermExpression>
     fun addExpression(termId: String, expressionType: ExpressionType, expressionValue: String, language: String?, style: String?, standard: Boolean): TermExpression
+    fun deleteExpressions(termId: String)
     fun listAliases(termId: String): List<TermAlias>
     fun addAlias(termId: String, aliasName: String, aliasType: AliasType, recommendationAction: String, reason: String): TermAlias
+    fun deleteAliases(termId: String)
     fun searchDocuments(): List<TermSearchDocument>
     fun relationshipDocuments(): List<TermRelationshipRecord>
     fun listHistory(termId: String, page: Int, size: Int): Pair<List<TermChangeHistory>, PageMetadata>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.aulms.upload.TermJsonlParserTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-06-04T10:47:03.828Z" hostname="NHY9M72K9J" time="0.044">
+  <properties/>
+  <testcase name="blank lines are skipped()" classname="com.aulms.upload.TermJsonlParserTest" time="0.024"/>
+  <testcase name="broken json line becomes parse error row()" classname="com.aulms.upload.TermJsonlParserTest" time="0.007"/>
+  <testcase name="parses hierarchical row with expressions aliases relationships()" classname="com.aulms.upload.TermJsonlParserTest" time="0.009"/>
+  <testcase name="row missing termId becomes parse error()" classname="com.aulms.upload.TermJsonlParserTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
