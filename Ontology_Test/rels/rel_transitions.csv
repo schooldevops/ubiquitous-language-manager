@@ -1,0 +1,20 @@
+fromCode,toCode,event,handler,scope,triggerProcessId
+MBR_NONE,MBR_ACTIVE,회원 가입 완료,"회원 계정 생성, CI/DI 매핑 저장, 기본 프로필 생성, 정회원 세션 생성",NORMAL,PR-MBR-CS-001-05
+MBR_NONE,MBR_ACTIVE,기존 정상 회원 식별,신규 가입을 중단하고 로그인 경로로 분기,NORMAL,
+MBR_NONE,MBR_DORMANT,기존 휴면 회원 식별,신규 가입을 중단하고 휴면 해제 경로로 분기,NORMAL,
+MBR_NONE,MBR_WITHDRAW_PENDING,탈퇴유예 회원 식별,유예 기간 내 철회 가능 여부를 안내하고 신규 가입은 제한,NORMAL,
+MBR_NONE,MBR_REJOIN_BLOCKED,재가입제한 회원 식별,"재가입 제한 사유, 제한 종료일, 문의 경로 안내",NORMAL,
+MBR_ACTIVE,MBR_DORMANT,휴면 전환 기준 충족,"휴면 전환은 BSS 배치 또는 별도 운영 기준에 따라 처리하고, 본 문서에서는 상세 프로세스 범위에서 제외",NORMAL,
+MBR_ACTIVE,MBR_WITHDRAW_PENDING,회원 탈퇴 최종 동의 완료,회원 상태를 탈퇴유예로 전환하고 세션·토큰을 종료하며 철회 가능 기간을 안내,NORMAL,PR-MBR-CS-003-05
+MBR_ACTIVE,MBR_JOIN_BLOCKED,가입 제한 또는 운영 제한 적용,"제한 사유 코드, 제한 시작일, 제한 해제 조건을 저장하고 고객에게 제한 상태 안내",NORMAL,
+MBR_DORMANT,MBR_ACTIVE,휴면 해제 완료,분리보관 데이터를 복원하고 정상 회원 상태로 전환한 뒤 세션을 복구,NORMAL,PR-MBR-CS-002-05
+MBR_DORMANT,MBR_WITHDRAW_PENDING,탈퇴 요청,본인인증 및 필요한 재동의·안내 확인 후 탈퇴 처리 진행,NORMAL,
+MBR_WITHDRAW_PENDING,MBR_ACTIVE,철회 요청 승인,유예 기간 내 본인인증 후 철회 처리하고 탈퇴 이전 상태로 복원,NORMAL,
+MBR_WITHDRAW_PENDING,MBR_WITHDRAWN,유예 기간 만료,탈퇴 완료 상태로 전환하고 파기 대상과 법정 보관 대상을 분리,NORMAL,
+MBR_WITHDRAWN,MBR_ACTIVE,재가입 가능 판정 완료,재가입 제한이 없으면 계정 복원 또는 신규 생성 기준에 따라 재가입 처리,NORMAL,PR-MBR-CS-004-05
+MBR_WITHDRAWN,MBR_REJOIN_BLOCKED,재가입 제한 조건 해당,"재가입 제한 기간, 제재 여부, 예외 제한 사유를 안내",NORMAL,
+MBR_REJOIN_BLOCKED,MBR_ACTIVE,제한 기간 종료 후 재가입 요청,"본인인증, 재가입 가능 여부 확인, 개인정보 입력 후 재가입 처리",NORMAL,PR-MBR-CS-004-05
+MBR_JOIN_BLOCKED,MBR_NONE,제한 해제,계정 존재 여부와 제한 해제 사유에 따라 미가입 또는 정상 상태로 전환,NORMAL,
+MBR_JOIN_BLOCKED,MBR_ACTIVE,제한 해제,계정 존재 여부와 제한 해제 사유에 따라 미가입 또는 정상 상태로 전환,NORMAL,
+ALL,,상태 조회 실패 또는 시스템 오류,"상태를 임의 변경하지 않고 재조회, 오류 안내, 오류 이력 저장 처리",ALL,
+ALL,,중복 요청,멱등성 키 또는 처리 이력 기준으로 중복 요청을 차단하거나 기존 처리 결과를 반환,ALL,

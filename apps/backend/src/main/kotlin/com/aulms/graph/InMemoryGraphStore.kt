@@ -1,16 +1,18 @@
 package com.aulms.graph
 
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Repository
 import java.util.concurrent.atomic.AtomicLong
 
 @Repository
-class InMemoryGraphStore {
+@Profile("!postgres")
+class InMemoryGraphStore : GraphStore {
     private val nodes = linkedMapOf<String, GraphNode>()
     private val edges = linkedMapOf<String, GraphEdge>()
     private val logs = mutableListOf<GraphSyncLog>()
     private val logSequence = AtomicLong(1)
 
-    fun upsertNode(node: GraphNode): GraphUpsertResult {
+    override fun upsertNode(node: GraphNode): GraphUpsertResult {
         val existing = nodes[node.nodeKey]
         if (existing == null) {
             nodes[node.nodeKey] = node
@@ -23,7 +25,7 @@ class InMemoryGraphStore {
         return GraphUpsertResult(created = false, updated = true)
     }
 
-    fun upsertEdge(edge: GraphEdge): GraphUpsertResult {
+    override fun upsertEdge(edge: GraphEdge): GraphUpsertResult {
         val existing = edges[edge.edgeKey]
         if (existing == null) {
             edges[edge.edgeKey] = edge
@@ -36,14 +38,14 @@ class InMemoryGraphStore {
         return GraphUpsertResult(created = false, updated = true)
     }
 
-    fun replaceAll(nodes: List<GraphNode>, edges: List<GraphEdge>) {
+    override fun replaceAll(nodes: List<GraphNode>, edges: List<GraphEdge>) {
         this.nodes.clear()
         this.edges.clear()
         nodes.forEach { this.nodes[it.nodeKey] = it }
         edges.forEach { this.edges[it.edgeKey] = it }
     }
 
-    fun addLog(result: GraphSyncResult): GraphSyncLog {
+    override fun addLog(result: GraphSyncResult): GraphSyncLog {
         val log = GraphSyncLog(
             logId = logSequence.getAndIncrement(),
             mode = result.mode,
@@ -61,17 +63,17 @@ class InMemoryGraphStore {
         return log
     }
 
-    fun nodes(): List<GraphNode> = nodes.values.toList()
+    override fun nodes(): List<GraphNode> = nodes.values.toList()
 
-    fun edges(): List<GraphEdge> = edges.values.toList()
+    override fun edges(): List<GraphEdge> = edges.values.toList()
 
-    fun logs(): List<GraphSyncLog> = logs.toList()
+    override fun logs(): List<GraphSyncLog> = logs.toList()
 
-    fun findNode(nodeKey: String): GraphNode? = nodes[nodeKey]
+    override fun findNode(nodeKey: String): GraphNode? = nodes[nodeKey]
 
-    fun findEdge(edgeKey: String): GraphEdge? = edges[edgeKey]
+    override fun findEdge(edgeKey: String): GraphEdge? = edges[edgeKey]
 
-    fun clear() {
+    override fun clear() {
         nodes.clear()
         edges.clear()
         logs.clear()

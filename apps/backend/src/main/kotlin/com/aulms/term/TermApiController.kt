@@ -44,10 +44,16 @@ class TermApiController(private val service: TermService) : TermApi, ExpressionA
     override fun createTermExpression(termId: String, termExpressionCreateRequest: TermExpressionCreateRequest) =
         ResponseEntity.status(HttpStatus.CREATED).body(service.createExpression(termId, termExpressionCreateRequest))
 
+    override fun replaceTermExpressions(termId: String, termExpressionCreateRequest: List<TermExpressionCreateRequest>) =
+        ResponseEntity.ok(service.replaceExpressions(termId, termExpressionCreateRequest))
+
     override fun listTermAliases(termId: String) =
         ResponseEntity.ok(service.listAliases(termId))
 
     override fun createTermAlias(termId: String, termAliasCreateRequest: TermAliasCreateRequest) =
         ResponseEntity.status(HttpStatus.CREATED).body(service.createAlias(termId, termAliasCreateRequest))
+
+    override fun replaceTermAliases(termId: String, termAliasCreateRequest: List<TermAliasCreateRequest>) =
+        ResponseEntity.ok(service.replaceAliases(termId, termAliasCreateRequest))
 }
 

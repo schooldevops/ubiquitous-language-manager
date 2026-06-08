@@ -16,6 +16,8 @@ Name | Type | Description | Notes
 **digits** | **number** |  | [default to undefined]
 **decimalPoint** | **number** |  | [default to undefined]
 **owner** | **string** |  | [default to undefined]
+**expressions** | [**Array&lt;RecommendedExpression&gt;**](RecommendedExpression.md) | 산출물별 표현 추천 (DB 컬럼, API 필드, 코드 변수, UI 라벨 등) | [default to undefined]
+**aliases** | [**Array&lt;RecommendedAlias&gt;**](RecommendedAlias.md) | 별칭/유사어/금지어 추천 목록 | [default to undefined]
 
 ## Example
 
@@ -33,6 +35,8 @@ const instance: RecommendedTermDraft = {
     digits,
     decimalPoint,
     owner,
+    expressions,
+    aliases,
 };
 ```
 

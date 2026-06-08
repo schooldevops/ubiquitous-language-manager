@@ -1,0 +1,77 @@
+name: aulms-local
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: aulms-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-aulms}
+      POSTGRES_USER: ${POSTGRES_USER:-aulms}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # init/*.sql 은 최초 빈 데이터 디렉토리에서 1회만 실행됨
+      - ./init/postgres:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-aulms} -d ${POSTGRES_DB:-aulms}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - aulms
+
+  redis:
+    image: redis:7-alpine
+    container_name: aulms-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - aulms
+
+  neo4j:
+    image: neo4j:5-community
+    container_name: aulms-neo4j
+    restart: unless-stopped
+    environment:
+      NEO4J_AUTH: ${NEO4J_AUTH:-neo4j/changeme123}
+      # APOC 등 플러그인 필요 시 아래 주석 해제
+      # NEO4J_PLUGINS: '["apoc"]'
+    ports:
+      - "${NEO4J_HTTP_PORT:-7474}:7474"   # HTTP / Browser
+      - "${NEO4J_BOLT_PORT:-7687}:7687"   # Bolt
+    volumes:
+      - neo4jdata:/data
+      - neo4jlogs:/logs
+      - ./init/neo4j:/var/lib/neo4j/import
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:7474 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - aulms
+
+volumes:
+  pgdata:
+  redisdata:
+  neo4jdata:
+  neo4jlogs:
+
+networks:
+  aulms:
+    driver: bridge

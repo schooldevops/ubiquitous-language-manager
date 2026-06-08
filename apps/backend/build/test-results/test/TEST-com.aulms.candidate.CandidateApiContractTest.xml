@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.aulms.candidate.CandidateApiContractTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-05-31T13:58:20.456Z" hostname="NHY9M72K9J" time="0.118">
-  <properties/>
-  <testcase name="create review and promote candidate to approved term()" classname="com.aulms.candidate.CandidateApiContractTest" time="0.118"/>
-  <system-out><![CDATA[2026-05-31T22:58:20.433+09:00  INFO 5410 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.aulms.candidate.CandidateApiContractTest]: CandidateApiContractTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-05-31T22:58:20.454+09:00  INFO 5410 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.aulms.AulmsBackendApplication for test class com.aulms.candidate.CandidateApiContractTest
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

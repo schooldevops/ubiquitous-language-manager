@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.aulms.impact.ImpactAnalysisApiContractTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-05-31T13:58:20.655Z" hostname="NHY9M72K9J" time="0.032">
-  <properties/>
-  <testcase name="analyze customer number api field rename impact()" classname="com.aulms.impact.ImpactAnalysisApiContractTest" time="0.032"/>
-  <system-out><![CDATA[2026-05-31T22:58:20.626+09:00  INFO 5410 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.aulms.impact.ImpactAnalysisApiContractTest]: ImpactAnalysisApiContractTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-05-31T22:58:20.653+09:00  INFO 5410 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.aulms.AulmsBackendApplication for test class com.aulms.impact.ImpactAnalysisApiContractTest
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

@@ -42,6 +42,44 @@ TermRecommendationRequest:
       description: 사용자가 일부 입력한 사용 맥락
       example: 배송 요청 화면과 배송 옵션 추천 API에서 사용
 
+RecommendedExpression:
+  type: object
+  description: 산출물별 표현 추천 항목
+  required:
+    - expressionType
+    - expressionValue
+    - isStandard
+  properties:
+    expressionType:
+      $ref: './enums.yaml#/ExpressionType'
+    expressionValue:
+      type: string
+      example: customerNumber
+    isStandard:
+      type: boolean
+      example: true
+
+RecommendedAlias:
+  type: object
+  description: 별칭/금지어 추천 항목
+  required:
+    - aliasName
+    - aliasType
+    - recommendationAction
+    - reason
+  properties:
+    aliasName:
+      type: string
+      example: 고객ID
+    aliasType:
+      $ref: './enums.yaml#/AliasType'
+    recommendationAction:
+      type: string
+      example: 고객번호로 변환 권장
+    reason:
+      type: string
+      example: 고객 식별 번호 의미로 사용되는 경우 표준 용어는 고객번호
+
 RecommendedTermDraft:
   type: object
   description: 추천으로 채워줄 용어 초안
@@ -56,6 +94,8 @@ RecommendedTermDraft:
     - digits
     - decimalPoint
     - owner
+    - expressions
+    - aliases
   properties:
     domainName:
       type: string
@@ -89,6 +129,28 @@ RecommendedTermDraft:
     owner:
       type: string
       example: 고객도메인 데이터스튜어드
+    expressions:
+      type: array
+      description: 산출물별 표현 추천 (DB 컬럼, API 필드, 코드 변수, UI 라벨 등)
+      items:
+        $ref: '#/RecommendedExpression'
+      example:
+        - expressionType: DB_COLUMN
+          expressionValue: CUST_NO
+          isStandard: true
+        - expressionType: API_FIELD
+          expressionValue: customerNumber
+          isStandard: true
+    aliases:
+      type: array
+      description: 별칭/유사어/금지어 추천 목록
+      items:
+        $ref: '#/RecommendedAlias'
+      example:
+        - aliasName: 고객ID
+          aliasType: Forbidden
+          recommendationAction: 고객번호로 변환 권장
+          reason: 기술 ID와 혼동되어 금지어로 분류
 
 RecommendationEvidence:
   type: object

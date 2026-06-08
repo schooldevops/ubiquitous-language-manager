@@ -1,8 +1,11 @@
 package com.aulms.ai
 
 import com.aulms.graph.GraphSyncWorker
+import com.aulms.model.ExpressionType
 import com.aulms.model.GraphRecommendationContext
 import com.aulms.model.RecommendationEvidence
+import com.aulms.model.RecommendedAlias
+import com.aulms.model.RecommendedExpression
 import com.aulms.model.RecommendedTermDraft
 import com.aulms.model.SearchResult
 import com.aulms.model.SemanticSearchRequest
@@ -14,6 +17,7 @@ import com.aulms.term.TermRepository
 import com.aulms.search.SearchNormalizer
 import com.aulms.search.SearchService
 import com.aulms.search.SemanticSearchService
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -22,7 +26,10 @@ class TermRecommendationService(
     private val searchService: SearchService,
     private val semanticSearchService: SemanticSearchService,
     private val graphSyncWorker: GraphSyncWorker,
+    private val llmTermDraftGenerator: LlmTermDraftGenerator,
 ) {
+    private val logger = LoggerFactory.getLogger(TermRecommendationService::class.java)
+
     fun recommend(request: TermRecommendationRequest): TermRecommendationResponse {
         val normalizedKoreanName = request.koreanName.trim().replace("\\s+".toRegex(), "")
         val exactMatches = searchService.exactSearch(request.koreanName, null).items.map { it.toEvidence(RecommendationEvidence.Source.Exact) }
@@ -46,14 +53,40 @@ class TermRecommendationService(
         val existingExact = exactMatches.firstOrNull {
             SearchNormalizer.normalize(it.standardTerm) == SearchNormalizer.normalize(normalizedKoreanName)
         }
-        val recommendation = llmInferRecommendation(
-            request = request,
-            normalizedKoreanName = normalizedKoreanName,
-            inferredDomainName = inferredDomainName,
-            ragMatches = ragMatches,
-            graphContext = graphContext,
-            existingExact = existingExact,
-        )
+        val recommendation: RecommendedTermDraft
+        val usedLlm: Boolean
+        if (existingExact != null) {
+            recommendation = heuristicInferRecommendation(
+                request = request,
+                normalizedKoreanName = normalizedKoreanName,
+                inferredDomainName = inferredDomainName,
+                ragMatches = ragMatches,
+                graphContext = graphContext,
+                existingExact = existingExact,
+            )
+            usedLlm = false
+        } else {
+            val llmResult = try {
+                llmTermDraftGenerator.generate(request, inferredDomainName, graphContext)
+            } catch (ex: LlmUnavailableException) {
+                logger.warn("LLM term draft unavailable, falling back to heuristic: {}", ex.message)
+                null
+            }
+            if (llmResult != null) {
+                recommendation = llmResult
+                usedLlm = true
+            } else {
+                recommendation = heuristicInferRecommendation(
+                    request = request,
+                    normalizedKoreanName = normalizedKoreanName,
+                    inferredDomainName = inferredDomainName,
+                    ragMatches = ragMatches,
+                    graphContext = graphContext,
+                    existingExact = existingExact,
+                )
+                usedLlm = false
+            }
+        }
 
         return TermRecommendationResponse(
             inputKoreanName = request.koreanName,
@@ -62,7 +95,7 @@ class TermRecommendationService(
             ragMatches = ragMatches,
             graphContext = graphContext,
             llmReasoning = llmReasoning(ragMatches, graphContext, recommendation, existingExact != null),
-            warnings = warnings(normalizedKoreanName, ragMatches, existingExact != null),
+            warnings = warnings(normalizedKoreanName, ragMatches, existingExact != null, usedLlm),
         )
     }
 
@@ -123,7 +156,7 @@ class TermRecommendationService(
         )
     }
 
-    private fun llmInferRecommendation(
+    private fun heuristicInferRecommendation(
         request: TermRecommendationRequest,
         normalizedKoreanName: String,
         inferredDomainName: String,
@@ -145,6 +178,12 @@ class TermRecommendationService(
                     digits = document.term.digits,
                     decimalPoint = document.term.decimalPoint,
                     owner = document.term.owner,
+                    expressions = document.term.expressions.map {
+                        RecommendedExpression(it.expressionType, it.expressionValue, it.isStandard)
+                    },
+                    aliases = document.term.aliases.map {
+                        RecommendedAlias(it.aliasName, it.aliasType, it.recommendationAction, it.reason)
+                    },
                 )
             }
         }
@@ -168,7 +207,33 @@ class TermRecommendationService(
             digits = inferredPattern.digits,
             decimalPoint = inferredPattern.decimalPoint,
             owner = "${inferredDomainName}도메인 데이터스튜어드",
+            expressions = heuristicExpressions(englishName, englishAbbreviation, normalizedKoreanName),
+            aliases = emptyList(),
         )
+    }
+
+    /** 산출물 표현 4종(DB 컬럼, API 필드, 코드 변수, UI 라벨) 규칙 기반 추론. */
+    private fun heuristicExpressions(
+        englishName: String,
+        englishAbbreviation: String,
+        koreanName: String,
+    ): List<RecommendedExpression> {
+        val camel = toCamelCase(englishName)
+        return listOf(
+            RecommendedExpression(ExpressionType.DB_COLUMN, englishAbbreviation, true),
+            RecommendedExpression(ExpressionType.API_FIELD, camel, true),
+            RecommendedExpression(ExpressionType.CODE_VARIABLE, camel, true),
+            RecommendedExpression(ExpressionType.UI_LABEL, koreanName, true),
+        ).filter { it.expressionValue.isNotBlank() }
+    }
+
+    private fun toCamelCase(englishName: String): String {
+        val words = englishName.trim().split("\\s+".toRegex()).filter { it.isNotBlank() }
+        if (words.isEmpty()) return ""
+        return words.mapIndexed { index, word ->
+            val lower = word.lowercase()
+            if (index == 0) lower else lower.replaceFirstChar { it.uppercaseChar() }
+        }.joinToString("")
     }
 
     private fun buildEnglishName(
@@ -247,8 +312,12 @@ class TermRecommendationService(
         normalizedKoreanName: String,
         ragMatches: List<RecommendationEvidence>,
         exactExisting: Boolean,
+        usedLlm: Boolean,
     ): List<String> {
         val items = mutableListOf<String>()
+        if (!usedLlm && !exactExisting) {
+            items += "LLM 미사용(키 미설정 또는 호출 실패) 규칙기반 추천값이므로 검토가 필요함"
+        }
         if (exactExisting) {
             items += "데이터 사전에 동일한 표준 용어가 이미 존재하므로 신규 등록보다 기존 용어 재사용이 우선임"
         } else {

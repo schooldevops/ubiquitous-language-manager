@@ -1,6 +1,6 @@
 package com.aulms.rag
 
-import com.aulms.term.TermRepository
+import com.aulms.term.InMemoryTermRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
@@ -8,12 +8,12 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 class RagDocumentGeneratorTest {
-    private val generator = RagDocumentGenerator(TermRepository())
+    private val generator = RagDocumentGenerator(InMemoryTermRepository())
 
     @Test
     fun `customer number document contains standard fields aliases and relationships`() {
         val customerDocument = generator.renderTermDocument(
-            TermRepository().searchDocuments().first { it.term.termId == "T-000001" },
+            InMemoryTermRepository().searchDocuments().first { it.term.termId == "T-000001" },
         )
 
         assertThat(customerDocument).contains("# 고객번호")

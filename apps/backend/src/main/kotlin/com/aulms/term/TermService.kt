@@ -45,10 +45,24 @@ class TermService(private val repository: TermRepository) {
     fun createExpression(termId: String, request: TermExpressionCreateRequest): TermExpression =
         repository.addExpression(termId, request.expressionType, request.expressionValue, request.language, request.style, request.isStandard)
 
+    fun replaceExpressions(termId: String, requests: List<TermExpressionCreateRequest>): List<TermExpression> {
+        repository.deleteExpressions(termId)
+        return requests.map {
+            repository.addExpression(termId, it.expressionType, it.expressionValue, it.language, it.style, it.isStandard)
+        }
+    }
+
     fun listAliases(termId: String): List<TermAlias> = repository.listAliases(termId)
 
     fun createAlias(termId: String, request: TermAliasCreateRequest): TermAlias =
         repository.addAlias(termId, request.aliasName, request.aliasType, request.recommendationAction, request.reason)
+
+    fun replaceAliases(termId: String, requests: List<TermAliasCreateRequest>): List<TermAlias> {
+        repository.deleteAliases(termId)
+        return requests.map {
+            repository.addAlias(termId, it.aliasName, it.aliasType, it.recommendationAction, it.reason)
+        }
+    }
 }
 
 private fun TermCreateRequest.toCommand(): TermCommand = TermCommand(

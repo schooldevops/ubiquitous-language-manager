@@ -4,12 +4,12 @@ import com.aulms.model.ExpressionType
 import com.aulms.model.TermStatus
 import com.aulms.model.ValidationSeverity
 import com.aulms.term.TermCommand
-import com.aulms.term.TermRepository
+import com.aulms.term.InMemoryTermRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class RuleEngineTest {
-    private val repository = TermRepository()
+    private val repository = InMemoryTermRepository()
     private val ruleEngine = RuleEngine(repository)
 
     @Test

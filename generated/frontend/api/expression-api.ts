@@ -115,6 +115,50 @@ export const ExpressionApiAxiosParamCreator = function (configuration?: Configur
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 해당 용어의 모든 표현 매핑을 요청 본문 목록으로 교체한다(기존 항목 삭제 후 재등록).
+         * @summary 용어 표현 매핑 전체 교체
+         * @param {string} termId 용어 식별자
+         * @param {Array<TermExpressionCreateRequest>} termExpressionCreateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        replaceTermExpressions: async (termId: string, termExpressionCreateRequest: Array<TermExpressionCreateRequest>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'termId' is not null or undefined
+            assertParamExists('replaceTermExpressions', 'termId', termId)
+            // verify required parameter 'termExpressionCreateRequest' is not null or undefined
+            assertParamExists('replaceTermExpressions', 'termExpressionCreateRequest', termExpressionCreateRequest)
+            const localVarPath = `/terms/{termId}/expressions`
+                .replace(`{${"termId"}}`, encodeURIComponent(String(termId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(termExpressionCreateRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -152,6 +196,20 @@ export const ExpressionApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['ExpressionApi.listTermExpressions']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 해당 용어의 모든 표현 매핑을 요청 본문 목록으로 교체한다(기존 항목 삭제 후 재등록).
+         * @summary 용어 표현 매핑 전체 교체
+         * @param {string} termId 용어 식별자
+         * @param {Array<TermExpressionCreateRequest>} termExpressionCreateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async replaceTermExpressions(termId: string, termExpressionCreateRequest: Array<TermExpressionCreateRequest>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TermExpression>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.replaceTermExpressions(termId, termExpressionCreateRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ExpressionApi.replaceTermExpressions']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -182,6 +240,17 @@ export const ExpressionApiFactory = function (configuration?: Configuration, bas
          */
         listTermExpressions(termId: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<TermExpression>> {
             return localVarFp.listTermExpressions(termId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 해당 용어의 모든 표현 매핑을 요청 본문 목록으로 교체한다(기존 항목 삭제 후 재등록).
+         * @summary 용어 표현 매핑 전체 교체
+         * @param {string} termId 용어 식별자
+         * @param {Array<TermExpressionCreateRequest>} termExpressionCreateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        replaceTermExpressions(termId: string, termExpressionCreateRequest: Array<TermExpressionCreateRequest>, options?: RawAxiosRequestConfig): AxiosPromise<Array<TermExpression>> {
+            return localVarFp.replaceTermExpressions(termId, termExpressionCreateRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -216,6 +285,19 @@ export class ExpressionApi extends BaseAPI {
      */
     public listTermExpressions(termId: string, options?: RawAxiosRequestConfig) {
         return ExpressionApiFp(this.configuration).listTermExpressions(termId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 해당 용어의 모든 표현 매핑을 요청 본문 목록으로 교체한다(기존 항목 삭제 후 재등록).
+     * @summary 용어 표현 매핑 전체 교체
+     * @param {string} termId 용어 식별자
+     * @param {Array<TermExpressionCreateRequest>} termExpressionCreateRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ExpressionApi
+     */
+    public replaceTermExpressions(termId: string, termExpressionCreateRequest: Array<TermExpressionCreateRequest>, options?: RawAxiosRequestConfig) {
+        return ExpressionApiFp(this.configuration).replaceTermExpressions(termId, termExpressionCreateRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

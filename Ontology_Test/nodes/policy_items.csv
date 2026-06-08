@@ -1,0 +1,476 @@
+id,name,value,valueType,valueNum,valueUnit,policyId
+POL-MBR-TERM-001-01,회원 가입 필수 약관,"서비스 이용약관, 개인정보 수집·이용 동의",enum,,,PG-MBR-TERM-001
+POL-MBR-TERM-001-02,회원 가입 선택 약관,"마케팅 정보 수신 동의, 맞춤형 혜택 제공 동의",enum,,,PG-MBR-TERM-001
+POL-MBR-TERM-001-03,휴면 해제 재동의 대상 약관,"개정된 필수 약관, 개인정보 수집·이용 동의",enum,,,PG-MBR-TERM-001
+POL-MBR-TERM-001-04,재가입 필수 약관,"서비스 이용약관, 개인정보 수집·이용 동의",enum,,,PG-MBR-TERM-001
+POL-MBR-TERM-001-05,재가입 선택 약관,"마케팅 정보 수신 동의, 맞춤형 혜택 제공 동의",enum,,,PG-MBR-TERM-001
+POL-MBR-TERM-001-06,필수 약관 미동의 처리,다음 단계 진행 불가,text,,,PG-MBR-TERM-001
+POL-MBR-TERM-001-07,선택 약관 미동의 처리,기본 업무 진행 가능,text,,,PG-MBR-TERM-001
+POL-MBR-TERM-001-08,전체 동의 적용 범위,"필수 약관, 선택 약관",enum,,,PG-MBR-TERM-001
+POL-MBR-TERM-001-09,선택 약관 개별 해제 허용 여부,허용,text,,,PG-MBR-TERM-001
+POL-MBR-TERM-001-10,약관 버전 적용 기준,업무 진행 시점의 최신 버전,text,,,PG-MBR-TERM-001
+POL-MBR-TERM-001-11,약관 상세 노출 대상,"약관 전문, 핵심 요약, 개정 이력",enum,,,PG-MBR-TERM-001
+POL-MBR-TERM-001-12,휴면 해제 선택 약관 재동의 여부,"필수 약관은 변경 시 재동의, 선택 약관은 고객 선택에 따라 재동의",enum,,,PG-MBR-TERM-001
+POL-MBR-TERM-002-01,법정대리인 동의 대상 고객,만 14세 미만 고객 및 법정대리인 동의가 필요한 미성년 고객,text,,,PG-MBR-TERM-002
+POL-MBR-TERM-002-02,법정대리인 동의 대상 업무,"회원 가입, 재가입",enum,,,PG-MBR-TERM-002
+POL-MBR-TERM-002-03,법정대리인 인증수단,"휴대폰 본인인증, PASS 인증",enum,,,PG-MBR-TERM-002
+POL-MBR-TERM-002-04,법정대리인 동의 방식,법정대리인 본인인증 후 전자 동의,text,,,PG-MBR-TERM-002
+POL-MBR-TERM-002-05,법정대리인 동의 유효시간,요청 발송 후 24시간,text,,,PG-MBR-TERM-002
+POL-MBR-TERM-002-06,법정대리인 동의 미완료 처리,다음 단계 진행 불가,text,,,PG-MBR-TERM-002
+POL-MBR-TERM-002-07,법정대리인 동의 증적 저장 여부,저장,text,,,PG-MBR-TERM-002
+POL-MBR-TERM-002-08,법정대리인 동의 증적 저장 항목,"고객 CI 해시, 법정대리인 CI 해시, 법정대리인 이름, 법정대리인 휴대폰번호, 고객과의 관계, 동의 일시, 동의 채널",enum,,,PG-MBR-TERM-002
+POL-MBR-TERM-002-09,법정대리인 동의 철회 가능 여부,가입 또는 재가입 완료 전까지 철회 가능,text,,,PG-MBR-TERM-002
+POL-MBR-TERM-002-10,법정대리인 동의 결과 통지 대상,"고객, 법정대리인",enum,,,PG-MBR-TERM-002
+POL-MBR-TERM-003-01,동의 이력 저장 항목,"고객ID, 약관ID, 약관버전, 동의 여부, 동의 일시, 동의 채널, IP, 세션ID",enum,,,PG-MBR-TERM-003
+POL-MBR-TERM-003-02,약관 버전 이력 저장 항목,"약관ID, 약관명, 버전, 시행일, 종료일",enum,,,PG-MBR-TERM-003
+POL-MBR-TERM-003-03,동의 채널,"앱, 모바일웹, PC웹",enum,,,PG-MBR-TERM-003
+POL-MBR-TERM-003-04,필수 약관 동의 이력 저장 여부,저장,text,,,PG-MBR-TERM-003
+POL-MBR-TERM-003-05,선택 약관 동의 이력 저장 여부,저장,text,,,PG-MBR-TERM-003
+POL-MBR-TERM-003-06,선택 약관 미동의 이력 저장 여부,저장,text,,,PG-MBR-TERM-003
+POL-MBR-TERM-003-07,약관 동의 철회 가능 대상,선택 약관,text,,,PG-MBR-TERM-003
+POL-MBR-TERM-003-08,약관 동의 철회 이력 저장 여부,저장,text,,,PG-MBR-TERM-003
+POL-MBR-TERM-003-09,약관 동의 이력 보관 기간,회원 탈퇴 후 5년 또는 관계 법령상 보관 기간 중 긴 기간,text,,,PG-MBR-TERM-003
+POL-MBR-TERM-003-10,약관 동의 이력 조회 권한,"회원 정책 담당자, 회원 시스템 운영자, 감사 권한자",enum,,,PG-MBR-TERM-003
+POL-MBR-TERM-003-11,동의 이력 변경 허용 여부,불가,text,,,PG-MBR-TERM-003
+POL-MBR-TERM-003-12,동의 이력 마스킹 대상,"CI, DI, 휴대폰번호, IP",enum,,,PG-MBR-TERM-003
+POL-MBR-INFO-001-01,회원 가입 필수 입력 항목,"아이디, 비밀번호, 이메일, 연락처",enum,,,PG-MBR-INFO-001
+POL-MBR-INFO-001-02,회원 가입 선택 입력 항목,"닉네임, 관심 혜택, 추천 수신 선호 항목",enum,,,PG-MBR-INFO-001
+POL-MBR-INFO-001-03,본인인증 결과 연계 항목,"이름, 생년월일, 성별, 내외국인 구분, 휴대폰번호, CI, DI",enum,,,PG-MBR-INFO-001
+POL-MBR-INFO-001-04,고객 유형 구분 항목,"일반 개인, 미성년자, 외국인",enum,,,PG-MBR-INFO-001
+POL-MBR-INFO-001-05,미성년자 추가 입력 항목,"법정대리인 이름, 법정대리인 휴대폰번호, 고객과의 관계",enum,,,PG-MBR-INFO-001
+POL-MBR-INFO-001-06,외국인 추가 입력 항목,"국적, 외국인등록번호 대체 식별값, 체류자격 확인 결과",enum,,,PG-MBR-INFO-001
+POL-MBR-INFO-001-07,고객 직접 입력 제외 항목,"CI, DI",enum,,,PG-MBR-INFO-001
+POL-MBR-INFO-001-08,항목 노출 기준,"고객 유형, 본인인증 결과, 가입 경로",enum,,,PG-MBR-INFO-001
+POL-MBR-INFO-001-09,입력 생략 가능 항목,"본인인증 결과 연계 항목, 임시저장 복원 항목",enum,,,PG-MBR-INFO-001
+POL-MBR-INFO-001-10,입력 임시저장 대상 항목,"아이디, 이메일, 연락처",enum,,,PG-MBR-INFO-001
+POL-MBR-INFO-001-11,입력 임시저장 제외 항목,"비밀번호, CI, DI",enum,,,PG-MBR-INFO-001
+POL-MBR-INFO-001-12,가입 완료 저장 항목,"아이디, 이메일, 연락처, 이름, 생년월일, 성별, 내외국인 구분, 휴대폰번호, CI, DI",enum,,,PG-MBR-INFO-001
+POL-MBR-INFO-002-01,필수값 검증 대상,"아이디, 비밀번호, 이메일, 연락처",enum,,,PG-MBR-INFO-002
+POL-MBR-INFO-002-02,필수값 누락 처리,다음 단계 진행 불가,text,,,PG-MBR-INFO-002
+POL-MBR-INFO-002-03,아이디 허용 문자,"영문 대문자, 영문 소문자, 숫자",enum,,,PG-MBR-INFO-002
+POL-MBR-INFO-002-04,아이디 길이,6~20자,text,,,PG-MBR-INFO-002
+POL-MBR-INFO-002-05,비밀번호 길이,10~20자,text,,,PG-MBR-INFO-002
+POL-MBR-INFO-002-06,비밀번호 문자 조합,"영문 대문자, 영문 소문자, 숫자, 특수문자 중 3종 이상 조합",enum,,,PG-MBR-INFO-002
+POL-MBR-INFO-002-07,이메일 형식,이메일 주소 형식,text,,,PG-MBR-INFO-002
+POL-MBR-INFO-002-08,연락처 형식,휴대폰번호 숫자,text,,,PG-MBR-INFO-002
+POL-MBR-INFO-002-09,공백 입력 허용 여부,불가,text,,,PG-MBR-INFO-002
+POL-MBR-INFO-002-10,본인인증 연계 항목 수정 허용 여부,불가,text,,,PG-MBR-INFO-002
+POL-MBR-INFO-002-11,검증 실패 처리,다음 단계 진행 불가,text,,,PG-MBR-INFO-002
+POL-MBR-INFO-002-12,검증 시점,"입력 중, 다음 단계 이동 시, 가입 완료 요청 시",enum,,,PG-MBR-INFO-002
+POL-MBR-INFO-002-13,오류 안내 문구,입력값을 다시 확인해 주세요.,text,,,PG-MBR-INFO-002
+POL-MBR-INFO-003-01,중복 확인 대상 식별정보,"CI, DI, 아이디, 휴대폰번호, 이메일",enum,,,PG-MBR-INFO-003
+POL-MBR-INFO-003-02,CI 중복 확인 기준,동일 CI 기준 1인 1계정,text,,,PG-MBR-INFO-003
+POL-MBR-INFO-003-03,DI 중복 확인 기준,동일 DI 중복 가입 불가,text,,,PG-MBR-INFO-003
+POL-MBR-INFO-003-04,아이디 중복 처리,사용 불가,text,,,PG-MBR-INFO-003
+POL-MBR-INFO-003-05,휴대폰번호 중복 처리,기존 회원 확인,text,,,PG-MBR-INFO-003
+POL-MBR-INFO-003-06,이메일 중복 처리,동일 이메일 기존 회원 존재 시 기존 계정 확인 안내,text,,,PG-MBR-INFO-003
+POL-MBR-INFO-003-07,기존 정상 회원 식별 시 처리,"로그인, 아이디 찾기",enum,,,PG-MBR-INFO-003
+POL-MBR-INFO-003-08,기존 휴면 회원 식별 시 처리,휴면 해제,text,,,PG-MBR-INFO-003
+POL-MBR-INFO-003-09,기존 탈퇴 회원 식별 시 처리,재가입 가능 여부 확인,text,,,PG-MBR-INFO-003
+POL-MBR-INFO-003-10,중복 확인 수행 시스템,BSS,text,,,PG-MBR-INFO-003
+POL-MBR-INFO-003-11,중복 확인 시점,"회원 정보 입력 완료 후, 가입 처리 전",enum,,,PG-MBR-INFO-003
+POL-MBR-INFO-003-12,중복 확인 실패 시 처리,다음 단계 진행 불가,text,,,PG-MBR-INFO-003
+POL-MBR-AUTH-001-01,회원 가입 본인인증 적용 여부,필수,text,,,PG-MBR-AUTH-001
+POL-MBR-AUTH-001-02,휴면 해제 본인인증 적용 여부,필수,text,,,PG-MBR-AUTH-001
+POL-MBR-AUTH-001-03,회원 탈퇴 본인인증 적용 여부,필수,text,,,PG-MBR-AUTH-001
+POL-MBR-AUTH-001-04,재가입 본인인증 적용 여부,필수,text,,,PG-MBR-AUTH-001
+POL-MBR-AUTH-001-05,본인인증 적용 시점,"회원 검증 전, 휴면 해제 처리 전, 탈퇴 최종 동의 전, 재가입 가능 여부 확인 전",enum,,,PG-MBR-AUTH-001
+POL-MBR-AUTH-001-06,동일 세션 인증 재사용 여부,"회원 가입: 허용, 휴면 해제: 허용, 재가입: 허용, 회원 탈퇴: 불가",enum,,,PG-MBR-AUTH-001
+POL-MBR-AUTH-001-07,인증 재사용 유효시간,동일 세션 기준 10분,text,,,PG-MBR-AUTH-001
+POL-MBR-AUTH-001-08,본인인증 생략 조건,동일 세션 내 유효한 본인인증 결과가 있고 고위험 업무가 아닌 경우,text,,,PG-MBR-AUTH-001
+POL-MBR-AUTH-002-01,회원 가입 허용 인증수단,"휴대폰 본인인증, PASS 인증, 공동인증서",enum,,,PG-MBR-AUTH-002
+POL-MBR-AUTH-002-02,휴면 해제 허용 인증수단,"휴대폰 본인인증, PASS 인증, 공동인증서",enum,,,PG-MBR-AUTH-002
+POL-MBR-AUTH-002-03,회원 탈퇴 허용 인증수단,"휴대폰 본인인증, PASS 인증",enum,,,PG-MBR-AUTH-002
+POL-MBR-AUTH-002-04,재가입 허용 인증수단,"휴대폰 본인인증, PASS 인증, 공동인증서",enum,,,PG-MBR-AUTH-002
+POL-MBR-AUTH-002-05,기본 노출 인증수단,휴대폰 본인인증,text,,,PG-MBR-AUTH-002
+POL-MBR-AUTH-002-06,대체 인증수단,공동인증서,text,,,PG-MBR-AUTH-002
+POL-MBR-AUTH-002-07,미성년자 인증수단,법정대리인 휴대폰 본인인증,text,,,PG-MBR-AUTH-002
+POL-MBR-AUTH-002-08,외국인 인증수단,"휴대폰 본인인증, 외국인등록번호 기반 인증",enum,,,PG-MBR-AUTH-002
+POL-MBR-AUTH-002-09,인증수단 노출 순서,휴대폰 본인인증 → PASS 인증 → 공동인증서,text,,,PG-MBR-AUTH-002
+POL-MBR-AUTH-003-01,인증번호 자리수,6자리,scalar,6,자리,PG-MBR-AUTH-003
+POL-MBR-AUTH-003-02,인증번호 문자 구성,숫자,text,,,PG-MBR-AUTH-003
+POL-MBR-AUTH-003-03,인증번호 유효시간,3분,scalar,3,분,PG-MBR-AUTH-003
+POL-MBR-AUTH-003-04,인증번호 발급 채널,SMS,text,,,PG-MBR-AUTH-003
+POL-MBR-AUTH-003-05,인증번호 재발급 시 기존 번호 처리,기존 인증번호 즉시 무효화,text,,,PG-MBR-AUTH-003
+POL-MBR-AUTH-003-06,인증번호 원문 저장 여부,저장 불가,text,,,PG-MBR-AUTH-003
+POL-MBR-AUTH-003-07,인증번호 발송 문구 템플릿,본인확인 인증번호는 {인증번호}입니다. 3분 이내 입력해 주세요.,text,,,PG-MBR-AUTH-003
+POL-MBR-AUTH-004-01,인증번호 재요청 가능 시간,발급 후 60초,text,,,PG-MBR-AUTH-004
+POL-MBR-AUTH-004-02,인증번호 재요청 가능 횟수,동일 인증 세션 내 최대 5회,text,,,PG-MBR-AUTH-004
+POL-MBR-AUTH-004-03,재요청 횟수 초기화 기준,인증 세션 종료 시 초기화,text,,,PG-MBR-AUTH-004
+POL-MBR-AUTH-004-04,재요청 제한 시 처리,재요청 버튼 비활성화,text,,,PG-MBR-AUTH-004
+POL-MBR-AUTH-004-05,재요청 후 기존 번호 처리,기존 인증번호 즉시 무효화,text,,,PG-MBR-AUTH-004
+POL-MBR-AUTH-005-01,인증번호 입력 실패 허용 횟수,동일 인증번호 기준 최대 5회,text,,,PG-MBR-AUTH-005
+POL-MBR-AUTH-005-02,입력 실패 횟수 초기화 기준,신규 인증번호 발급 시 초기화,text,,,PG-MBR-AUTH-005
+POL-MBR-AUTH-005-03,인증 제한 시간,10분,scalar,10,분,PG-MBR-AUTH-005
+POL-MBR-AUTH-005-04,잠금 해제 조건,제한 시간 경과 후 자동 해제,text,,,PG-MBR-AUTH-005
+POL-MBR-AUTH-005-05,실패 횟수 포함 대상,"인증번호 불일치, 인증수단 검증 실패",enum,,,PG-MBR-AUTH-005
+POL-MBR-AUTH-005-06,실패 횟수 제외 대상,"외부 인증기관 장애, 네트워크 오류, 시스템 오류",enum,,,PG-MBR-AUTH-005
+POL-MBR-AUTH-005-07,실패 안내 문구,인증에 실패했습니다. 입력 정보를 확인한 뒤 다시 시도해 주세요.,text,,,PG-MBR-AUTH-005
+POL-MBR-AUTH-006-01,인증 성공 판정 기준,"외부 인증기관 성공 응답, CI 수신, 이름·생년월일 일치",enum,,,PG-MBR-AUTH-006
+POL-MBR-AUTH-006-02,인증 실패 판정 기준,"외부 인증기관 실패 응답, 인증번호 불일치, 필수 식별정보 불일치",enum,,,PG-MBR-AUTH-006
+POL-MBR-AUTH-006-03,인증 취소 판정 기준,"고객 취소, 브라우저 종료, 인증 세션 종료",enum,,,PG-MBR-AUTH-006
+POL-MBR-AUTH-006-04,인증 오류 판정 기준,"외부 인증기관 장애, 통신 오류, 시스템 오류",enum,,,PG-MBR-AUTH-006
+POL-MBR-AUTH-006-05,인증 시간초과 판정 기준,"인증 세션 유지시간 초과, 인증번호 유효시간 초과",enum,,,PG-MBR-AUTH-006
+POL-MBR-AUTH-006-06,내부 인증 결과 코드,"SUCCESS, FAIL, CANCEL, ERROR, TIMEOUT",enum,,,PG-MBR-AUTH-006
+POL-MBR-AUTH-006-07,외부 인증 결과 코드 매핑,"외부 성공=SUCCESS, 외부 실패=FAIL, 고객 취소=CANCEL, 기관 오류=ERROR, 시간초과=TIMEOUT",enum,,,PG-MBR-AUTH-006
+POL-MBR-AUTH-007-01,인증 이력 저장 항목,"업무구분, 인증수단, 인증결과, 결과코드, 요청일시, 완료일시, 채널, 세션ID, CI 해시, IP",enum,,,PG-MBR-AUTH-007
+POL-MBR-AUTH-007-02,인증 이력 보관 기간,5년,scalar,5,년,PG-MBR-AUTH-007
+POL-MBR-AUTH-007-03,인증 이력 조회 권한,"회원 정책 담당자, 인증 시스템 운영자, 감사 권한자",enum,,,PG-MBR-AUTH-007
+POL-MBR-AUTH-007-04,인증 이력 마스킹 대상,"CI, DI, 휴대폰번호, 이름, 생년월일, IP",enum,,,PG-MBR-AUTH-007
+POL-MBR-AUTH-007-05,인증번호 원문 로그 저장 여부,저장 불가,text,,,PG-MBR-AUTH-007
+POL-MBR-AUTH-007-06,감사 추적 항목,"조회자 ID, 조회일시, 조회사유, 변경 전 값, 변경 후 값",enum,,,PG-MBR-AUTH-007
+POL-MBR-AUTH-007-07,인증 실패 이력 저장 여부,저장,text,,,PG-MBR-AUTH-007
+POL-MBR-STAT-001-01,상태 코드,"미가입, 정상, 휴면, 탈퇴, 가입제한",enum,,,PG-MBR-STAT-001
+POL-MBR-STAT-001-02,상태 조회 기준 식별정보,"CI, DI, 고객ID",enum,,,PG-MBR-STAT-001
+POL-MBR-STAT-001-03,상태 조회 수행 시스템,BSS,text,,,PG-MBR-STAT-001
+POL-MBR-STAT-001-04,정상 상태 후속 처리,업무 계속 진행,text,,,PG-MBR-STAT-001
+POL-MBR-STAT-001-05,휴면 상태 후속 처리,휴면 해제 프로세스 이동,text,,,PG-MBR-STAT-001
+POL-MBR-STAT-001-06,탈퇴 상태 후속 처리,재가입 가능 여부 확인,text,,,PG-MBR-STAT-001
+POL-MBR-STAT-001-07,가입제한 상태 후속 처리,가입 불가 안내,text,,,PG-MBR-STAT-001
+POL-MBR-STAT-001-08,미가입 상태 후속 처리,신규 가입 가능 여부 확인,text,,,PG-MBR-STAT-001
+POL-MBR-STAT-001-09,상태 불일치 처리,BSS 기준 적용,text,,,PG-MBR-STAT-001
+POL-MBR-STAT-001-10,조회 실패 처리,업무 중단 및 오류 안내,text,,,PG-MBR-STAT-001
+POL-MBR-STAT-001-11,상태 조회 이력 저장 여부,저장,text,,,PG-MBR-STAT-001
+POL-MBR-STAT-001-12,상태 조회 이력 저장 항목,"고객ID, CI 해시, 조회 일시, 조회 채널, 조회 결과 코드",enum,,,PG-MBR-STAT-001
+POL-MBR-JOIN-001-01,신규가입 가능 고객 상태,미가입,text,,,PG-MBR-JOIN-001
+POL-MBR-JOIN-001-02,기존 정상 회원 처리,로그인 유도,text,,,PG-MBR-JOIN-001
+POL-MBR-JOIN-001-03,기존 휴면 회원 처리,휴면 해제 유도,text,,,PG-MBR-JOIN-001
+POL-MBR-JOIN-001-04,기존 탈퇴 회원 처리,재가입 가능 여부 확인,text,,,PG-MBR-JOIN-001
+POL-MBR-JOIN-001-05,가입 제한 고객 처리,가입 불가,text,,,PG-MBR-JOIN-001
+POL-MBR-JOIN-001-06,중복 CI 판정 기준,동일 CI 기존 계정 존재,text,,,PG-MBR-JOIN-001
+POL-MBR-JOIN-001-07,가입 가능 판정 시스템,BSS,text,,,PG-MBR-JOIN-001
+POL-MBR-JOIN-001-08,가입 가능 판정 시점,본인인증 완료 후,text,,,PG-MBR-JOIN-001
+POL-MBR-JOIN-001-09,가입 불가 안내 항목,"가입 불가 사유, 후속 처리 경로",enum,,,PG-MBR-JOIN-001
+POL-MBR-JOIN-001-10,판정 실패 처리,업무 중단 및 재시도 안내,text,,,PG-MBR-JOIN-001
+POL-MBR-JOIN-001-11,가입 제한 사유 코드,"DUPLICATE_CI, DORMANT_MEMBER, LEAVE_PENDING, REJOIN_LIMITED, BLOCKED_MEMBER",enum,,,PG-MBR-JOIN-001
+POL-MBR-JOIN-001-12,신규 가입 재시도 허용 여부,허용,text,,,PG-MBR-JOIN-001
+POL-MBR-ROUTE-001-01,미가입 상태 이동 경로,개인정보 입력,text,,,PG-MBR-ROUTE-001
+POL-MBR-ROUTE-001-02,정상 회원 이동 경로,로그인,text,,,PG-MBR-ROUTE-001
+POL-MBR-ROUTE-001-03,휴면 회원 이동 경로,휴면 해제,text,,,PG-MBR-ROUTE-001
+POL-MBR-ROUTE-001-04,탈퇴 회원 이동 경로,재가입 가능 여부 확인,text,,,PG-MBR-ROUTE-001
+POL-MBR-ROUTE-001-05,가입제한 회원 이동 경로,가입 불가 안내,text,,,PG-MBR-ROUTE-001
+POL-MBR-ROUTE-001-06,상태 조회 실패 이동 경로,오류 안내,text,,,PG-MBR-ROUTE-001
+POL-MBR-ROUTE-001-07,고객 선택 가능 분기,"로그인, 회원 가입, 재가입",enum,,,PG-MBR-ROUTE-001
+POL-MBR-ROUTE-001-08,자동 분기 기준,상태 코드,text,,,PG-MBR-ROUTE-001
+POL-MBR-ROUTE-001-09,분기 처리 시스템,"채널, BSS",enum,,,PG-MBR-ROUTE-001
+POL-MBR-ROUTE-001-10,분기 이력 저장 여부,저장,text,,,PG-MBR-ROUTE-001
+POL-MBR-ROUTE-001-11,분기 이력 저장 항목,"고객ID, 상태 코드, 분기 경로, 처리 일시",enum,,,PG-MBR-ROUTE-001
+POL-MBR-ACCT-001-01,계정 생성 조건,"약관 동의 완료, 본인인증 완료, 신규가입 가능",enum,,,PG-MBR-ACCT-001
+POL-MBR-ACCT-001-02,계정 식별자 생성 기준,BSS 발급 고객ID,text,,,PG-MBR-ACCT-001
+POL-MBR-ACCT-001-03,CI 저장 여부,저장,text,,,PG-MBR-ACCT-001
+POL-MBR-ACCT-001-04,DI 저장 여부,저장,text,,,PG-MBR-ACCT-001
+POL-MBR-ACCT-001-05,휴대폰번호 저장 여부,저장,text,,,PG-MBR-ACCT-001
+POL-MBR-ACCT-001-06,가입 채널 저장 값,"앱, 모바일웹, PC웹",enum,,,PG-MBR-ACCT-001
+POL-MBR-ACCT-001-07,중복 생성 방지 기준,CI 기준 1인 1계정,text,,,PG-MBR-ACCT-001
+POL-MBR-ACCT-001-08,계정 생성 수행 시스템,BSS,text,,,PG-MBR-ACCT-001
+POL-MBR-ACCT-001-09,계정 생성 완료 상태 코드,정상,text,,,PG-MBR-ACCT-001
+POL-MBR-ACCT-001-10,계정 생성 실패 처리,생성 취소 및 오류 안내,text,,,PG-MBR-ACCT-001
+POL-MBR-ACCT-001-11,생성 이력 저장 항목,"고객ID, CI 해시, 가입 채널, 생성 일시, 처리 결과 코드",enum,,,PG-MBR-ACCT-001
+POL-MBR-ACCT-001-12,롤백 기준,계정 생성 중 필수 저장 실패,text,,,PG-MBR-ACCT-001
+POL-MBR-PROF-001-01,초기 프로필 항목,"이름, 휴대폰번호, 이메일, 생년월일, 성별, 고객 유형",enum,,,PG-MBR-PROF-001
+POL-MBR-PROF-001-02,기본 프로필 표시명,고객 이름,text,,,PG-MBR-PROF-001
+POL-MBR-PROF-001-03,초기 수신 설정 기준,약관 동의 결과,text,,,PG-MBR-PROF-001
+POL-MBR-PROF-001-04,마케팅 수신 초기값,고객 동의값,text,,,PG-MBR-PROF-001
+POL-MBR-PROF-001-05,맞춤형 혜택 제공 초기값,고객 동의값,text,,,PG-MBR-PROF-001
+POL-MBR-PROF-001-06,기본 연락처,본인인증 휴대폰번호,text,,,PG-MBR-PROF-001
+POL-MBR-PROF-001-07,기본 이메일,고객 입력 이메일,text,,,PG-MBR-PROF-001
+POL-MBR-PROF-001-08,초기 권한 상태,일반 회원,text,,,PG-MBR-PROF-001
+POL-MBR-PROF-001-09,프로필 생성 수행 시스템,BSS,text,,,PG-MBR-PROF-001
+POL-MBR-PROF-001-10,프로필 초기화 실패 처리,가입 처리 중단,text,,,PG-MBR-PROF-001
+POL-MBR-PROF-001-11,프로필 변경 가능 항목,"이메일, 연락처, 마케팅 수신 설정",enum,,,PG-MBR-PROF-001
+POL-MBR-PROF-001-12,프로필 변경 불가 항목,"CI, DI",enum,,,PG-MBR-PROF-001
+POL-MBR-SESS-001-01,임시 세션 종료 시점,가입 완료 즉시,text,,,PG-MBR-SESS-001
+POL-MBR-SESS-001-02,로그인 세션 생성 대상,가입 완료 회원,text,,,PG-MBR-SESS-001
+POL-MBR-SESS-001-03,가입 완료 후 로그인 상태,자동 로그인,text,,,PG-MBR-SESS-001
+POL-MBR-SESS-001-04,세션 유효시간,24시간,scalar,24,시간,PG-MBR-SESS-001
+POL-MBR-SESS-001-05,자동 로그인 적용 여부,적용,text,,,PG-MBR-SESS-001
+POL-MBR-SESS-001-06,세션 생성 기준 정보,"고객ID, 인증 결과, 가입 완료 상태",enum,,,PG-MBR-SESS-001
+POL-MBR-SESS-001-07,가입 완료 후 이동 경로,가입 완료 화면,text,,,PG-MBR-SESS-001
+POL-MBR-SESS-001-08,세션 생성 실패 처리,재로그인 유도,text,,,PG-MBR-SESS-001
+POL-MBR-SESS-001-09,임시 세션 데이터 삭제 대상,"인증 세션, 입력 임시저장 정보",enum,,,PG-MBR-SESS-001
+POL-MBR-SESS-001-10,세션 전환 이력 저장 여부,저장,text,,,PG-MBR-SESS-001
+POL-MBR-SESS-001-11,세션 전환 이력 저장 항목,"고객ID, 전환 일시, 전환 결과 코드, 채널",enum,,,PG-MBR-SESS-001
+POL-MBR-LOGIN-001-01,로그인 가능 상태,정상,text,,,PG-MBR-LOGIN-001
+POL-MBR-LOGIN-001-02,휴면 진입 상태,휴면,text,,,PG-MBR-LOGIN-001
+POL-MBR-LOGIN-001-03,탈퇴 상태 로그인 처리,재가입 안내,text,,,PG-MBR-LOGIN-001
+POL-MBR-LOGIN-001-04,가입제한 상태 로그인 처리,로그인 불가 안내,text,,,PG-MBR-LOGIN-001
+POL-MBR-LOGIN-001-05,로그인 실패 처리,로그인 실패 안내,text,,,PG-MBR-LOGIN-001
+POL-MBR-LOGIN-001-06,휴면 안내 노출 조건,회원 상태 휴면,text,,,PG-MBR-LOGIN-001
+POL-MBR-LOGIN-001-07,휴면 해제 이동 경로,휴면 해제 프로세스,text,,,PG-MBR-LOGIN-001
+POL-MBR-LOGIN-001-08,로그인 상태 조회 기준,"고객ID, CI",enum,,,PG-MBR-LOGIN-001
+POL-MBR-LOGIN-001-09,로그인 결과 저장 여부,저장,text,,,PG-MBR-LOGIN-001
+POL-MBR-LOGIN-001-10,로그인 이력 저장 항목,"고객ID, 로그인 일시, 로그인 채널, 결과 코드",enum,,,PG-MBR-LOGIN-001
+POL-MBR-LOGIN-001-11,로그인 실패 재시도 횟수,5회,scalar,5,회,PG-MBR-LOGIN-001
+POL-MBR-LOGIN-001-12,휴면 진입 안내 문구,휴면 상태입니다. 본인인증 후 다시 이용할 수 있습니다.,text,,,PG-MBR-LOGIN-001
+POL-MBR-DORM-001-01,휴면 해제 가능 상태,휴면,text,,,PG-MBR-DORM-001
+POL-MBR-DORM-001-02,휴면 해제 불가 상태,"탈퇴, 가입제한",enum,,,PG-MBR-DORM-001
+POL-MBR-DORM-001-03,본인확인 필요 여부,필수,text,,,PG-MBR-DORM-001
+POL-MBR-DORM-001-04,약관 재동의 필요 여부,개정된 필수 약관 존재 시 필수,text,,,PG-MBR-DORM-001
+POL-MBR-DORM-001-05,휴면 해제 가능 채널,"앱, 모바일웹, PC웹",enum,,,PG-MBR-DORM-001
+POL-MBR-DORM-001-06,휴면 해제 제한 조건,"본인인증 실패, 가입제한 상태, BSS 상태 조회 실패",enum,,,PG-MBR-DORM-001
+POL-MBR-DORM-001-07,해제 불가 안내 항목,"해제 불가 사유, 후속 문의 경로",enum,,,PG-MBR-DORM-001
+POL-MBR-DORM-001-08,휴면 해제 판정 시스템,BSS,text,,,PG-MBR-DORM-001
+POL-MBR-DORM-001-09,판정 시점,로그인 후 휴면 상태 확인 시,text,,,PG-MBR-DORM-001
+POL-MBR-DORM-001-10,판정 실패 처리,업무 중단 및 오류 안내,text,,,PG-MBR-DORM-001
+POL-MBR-DORM-001-11,해제 가능 여부 이력 저장 여부,저장,text,,,PG-MBR-DORM-001
+POL-MBR-DORM-001-12,해제 가능 여부 이력 저장 항목,"고객ID, 상태 코드, 판정 결과, 판정 일시",enum,,,PG-MBR-DORM-001
+POL-MBR-DORM-002-01,상태 전환 대상 상태,휴면,text,,,PG-MBR-DORM-002
+POL-MBR-DORM-002-02,전환 후 상태,정상,text,,,PG-MBR-DORM-002
+POL-MBR-DORM-002-03,상태 전환 조건,"본인인증 성공, 필수 약관 재동의 완료, 휴면 해제 가능 판정 통과",enum,,,PG-MBR-DORM-002
+POL-MBR-DORM-002-04,상태 전환 처리 시스템,BSS,text,,,PG-MBR-DORM-002
+POL-MBR-DORM-002-05,상태 전환 기준 시각,BSS 처리 완료 시각,text,,,PG-MBR-DORM-002
+POL-MBR-DORM-002-06,중복 요청 처리,동일 세션 내 1회 처리,text,,,PG-MBR-DORM-002
+POL-MBR-DORM-002-07,상태 전환 실패 처리,업무 중단 및 오류 안내,text,,,PG-MBR-DORM-002
+POL-MBR-DORM-002-08,상태 전환 이력 저장 여부,저장,text,,,PG-MBR-DORM-002
+POL-MBR-DORM-002-09,상태 전환 이력 저장 항목,"고객ID, 이전 상태, 변경 상태, 처리 일시, 처리 채널, 처리 결과 코드",enum,,,PG-MBR-DORM-002
+POL-MBR-DORM-002-10,상태 전환 알림 여부,발송,text,,,PG-MBR-DORM-002
+POL-MBR-DORM-002-11,상태 전환 알림 채널,"앱 푸시, SMS",enum,,,PG-MBR-DORM-002
+POL-MBR-DORM-002-12,상태 전환 결과 코드,"성공, 실패, 오류",enum,,,PG-MBR-DORM-002
+POL-MBR-DORM-003-01,복원 대상 데이터,"회원 기본정보, 로그인 정보, 마케팅 수신 동의, 서비스 이용 설정",enum,,,PG-MBR-DORM-003
+POL-MBR-DORM-003-02,복원 제외 데이터,"삭제 대상 개인정보, 법정 보관 만료 정보",enum,,,PG-MBR-DORM-003
+POL-MBR-DORM-003-03,복원 선행 조건,휴면 상태 전환 완료,text,,,PG-MBR-DORM-003
+POL-MBR-DORM-003-04,복원 처리 시스템,BSS,text,,,PG-MBR-DORM-003
+POL-MBR-DORM-003-05,복원 처리 순서,"식별정보, 회원 기본정보, 수신 동의, 서비스 이용 설정",enum,,,PG-MBR-DORM-003
+POL-MBR-DORM-003-06,복원 기준 시각,BSS 복원 완료 시각,text,,,PG-MBR-DORM-003
+POL-MBR-DORM-003-07,부분 복원 허용 여부,미허용,text,,,PG-MBR-DORM-003
+POL-MBR-DORM-003-08,복원 실패 처리,업무 중단 및 오류 안내,text,,,PG-MBR-DORM-003
+POL-MBR-DORM-003-09,복원 후 검증 항목,"회원 상태, 로그인 가능 여부, 필수 정보 존재 여부",enum,,,PG-MBR-DORM-003
+POL-MBR-DORM-003-10,복원 이력 저장 여부,저장,text,,,PG-MBR-DORM-003
+POL-MBR-DORM-003-11,복원 이력 저장 항목,"고객ID, 복원 대상, 복원 결과, 복원 일시, 처리 채널",enum,,,PG-MBR-DORM-003
+POL-MBR-DORM-003-12,복원 결과 코드,"성공, 실패, 부분 실패, 오류",enum,,,PG-MBR-DORM-003
+POL-MBR-SESS-002-01,세션 복구 조건,"휴면 상태 전환 완료, 데이터 복원 완료",enum,,,PG-MBR-SESS-002
+POL-MBR-SESS-002-02,기존 로그인 세션 처리,즉시 만료,text,,,PG-MBR-SESS-002
+POL-MBR-SESS-002-03,신규 로그인 세션 생성 여부,생성,text,,,PG-MBR-SESS-002
+POL-MBR-SESS-002-04,재로그인 필요 여부,미필수,text,,,PG-MBR-SESS-002
+POL-MBR-SESS-002-05,세션 유효시간,24시간,scalar,24,시간,PG-MBR-SESS-002
+POL-MBR-SESS-002-06,세션 복구 후 이동 경로,홈,text,,,PG-MBR-SESS-002
+POL-MBR-SESS-002-07,세션 복구 실패 처리,재로그인 유도,text,,,PG-MBR-SESS-002
+POL-MBR-SESS-002-08,세션 저장 항목,"고객ID, 세션ID, 생성 일시, 만료 일시, 채널",enum,,,PG-MBR-SESS-002
+POL-MBR-SESS-002-09,세션 보안 검증 항목,"기기 식별값, 접속 IP, 토큰 유효성",enum,,,PG-MBR-SESS-002
+POL-MBR-SESS-002-10,세션 복구 이력 저장 여부,저장,text,,,PG-MBR-SESS-002
+POL-MBR-SESS-002-11,세션 복구 이력 저장 항목,"고객ID, 세션ID, 처리 일시, 처리 결과 코드",enum,,,PG-MBR-SESS-002
+POL-MBR-SESS-002-12,세션 복구 결과 코드,"성공, 실패, 오류",enum,,,PG-MBR-SESS-002
+POL-MBR-DORM-004-01,안내 대상,휴면 해제 완료 고객,text,,,PG-MBR-DORM-004
+POL-MBR-DORM-004-02,안내 시점,휴면 해제 완료 즉시,text,,,PG-MBR-DORM-004
+POL-MBR-DORM-004-03,안내 채널,"화면, 앱 푸시, SMS",enum,,,PG-MBR-DORM-004
+POL-MBR-DORM-004-04,화면 안내 항목,"정상 회원 전환 완료, 서비스 이용 가능 상태, 후속 이동 경로",enum,,,PG-MBR-DORM-004
+POL-MBR-DORM-004-05,알림 발송 항목,"휴면 해제 완료 일시, 처리 채널",enum,,,PG-MBR-DORM-004
+POL-MBR-DORM-004-06,안내 제외 조건,"고객 연락처 부재, 알림 수신 불가 상태",enum,,,PG-MBR-DORM-004
+POL-MBR-DORM-004-07,완료 후 기본 이동 경로,홈,text,,,PG-MBR-DORM-004
+POL-MBR-DORM-004-08,후속 권장 경로,"회원정보 확인, 마케팅 동의 관리",enum,,,PG-MBR-DORM-004
+POL-MBR-DORM-004-09,결과 안내 이력 저장 여부,저장,text,,,PG-MBR-DORM-004
+POL-MBR-DORM-004-10,결과 안내 이력 저장 항목,"고객ID, 안내 채널, 발송 일시, 발송 결과 코드",enum,,,PG-MBR-DORM-004
+POL-MBR-DORM-004-11,발송 실패 처리,화면 안내 유지,text,,,PG-MBR-DORM-004
+POL-MBR-DORM-004-12,결과 안내 문구,휴면 해제가 완료되었습니다. 지금부터 정상적으로 서비스를 이용할 수 있습니다.,text,,,PG-MBR-DORM-004
+POL-MBR-AUTH-008-01,고위험 업무 대상,회원 탈퇴,text,,,PG-MBR-AUTH-008
+POL-MBR-AUTH-008-02,추가 인증 적용 시점,탈퇴 최종 동의 전,text,,,PG-MBR-AUTH-008
+POL-MBR-AUTH-008-03,추가 인증수단,"휴대폰 본인인증, PASS 인증",enum,,,PG-MBR-AUTH-008
+POL-MBR-AUTH-008-04,인증 재사용 허용 여부,미허용,text,,,PG-MBR-AUTH-008
+POL-MBR-AUTH-008-05,동일 세션 인증 재사용 제한,회원 탈퇴 프로세스,text,,,PG-MBR-AUTH-008
+POL-MBR-AUTH-008-06,인증 유효시간,5분,scalar,5,분,PG-MBR-AUTH-008
+POL-MBR-AUTH-008-07,추가 확인 문구,회원 탈퇴를 계속하려면 본인인증을 다시 완료해 주세요.,text,,,PG-MBR-AUTH-008
+POL-MBR-AUTH-008-08,추가 인증 실패 처리,탈퇴 진행 불가,text,,,PG-MBR-AUTH-008
+POL-MBR-AUTH-008-09,추가 인증 결과 저장 여부,저장,text,,,PG-MBR-AUTH-008
+POL-MBR-AUTH-008-10,추가 인증 이력 저장 항목,"고객ID, 업무ID, 인증수단, 인증 결과, 인증 일시, 처리 채널",enum,,,PG-MBR-AUTH-008
+POL-MBR-LEAVE-001-01,사유 입력 필수 여부,필수,text,,,PG-MBR-LEAVE-001
+POL-MBR-LEAVE-001-02,사유 코드,"서비스 이용 빈도 낮음, 혜택 불만, 개인정보 우려, 다른 서비스 이용, 기타",enum,,,PG-MBR-LEAVE-001
+POL-MBR-LEAVE-001-03,기타 의견 입력 허용 여부,허용,text,,,PG-MBR-LEAVE-001
+POL-MBR-LEAVE-001-04,기타 의견 필수 조건,기타 선택 시 필수,text,,,PG-MBR-LEAVE-001
+POL-MBR-LEAVE-001-05,기타 의견 최대 길이,500자,scalar,500,자,PG-MBR-LEAVE-001
+POL-MBR-LEAVE-001-06,사유 미선택 처리,다음 단계 진행 불가,text,,,PG-MBR-LEAVE-001
+POL-MBR-LEAVE-001-07,민감정보 입력 제한 여부,제한,text,,,PG-MBR-LEAVE-001
+POL-MBR-LEAVE-001-08,사유 저장 여부,저장,text,,,PG-MBR-LEAVE-001
+POL-MBR-LEAVE-001-09,사유 저장 항목,"고객ID, 사유 코드, 기타 의견, 입력 일시, 처리 채널",enum,,,PG-MBR-LEAVE-001
+POL-MBR-LEAVE-001-10,사유 보관 기간,탈퇴 완료 후 3년,text,,,PG-MBR-LEAVE-001
+POL-MBR-LEAVE-001-11,탈퇴 사유 마케팅 활용 여부,미활용,text,,,PG-MBR-LEAVE-001
+POL-MBR-LEAVE-001-12,금칙어 처리 기준,"욕설, 비속어, 주민등록번호, 카드번호, 계좌번호 등 민감정보 입력 제한",enum,,,PG-MBR-LEAVE-001
+POL-MBR-LEAVE-002-01,탈퇴 가능 회원 상태,정상,text,,,PG-MBR-LEAVE-002
+POL-MBR-LEAVE-002-02,탈퇴 제한 회원 상태,"휴면, 가입제한, 탈퇴",enum,,,PG-MBR-LEAVE-002
+POL-MBR-LEAVE-002-03,선행 인증 조건,본인인증 성공,text,,,PG-MBR-LEAVE-002
+POL-MBR-LEAVE-002-04,점검 대상 항목,"미납 요금, 미완료 주문, 진행 중 업무, 보유 혜택·자산, 연계 서비스",enum,,,PG-MBR-LEAVE-002
+POL-MBR-LEAVE-002-05,탈퇴 가능 판정 기준,제한 항목 없음,text,,,PG-MBR-LEAVE-002
+POL-MBR-LEAVE-002-06,탈퇴 불가 판정 기준,"미납 요금 존재, 필수 선처리 업무 존재, BSS 상태 조회 실패",enum,,,PG-MBR-LEAVE-002
+POL-MBR-LEAVE-002-07,탈퇴 불가 처리,탈퇴 진행 불가,text,,,PG-MBR-LEAVE-002
+POL-MBR-LEAVE-002-08,선처리 필요 업무 처리,선처리 후 재진입,text,,,PG-MBR-LEAVE-002
+POL-MBR-LEAVE-002-09,점검 수행 시스템,BSS,text,,,PG-MBR-LEAVE-002
+POL-MBR-LEAVE-002-10,점검 시점,탈퇴 전 안내 진입 전,text,,,PG-MBR-LEAVE-002
+POL-MBR-LEAVE-002-11,점검 실패 처리,업무 중단 및 오류 안내,text,,,PG-MBR-LEAVE-002
+POL-MBR-LEAVE-002-12,점검 이력 저장 여부,저장,text,,,PG-MBR-LEAVE-002
+POL-MBR-LEAVE-003-01,미납 조회 항목,"통신요금, 단말기 할부금, 소액결제, 콘텐츠 이용료",enum,,,PG-MBR-LEAVE-003
+POL-MBR-LEAVE-003-02,미완료 주문 조회 항목,"진행 중 주문, 배송 중 주문, 교환/반품/환불 진행 건",enum,,,PG-MBR-LEAVE-003
+POL-MBR-LEAVE-003-03,진행 중 업무 조회 항목,"상담 접수, 민원 접수, AS 접수, 명의변경 진행 건",enum,,,PG-MBR-LEAVE-003
+POL-MBR-LEAVE-003-04,선결제 필요 여부,미납 존재 시 필수,text,,,PG-MBR-LEAVE-003
+POL-MBR-LEAVE-003-05,미완료 주문 존재 시 처리,탈퇴 진행 불가,text,,,PG-MBR-LEAVE-003
+POL-MBR-LEAVE-003-06,진행 중 업무 존재 시 처리,탈퇴 진행 불가,text,,,PG-MBR-LEAVE-003
+POL-MBR-LEAVE-003-07,부분 미납 허용 여부,불가,text,,,PG-MBR-LEAVE-003
+POL-MBR-LEAVE-003-08,미처리 항목 안내 항목,"항목명, 금액, 처리 상태, 처리 경로, 담당 채널",enum,,,PG-MBR-LEAVE-003
+POL-MBR-LEAVE-003-09,조회 수행 시스템,"BSS, 주문 시스템, 상담 시스템",enum,,,PG-MBR-LEAVE-003
+POL-MBR-LEAVE-003-10,조회 실패 처리,업무 중단 및 오류 안내,text,,,PG-MBR-LEAVE-003
+POL-MBR-LEAVE-003-11,확인 이력 저장 여부,저장,text,,,PG-MBR-LEAVE-003
+POL-MBR-LEAVE-003-12,확인 이력 저장 항목,"고객ID, 조회 항목, 조회 결과, 조회 일시, 처리 채널",enum,,,PG-MBR-LEAVE-003
+POL-MBR-LEAVE-004-01,소멸 대상 자산,"포인트, 쿠폰, 멤버십 혜택, 이벤트 응모권",enum,,,PG-MBR-LEAVE-004
+POL-MBR-LEAVE-004-02,소멸 시점,탈퇴 처리 완료 시,text,,,PG-MBR-LEAVE-004
+POL-MBR-LEAVE-004-03,소멸 예외 대상,"법정 보관 대상, 환불 대상 자산",enum,,,PG-MBR-LEAVE-004
+POL-MBR-LEAVE-004-04,사용 유도 대상,"잔여 포인트, 잔여 쿠폰",enum,,,PG-MBR-LEAVE-004
+POL-MBR-LEAVE-004-05,소멸 안내 필수 여부,필수,text,,,PG-MBR-LEAVE-004
+POL-MBR-LEAVE-004-06,고객 확인 방식,체크박스,text,,,PG-MBR-LEAVE-004
+POL-MBR-LEAVE-004-07,보유 자산 조회 기준,"고객ID, CI",enum,,,PG-MBR-LEAVE-004
+POL-MBR-LEAVE-004-08,보유 자산 조회 시스템,"BSS, 멤버십 시스템, 쿠폰 시스템",enum,,,PG-MBR-LEAVE-004
+POL-MBR-LEAVE-004-09,조회 실패 처리,탈퇴 진행 불가,text,,,PG-MBR-LEAVE-004
+POL-MBR-LEAVE-004-10,재가입 시 복구 여부,미복구,text,,,PG-MBR-LEAVE-004
+POL-MBR-LEAVE-004-11,안내 이력 저장 여부,저장,text,,,PG-MBR-LEAVE-004
+POL-MBR-LEAVE-004-12,안내 이력 저장 항목,"고객ID, 자산 유형, 안내 일시, 확인 일시, 처리 채널",enum,,,PG-MBR-LEAVE-004
+POL-MBR-LEAVE-005-01,영향 대상 서비스,"T 멤버십, T 우주, T 다이렉트샵, 구독, 결합, 제휴 서비스",enum,,,PG-MBR-LEAVE-005
+POL-MBR-LEAVE-005-02,자동 해지 대상 서비스,"회원 기반 알림 설정, 개인화 설정, 내부 구독 연계 정보",enum,,,PG-MBR-LEAVE-005
+POL-MBR-LEAVE-005-03,별도 해지 필요 서비스,"제휴사 직접 가입 서비스, 외부 계정 연결 서비스",enum,,,PG-MBR-LEAVE-005
+POL-MBR-LEAVE-005-04,이용 제한 시점,탈퇴 처리 완료 시,text,,,PG-MBR-LEAVE-005
+POL-MBR-LEAVE-005-05,구독 영향 안내 여부,필수,text,,,PG-MBR-LEAVE-005
+POL-MBR-LEAVE-005-06,결합 영향 안내 여부,필수,text,,,PG-MBR-LEAVE-005
+POL-MBR-LEAVE-005-07,멤버십 영향 안내 여부,필수,text,,,PG-MBR-LEAVE-005
+POL-MBR-LEAVE-005-08,제휴사 계정 영향 기준,제휴사 직접 가입 또는 외부 계정으로 가입한 서비스는 제휴사 정책 우선 적용,text,,,PG-MBR-LEAVE-005
+POL-MBR-LEAVE-005-09,영향 조회 수행 시스템,"BSS, 구독 시스템, 멤버십 시스템, 제휴 연동 시스템",enum,,,PG-MBR-LEAVE-005
+POL-MBR-LEAVE-005-10,조회 실패 처리,탈퇴 진행 불가,text,,,PG-MBR-LEAVE-005
+POL-MBR-LEAVE-005-11,고객 확인 방식,체크박스,text,,,PG-MBR-LEAVE-005
+POL-MBR-LEAVE-005-12,안내 문구,탈퇴하면 일부 혜택과 연계 서비스 이용이 제한될 수 있습니다. 내용을 확인해 주세요.,text,,,PG-MBR-LEAVE-005
+POL-MBR-LEAVE-006-01,필수 확인 항목,"탈퇴 제한 항목, 소멸 자산, 연계 서비스 영향, 데이터 보관·파기, 재가입 기준",enum,,,PG-MBR-LEAVE-006
+POL-MBR-LEAVE-006-02,확인 방식,"항목별 체크, 전체 확인",enum,,,PG-MBR-LEAVE-006
+POL-MBR-LEAVE-006-03,전체 확인 허용 조건,필수 확인 항목 전체 체크,text,,,PG-MBR-LEAVE-006
+POL-MBR-LEAVE-006-04,미확인 시 처리,다음 단계 진행 불가,text,,,PG-MBR-LEAVE-006
+POL-MBR-LEAVE-006-05,확인 유효시간,동일 세션,text,,,PG-MBR-LEAVE-006
+POL-MBR-LEAVE-006-06,재진입 시 확인 유지 기준,동일 세션,text,,,PG-MBR-LEAVE-006
+POL-MBR-LEAVE-006-07,세션 종료 시 처리,재확인,text,,,PG-MBR-LEAVE-006
+POL-MBR-LEAVE-006-08,확인 증적 저장 여부,저장,text,,,PG-MBR-LEAVE-006
+POL-MBR-LEAVE-006-09,확인 증적 저장 항목,"고객ID, 확인 항목, 확인 일시, 처리 채널, 세션ID",enum,,,PG-MBR-LEAVE-006
+POL-MBR-LEAVE-006-10,확인 이력 보관 기간,탈퇴 완료 후 5년,text,,,PG-MBR-LEAVE-006
+POL-MBR-LEAVE-007-01,탈퇴 최종 동의 대상,회원 탈퇴,text,,,PG-MBR-LEAVE-007
+POL-MBR-LEAVE-007-02,탈퇴 최종 동의 방식,"체크박스, 탈퇴 버튼 선택",enum,,,PG-MBR-LEAVE-007
+POL-MBR-LEAVE-007-03,탈퇴 최종 동의 문구,위 내용을 모두 확인했으며 회원 탈퇴에 동의합니다.,text,,,PG-MBR-LEAVE-007
+POL-MBR-LEAVE-007-04,동의 유효시간,동일 세션,text,,,PG-MBR-LEAVE-007
+POL-MBR-LEAVE-007-05,동의 전 필수 조건,"추가 인증 완료, 탈퇴 전 안내 확인 완료, 탈퇴 가능 판정 통과",enum,,,PG-MBR-LEAVE-007
+POL-MBR-LEAVE-007-06,동의 철회 가능 여부,탈퇴 처리 전 허용,text,,,PG-MBR-LEAVE-007
+POL-MBR-LEAVE-007-07,미동의 시 처리,탈퇴 진행 불가,text,,,PG-MBR-LEAVE-007
+POL-MBR-LEAVE-007-08,동의 후 처리,탈퇴 처리 요청,text,,,PG-MBR-LEAVE-007
+POL-MBR-LEAVE-007-09,동의 증적 저장 여부,저장,text,,,PG-MBR-LEAVE-007
+POL-MBR-LEAVE-007-10,동의 증적 저장 항목,"고객ID, 동의 문구, 동의 일시, 처리 채널, 세션ID",enum,,,PG-MBR-LEAVE-007
+POL-MBR-LEAVE-007-11,동의 이력 보관 기간,탈퇴 완료 후 5년,text,,,PG-MBR-LEAVE-007
+POL-MBR-LEAVE-008-01,전환 전 상태,정상,text,,,PG-MBR-LEAVE-008
+POL-MBR-LEAVE-008-02,탈퇴 요청 후 상태,탈퇴유예,text,,,PG-MBR-LEAVE-008
+POL-MBR-LEAVE-008-03,유예 종료 후 상태,탈퇴,text,,,PG-MBR-LEAVE-008
+POL-MBR-LEAVE-008-04,상태 전환 조건,"탈퇴 최종 동의 완료, 추가 인증 성공, 탈퇴 가능 판정 통과",enum,,,PG-MBR-LEAVE-008
+POL-MBR-LEAVE-008-05,상태 전환 처리 시스템,BSS,text,,,PG-MBR-LEAVE-008
+POL-MBR-LEAVE-008-06,처리 기준일시,BSS 처리 완료 시각,text,,,PG-MBR-LEAVE-008
+POL-MBR-LEAVE-008-07,중복 요청 처리,동일 고객 동일 세션 내 1회 처리,text,,,PG-MBR-LEAVE-008
+POL-MBR-LEAVE-008-08,상태 전환 실패 처리,업무 중단 및 오류 안내,text,,,PG-MBR-LEAVE-008
+POL-MBR-LEAVE-008-09,상태 코드,"ACTIVE, DORMANT, LEAVE_PENDING, LEAVED, BLOCKED",enum,,,PG-MBR-LEAVE-008
+POL-MBR-LEAVE-008-10,상태 전환 이력 저장 여부,저장,text,,,PG-MBR-LEAVE-008
+POL-MBR-LEAVE-008-11,상태 전환 이력 저장 항목,"고객ID, 이전 상태, 변경 상태, 처리 일시, 처리 채널, 처리 결과 코드",enum,,,PG-MBR-LEAVE-008
+POL-MBR-LEAVE-008-12,상태 전환 결과 코드,"성공, 실패, 오류",enum,,,PG-MBR-LEAVE-008
+POL-MBR-LEAVE-009-01,세션 종료 대상,"현재 세션, 전체 로그인 세션",enum,,,PG-MBR-LEAVE-009
+POL-MBR-LEAVE-009-02,토큰 폐기 대상,"인증 토큰, 갱신 토큰, 자동 로그인 토큰",enum,,,PG-MBR-LEAVE-009
+POL-MBR-LEAVE-009-03,자동 로그인 해제 여부,해제,text,,,PG-MBR-LEAVE-009
+POL-MBR-LEAVE-009-04,동시 접속 종료 여부,종료,text,,,PG-MBR-LEAVE-009
+POL-MBR-LEAVE-009-05,종료 시점,탈퇴 상태 전환 완료 즉시,text,,,PG-MBR-LEAVE-009
+POL-MBR-LEAVE-009-06,재로그인 허용 여부,미허용,text,,,PG-MBR-LEAVE-009
+POL-MBR-LEAVE-009-07,인증 세션 처리,즉시 만료,text,,,PG-MBR-LEAVE-009
+POL-MBR-LEAVE-009-08,종료 실패 처리,재시도 후 실패 이력 저장,text,,,PG-MBR-LEAVE-009
+POL-MBR-LEAVE-009-09,세션 종료 이력 저장 여부,저장,text,,,PG-MBR-LEAVE-009
+POL-MBR-LEAVE-009-10,세션 종료 이력 저장 항목,"고객ID, 세션ID, 종료 대상, 종료 일시, 종료 결과 코드",enum,,,PG-MBR-LEAVE-009
+POL-MBR-LEAVE-009-11,종료 결과 코드,"성공, 실패, 오류",enum,,,PG-MBR-LEAVE-009
+POL-MBR-LEAVE-010-01,보관 대상 데이터,"법정 보관 대상 거래 기록, 탈퇴 이력, 동의 이력",enum,,,PG-MBR-LEAVE-010
+POL-MBR-LEAVE-010-02,파기 대상 데이터,"법정 보관 대상 제외 개인정보, 마케팅 수신 정보, 개인화 설정",enum,,,PG-MBR-LEAVE-010
+POL-MBR-LEAVE-010-03,분리 보관 대상,법정 보관 대상 개인정보,text,,,PG-MBR-LEAVE-010
+POL-MBR-LEAVE-010-04,법정 보관 기간,"전자상거래 거래기록 5년, 소비자 불만·분쟁처리 기록 3년, 접속기록 3개월",enum,,,PG-MBR-LEAVE-010
+POL-MBR-LEAVE-010-05,즉시 파기 대상,"자동 로그인 토큰, 개인화 설정, 마케팅 수신 설정",enum,,,PG-MBR-LEAVE-010
+POL-MBR-LEAVE-010-06,파기 시점,유예 기간 종료 후,text,,,PG-MBR-LEAVE-010
+POL-MBR-LEAVE-010-07,파기 방식,복구 불가능한 방식,text,,,PG-MBR-LEAVE-010
+POL-MBR-LEAVE-010-08,재가입 시 복구 대상,없음,text,,,PG-MBR-LEAVE-010
+POL-MBR-LEAVE-010-09,보관 기간 만료 후 처리,파기,text,,,PG-MBR-LEAVE-010
+POL-MBR-LEAVE-010-10,파기 이력 저장 여부,저장,text,,,PG-MBR-LEAVE-010
+POL-MBR-LEAVE-010-11,파기 이력 저장 항목,"고객ID, 데이터 유형, 파기 일시, 파기 결과 코드, 처리 시스템",enum,,,PG-MBR-LEAVE-010
+POL-MBR-LEAVE-010-12,데이터 처리 결과 코드,"보관, 분리 보관, 파기, 오류",enum,,,PG-MBR-LEAVE-010
+POL-MBR-LEAVE-011-01,유예 기간,7일,scalar,7,일,PG-MBR-LEAVE-011
+POL-MBR-LEAVE-011-02,유예 시작 시점,탈퇴 요청 처리 완료 시각,text,,,PG-MBR-LEAVE-011
+POL-MBR-LEAVE-011-03,유예 종료 시점,유예 시작 시점 + 7일,text,,,PG-MBR-LEAVE-011
+POL-MBR-LEAVE-011-04,유예 중 회원 상태,탈퇴유예,text,,,PG-MBR-LEAVE-011
+POL-MBR-LEAVE-011-05,유예 중 로그인 처리,탈퇴 철회 안내,text,,,PG-MBR-LEAVE-011
+POL-MBR-LEAVE-011-06,유예 중 서비스 이용,제한,text,,,PG-MBR-LEAVE-011
+POL-MBR-LEAVE-011-07,철회 가능 조건,"유예 기간 내, 본인인증 성공",enum,,,PG-MBR-LEAVE-011
+POL-MBR-LEAVE-011-08,철회 불가 조건,"유예 기간 만료, 탈퇴 확정 처리 완료",enum,,,PG-MBR-LEAVE-011
+POL-MBR-LEAVE-011-09,철회 요청 채널,"앱, 모바일웹, PC웹",enum,,,PG-MBR-LEAVE-011
+POL-MBR-LEAVE-011-10,유예 종료 처리,탈퇴 확정,text,,,PG-MBR-LEAVE-011
+POL-MBR-LEAVE-011-11,철회 이력 저장 여부,저장,text,,,PG-MBR-LEAVE-011
+POL-MBR-LEAVE-011-12,철회 이력 저장 항목,"고객ID, 철회 요청 일시, 처리 채널, 처리 결과 코드",enum,,,PG-MBR-LEAVE-011
+POL-MBR-LEAVE-012-01,안내 대상,"탈퇴 요청 완료 고객, 탈퇴 확정 고객",enum,,,PG-MBR-LEAVE-012
+POL-MBR-LEAVE-012-02,안내 시점,"탈퇴 요청 완료 즉시, 유예 종료 시",enum,,,PG-MBR-LEAVE-012
+POL-MBR-LEAVE-012-03,안내 채널,"화면, 앱 푸시, SMS",enum,,,PG-MBR-LEAVE-012
+POL-MBR-LEAVE-012-04,결과 안내 항목,"탈퇴 요청 완료, 유예 기간, 철회 경로, 데이터 보관·파기 기준, 재가입 기준, 후속 문의 경로",enum,,,PG-MBR-LEAVE-012
+POL-MBR-LEAVE-012-05,유예 기간 안내,7일,scalar,7,일,PG-MBR-LEAVE-012
+POL-MBR-LEAVE-012-06,데이터 보관 안내 항목,"법정 보관 대상, 파기 대상, 보관 기간",enum,,,PG-MBR-LEAVE-012
+POL-MBR-LEAVE-012-07,후속 문의 경로,"고객센터, 1:1 문의",enum,,,PG-MBR-LEAVE-012
+POL-MBR-LEAVE-012-08,발송 제외 조건,"고객 연락처 부재, 알림 수신 불가 상태",enum,,,PG-MBR-LEAVE-012
+POL-MBR-LEAVE-012-09,발송 실패 처리,화면 안내 유지,text,,,PG-MBR-LEAVE-012
+POL-MBR-LEAVE-012-10,결과 안내 이력 저장 여부,저장,text,,,PG-MBR-LEAVE-012
+POL-MBR-LEAVE-012-11,결과 안내 이력 저장 항목,"고객ID, 안내 유형, 안내 채널, 발송 일시, 발송 결과 코드",enum,,,PG-MBR-LEAVE-012
+POL-MBR-LEAVE-012-12,결과 안내 문구,회원 탈퇴 요청이 완료되었습니다. 유예 기간 내에는 철회할 수 있습니다.,text,,,PG-MBR-LEAVE-012
+POL-MBR-REJOIN-001-01,복원 가능 상태,탈퇴 철회 가능 상태,text,,,PG-MBR-REJOIN-001
+POL-MBR-REJOIN-001-02,복원 불가 상태,"탈퇴 확정, 가입제한",enum,,,PG-MBR-REJOIN-001
+POL-MBR-REJOIN-001-03,복원 가능 기간,탈퇴 요청일로부터 7일,text,,,PG-MBR-REJOIN-001
+POL-MBR-REJOIN-001-04,복원 대상 데이터,"회원 계정, 기본 프로필, 약관 동의 이력, 알림 설정",enum,,,PG-MBR-REJOIN-001
+POL-MBR-REJOIN-001-05,복원 제외 데이터,탈퇴 시 즉시 삭제 대상 데이터,text,,,PG-MBR-REJOIN-001
+POL-MBR-REJOIN-001-06,복원 판정 기준 식별자,CI,text,,,PG-MBR-REJOIN-001
+POL-MBR-REJOIN-001-07,복원 판정 수행 시스템,BSS,text,,,PG-MBR-REJOIN-001
+POL-MBR-REJOIN-001-08,복원 불가 처리,재가입 프로세스 진행,text,,,PG-MBR-REJOIN-001
+POL-MBR-REJOIN-001-09,판정 실패 처리,업무 중단 및 오류 안내,text,,,PG-MBR-REJOIN-001
+POL-MBR-REJOIN-001-10,판정 이력 저장 항목,"CI, 회원ID, 판정 결과, 판정 일시, 처리 채널",enum,,,PG-MBR-REJOIN-001
+POL-MBR-REJOIN-002-01,재가입 가능 상태,탈퇴 확정,text,,,PG-MBR-REJOIN-002
+POL-MBR-REJOIN-002-02,재가입 불가 상태,"정상, 휴면, 가입제한",enum,,,PG-MBR-REJOIN-002
+POL-MBR-REJOIN-002-03,재가입 제한 기간,탈퇴 요청일로부터 7일,text,,,PG-MBR-REJOIN-002
+POL-MBR-REJOIN-002-04,탈퇴 이력 기준,CI,text,,,PG-MBR-REJOIN-002
+POL-MBR-REJOIN-002-05,중복 계정 기준,"CI, DI, 휴대폰번호",enum,,,PG-MBR-REJOIN-002
+POL-MBR-REJOIN-002-06,재가입 가능 채널,"앱, 모바일웹, PC웹",enum,,,PG-MBR-REJOIN-002
+POL-MBR-REJOIN-002-07,재가입 불가 안내 항목,"불가 사유, 후속 문의 경로",enum,,,PG-MBR-REJOIN-002
+POL-MBR-REJOIN-002-08,판정 수행 시스템,BSS,text,,,PG-MBR-REJOIN-002
+POL-MBR-REJOIN-002-09,판정 실패 처리,업무 중단 및 오류 안내,text,,,PG-MBR-REJOIN-002
+POL-MBR-REJOIN-002-10,판정 이력 저장 항목,"CI, 회원ID, 판정 결과, 판정 일시, 처리 채널",enum,,,PG-MBR-REJOIN-002
+POL-MBR-REJOIN-003-01,제한 대상,"가입제한 회원, 부정이용 이력 회원, 법령·약관 위반 회원",enum,,,PG-MBR-REJOIN-003
+POL-MBR-REJOIN-003-02,제한 기준 식별자,"CI, DI",enum,,,PG-MBR-REJOIN-003
+POL-MBR-REJOIN-003-03,제한 기간,제한 사유별 운영 정책에 따르며 기본 1년,text,,,PG-MBR-REJOIN-003
+POL-MBR-REJOIN-003-04,예외 승인 조건,운영자 승인,text,,,PG-MBR-REJOIN-003
+POL-MBR-REJOIN-003-05,예외 승인 권한,관리자,text,,,PG-MBR-REJOIN-003
+POL-MBR-REJOIN-003-06,예외 승인 증빙,"본인확인 결과, 제한 해소 증빙, 운영자 승인 사유",enum,,,PG-MBR-REJOIN-003
+POL-MBR-REJOIN-003-07,예외 승인 후 처리,재가입 가능,text,,,PG-MBR-REJOIN-003
+POL-MBR-REJOIN-003-08,예외 거절 처리,재가입 불가 안내,text,,,PG-MBR-REJOIN-003
+POL-MBR-REJOIN-003-09,제한 해제 조건,제한 기간 만료 또는 운영자 예외 승인 완료,text,,,PG-MBR-REJOIN-003
+POL-MBR-REJOIN-003-10,예외 이력 저장 항목,"고객ID, CI, 승인자ID, 승인 일시, 승인 결과",enum,,,PG-MBR-REJOIN-003
+POL-MBR-INFO-004-01,기존 정보 재사용 가능 항목,"본인인증 결과 항목, CI, DI",enum,,,PG-MBR-INFO-004
+POL-MBR-INFO-004-02,기존 정보 재사용 제한 항목,"비밀번호, 마케팅 동의, 선택 약관 동의",enum,,,PG-MBR-INFO-004
+POL-MBR-INFO-004-03,신규 입력 필수 항목,"아이디, 비밀번호, 휴대폰번호, 이메일",enum,,,PG-MBR-INFO-004
+POL-MBR-INFO-004-04,고객 확인 대상 항목,"이름, 휴대폰번호, 이메일",enum,,,PG-MBR-INFO-004
+POL-MBR-INFO-004-05,정보 최신화 기준,고객 수정 입력값,text,,,PG-MBR-INFO-004
+POL-MBR-INFO-004-06,기존 휴대폰번호 사용 조건,본인인증 결과와 일치,text,,,PG-MBR-INFO-004
+POL-MBR-INFO-004-07,기존 이메일 사용 조건,고객 확인 완료,text,,,PG-MBR-INFO-004
+POL-MBR-INFO-004-08,재사용 정보 노출 방식,마스킹,text,,,PG-MBR-INFO-004
+POL-MBR-INFO-004-09,재사용 불가 처리,신규 입력,text,,,PG-MBR-INFO-004
+POL-MBR-INFO-004-10,입력값 검증 기준,회원 정보 입력값 검증 정책,text,,,PG-MBR-INFO-004
+POL-MBR-INFO-004-11,입력 이력 저장 항목,"고객ID, 입력 항목, 처리 일시, 처리 채널",enum,,,PG-MBR-INFO-004
+POL-MBR-REJOIN-004-01,복원 처리 조건,"탈퇴 철회 가능 상태, 복원 가능 판정 통과",enum,,,PG-MBR-REJOIN-004
+POL-MBR-REJOIN-004-02,신규 생성 조건,"탈퇴 확정, 재가입 가능 판정 통과",enum,,,PG-MBR-REJOIN-004
+POL-MBR-REJOIN-004-03,기존 회원ID 재사용 여부,"탈퇴 철회 가능 상태에서는 재사용, 탈퇴 확정 후 재가입 시 재사용 불가",enum,,,PG-MBR-REJOIN-004
+POL-MBR-REJOIN-004-04,신규 회원ID 발급 기준,고객이 신규 입력한 아이디가 중복되지 않을 때 발급,text,,,PG-MBR-REJOIN-004
+POL-MBR-REJOIN-004-05,CI/DI 연결 기준,"CI, DI",enum,,,PG-MBR-REJOIN-004
+POL-MBR-REJOIN-004-06,기존 데이터 연결 대상,"본인인증 결과 항목, 고객 식별 이력, 법정 보관 대상 이력",enum,,,PG-MBR-REJOIN-004
+POL-MBR-REJOIN-004-07,신규 생성 초기화 대상,"기본 프로필, 약관 동의 이력, 수신 설정",enum,,,PG-MBR-REJOIN-004
+POL-MBR-REJOIN-004-08,실패 롤백 대상,"계정 생성, CI/DI 매핑, 프로필 생성",enum,,,PG-MBR-REJOIN-004
+POL-MBR-REJOIN-004-09,중복 생성 방지 기준,동일 CI 기준 1개 계정,text,,,PG-MBR-REJOIN-004
+POL-MBR-REJOIN-004-10,처리 수행 시스템,BSS,text,,,PG-MBR-REJOIN-004
+POL-MBR-REJOIN-004-11,처리 결과 저장 항목,"고객ID, CI, 처리 유형, 처리 일시, 처리 결과 코드",enum,,,PG-MBR-REJOIN-004
+POL-MBR-REJOIN-005-01,완료 안내 항목,"재가입 완료 여부, 이용 가능 상태, 로그인 상태, 후속 안내",enum,,,PG-MBR-REJOIN-005
+POL-MBR-REJOIN-005-02,통지 채널,"앱 푸시, SMS, 이메일",enum,,,PG-MBR-REJOIN-005
+POL-MBR-REJOIN-005-03,기본 완료 화면 이동,재가입 완료 화면,text,,,PG-MBR-REJOIN-005
+POL-MBR-REJOIN-005-04,후속 이동 경로,홈,text,,,PG-MBR-REJOIN-005
+POL-MBR-REJOIN-005-05,이용 가능 상태,정상,text,,,PG-MBR-REJOIN-005
+POL-MBR-REJOIN-005-06,알림 발송 시점,재가입 완료 즉시,text,,,PG-MBR-REJOIN-005
+POL-MBR-REJOIN-005-07,알림 발송 실패 처리,발송 실패 이력 저장,text,,,PG-MBR-REJOIN-005
+POL-MBR-REJOIN-005-08,재가입 이력 저장 여부,저장,text,,,PG-MBR-REJOIN-005
+POL-MBR-REJOIN-005-09,재가입 이력 저장 항목,"고객ID, CI, 재가입 일시, 처리 채널, 처리 결과 코드",enum,,,PG-MBR-REJOIN-005
+POL-MBR-REJOIN-005-10,안내 문구,재가입이 완료되었습니다. 지금부터 정상적으로 서비스를 이용할 수 있습니다.,text,,,PG-MBR-REJOIN-005

@@ -17,6 +17,7 @@
 export * from './api/aiapi';
 export * from './api/alias-api';
 export * from './api/candidate-api';
+export * from './api/dashboard-api';
 export * from './api/expression-api';
 export * from './api/governance-api';
 export * from './api/impact-api';
@@ -25,4 +26,5 @@ export * from './api/relationship-api';
 export * from './api/review-api';
 export * from './api/search-api';
 export * from './api/term-api';
+export * from './api/term-upload-api';
 

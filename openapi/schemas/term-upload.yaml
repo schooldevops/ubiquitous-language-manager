@@ -1,0 +1,48 @@
+TermUploadStatus:
+  type: string
+  enum: [INSERTED, UPDATED, FAILED]
+  description: 행 처리 결과 상태
+
+TermUploadRow:
+  type: object
+  required: [lineNo, status]
+  properties:
+    lineNo: { type: integer, example: 1 }
+    termId: { type: string, nullable: true, example: "T-000001" }
+    status: { $ref: '#/TermUploadStatus' }
+    errorMessage: { type: string, nullable: true }
+    registeredAt: { type: string, format: date-time, nullable: true }
+    failedAt: { type: string, format: date-time, nullable: true }
+
+TermUploadResult:
+  type: object
+  required: [uploadBatchId, uploadedAt, totalRows, inserted, updated, failed, rows]
+  properties:
+    uploadBatchId: { type: string, example: "UPL-20260604-0001" }
+    uploadedAt: { type: string, format: date-time }
+    totalRows: { type: integer }
+    inserted: { type: integer }
+    updated: { type: integer }
+    failed: { type: integer }
+    rows:
+      type: array
+      items: { $ref: '#/TermUploadRow' }
+
+TermUploadBatchSummary:
+  type: object
+  required: [uploadBatchId, uploadedAt, totalRows, inserted, updated, failed]
+  properties:
+    uploadBatchId: { type: string }
+    uploadedAt: { type: string, format: date-time }
+    totalRows: { type: integer }
+    inserted: { type: integer }
+    updated: { type: integer }
+    failed: { type: integer }
+
+TermUploadBatchListResponse:
+  type: object
+  required: [items]
+  properties:
+    items:
+      type: array
+      items: { $ref: '#/TermUploadBatchSummary' }
